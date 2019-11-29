@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!---
+ A CollapsiblePanel showing a siteimprove feedback item
+-->
+<local:SiteimproveFeedbackItemPanelBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns="exml:ext.config"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
+        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
+        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
+  <fx:Metadata>
+    [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
+    [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
+  </fx:Metadata>
+  <fx:Script><![CDATA[
+    import com.coremedia.ui.data.ValueExpressionFactory;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveFeedbackItemPanel";
+
+    private var config:SiteimproveFeedbackItemPanel;
+
+    public native function SiteimproveFeedbackItemPanel(config:SiteimproveFeedbackItemPanel = null);
+
+    private function getEmptyText(config:SiteimproveFeedbackItemPanel):String {
+      return config.feedbackItem.isStub
+              ? resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimproveFeedbackItemPanel_no_feedback_loaded_text')
+              : resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimproveFeedbackItemPanel_no_feedback_available_text');
+    }
+    ]]></fx:Script>
+  <fx:Metadata>
+    [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
+  </fx:Metadata>
+  <local:items>
+    <editor:CollapsibleFormPanel collapsible="false" header="{false}" ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_tooltip')}">
+      <editor:items>
+        <DisplayField value="{getEmptyText(config)}"/>
+      </editor:items>
+      <editor:plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNotLoadedExpression(config)}"/>
+      </editor:plugins>
+    </editor:CollapsibleFormPanel>
+    <editor:CollapsibleFormPanel
+            collapsible="false"
+            ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
+            title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
+      <editor:plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
+      </editor:plugins>
+      <editor:items>
+        <Container>
+          <items>
+            <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+                           tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_open_tooltip')}"
+                           handler="{openSiteimprove}"/>
+          </items>
+          <layout>
+            <layout_HBox align="stretch" pack="end" />
+          </layout>
+        </Container>
+        <components:ScoreCircle
+                bindTo="{ValueExpressionFactory.create('summary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
+      </editor:items>
+    </editor:CollapsibleFormPanel>
+    <editor:CollapsibleFormPanel
+            collapsible="false"
+            ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}"
+            title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}">
+      <editor:items>
+        <components:ScoreBar
+                label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_a11n')}"
+                bindTo="{ValueExpressionFactory.create('summary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
+        <components:ScoreBar
+                label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_quality')}"
+                bindTo="{ValueExpressionFactory.create('summary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
+        <components:ScoreBar
+                label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_seo')}"
+                bindTo="{ValueExpressionFactory.create('summary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
+      </editor:items>
+      <editor:plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
+      </editor:plugins>
+    </editor:CollapsibleFormPanel>
+    <editor:CollapsibleFormPanel
+            collapsible="false"
+            ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}"
+            title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}">
+      <editor:plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
+      </editor:plugins>
+      <editor:items>
+        <components:IssueList feedbackData="{ValueExpressionFactory.create('summary', config.feedbackItem)}" bindTo="{ValueExpressionFactory.create('summary.seov2IssuesDocument.items', config.feedbackItem)}"/>
+      </editor:items>
+    </editor:CollapsibleFormPanel>
+  </local:items>
+</local:SiteimproveFeedbackItemPanelBase>

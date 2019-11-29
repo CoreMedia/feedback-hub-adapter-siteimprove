@@ -8,7 +8,7 @@ It is possible to connect external systems to Feedback Hub in order to collect f
 This projects integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
 It also enables the Siteimprove widget for the preview CAE.
 
-### Documentation & Tutorial
+### Documentation
 
 https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/tree/master/documentation
 

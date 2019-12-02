@@ -7,6 +7,8 @@ import com.coremedia.objectserver.view.RenderNode;
 import com.coremedia.objectserver.view.events.ViewHookEvent;
 import com.coremedia.objectserver.view.events.ViewHookEventListener;
 
+import com.google.common.base.Strings;
+
 import javax.inject.Named;
 
 import static com.coremedia.blueprint.base.cae.web.taglib.ViewHookEventNames.VIEW_HOOK_HEAD;
@@ -18,10 +20,12 @@ public class SiteImproveMetadataViewHookEventListener implements ViewHookEventLi
   @Override
   public RenderNode onViewHook(ViewHookEvent<Page> event) {
     String contentId = event.getBean().getContentId();
-    int id = IdHelper.parseContentId(contentId);
-    SiteImproveMetadata tag = new SiteImproveMetadata(id);
-    if(VIEW_HOOK_HEAD.equals(event.getId())) {
-      return new RenderNode(tag, VIEW_HOOK_HEAD);
+    if(!Strings.isNullOrEmpty(contentId)) {
+      int id = IdHelper.parseContentId(contentId);
+      SiteImproveMetadata tag = new SiteImproveMetadata(id);
+      if (VIEW_HOOK_HEAD.equals(event.getId())) {
+        return new RenderNode(tag, VIEW_HOOK_HEAD);
+      }
     }
 
     return null;

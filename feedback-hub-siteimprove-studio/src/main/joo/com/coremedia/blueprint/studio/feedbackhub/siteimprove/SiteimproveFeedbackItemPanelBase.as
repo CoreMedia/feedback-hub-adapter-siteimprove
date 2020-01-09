@@ -16,7 +16,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel{
   internal function getFeedbackLoadedExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
     if (!feedbackLoadedExpression) {
       feedbackLoadedExpression = ValueExpressionFactory.createFromFunction(function ():Boolean {
-        return SiteimproveFeedbackItem(config.feedbackItem).summary;
+        return SiteimproveFeedbackItem(config.feedbackItem).previewSummary;
       });
     }
     return feedbackLoadedExpression;
@@ -25,7 +25,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel{
   internal function getFeedbackNotLoadedExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
     if (!feedbackNotLoadedExpression) {
       feedbackNotLoadedExpression = ValueExpressionFactory.createFromFunction(function ():Boolean {
-        return !SiteimproveFeedbackItem(config.feedbackItem).summary;
+        return !SiteimproveFeedbackItem(config.feedbackItem).previewSummary;
       });
     }
     return feedbackNotLoadedExpression;

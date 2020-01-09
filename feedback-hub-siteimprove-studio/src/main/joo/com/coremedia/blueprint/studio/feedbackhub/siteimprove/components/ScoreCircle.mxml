@@ -17,8 +17,9 @@
 
   <local:items>
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
+    <DisplayField itemId="label" value="{config.label}"/>
   </local:items>
   <local:layout>
-    <layout_VBox align="stretch" pack="center"/>
+    <layout_VBox align="middle" pack="center"/>
   </local:layout>
 </local:ScoreCircleBase>

@@ -9,6 +9,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOver
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssueDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.cap.content.Content;
 import com.coremedia.feedbackhub.provider.ContentFeedbackProvider;
@@ -19,10 +20,14 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 /**
  * SiteimproveContentFeedbackProvider provides Feedbacks for the page of the {@link Content}.
@@ -39,10 +44,14 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     this.siteimproveService = siteimproveService;
   }
 
+  public SiteimproveSettings getSettings() {
+    return this.settings;
+  }
+
   @Override
   public CompletionStage<Collection<FeedbackItem>> provideFeedback(Content content) {
-    ContentQualitySummaryDocument contentQualitySummary = getContentQualitySummary(content);
-    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(contentQualitySummary);
+    ContentQualitySummaryDocument previewContentQualitySummary = getPreviewContentQualitySummary(content);
+    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, previewContentQualitySummary);
     return CompletableFuture.completedFuture(feedbackItem)
             .thenApply(this::asFeedbackItems);
   }
@@ -56,7 +65,7 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     return Collections.singleton(feedbackItem);
   }
 
-  private ContentQualitySummaryDocument getContentQualitySummary(Content content) {
+  private ContentQualitySummaryDocument getPreviewContentQualitySummary(Content content) {
     PageDocument page = findPage(settings, content);
     if (page == null) {
       //TODO: Use on-demand content check (https://api.siteimprove.com/v2/documentation#/Content) and upload the previewed html
@@ -88,6 +97,8 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     }
 
     Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, page.getId());
+    List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
+    seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
     contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
 
     AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, page.getId());
@@ -99,6 +110,25 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
   @Nullable
   private PageDocument findPage(SiteimproveSettings config, Content content) {
     return siteimproveService.findPage(config, content);
+  }
+
+  /**
+   * We don't want to display all SEO issues to the editor.
+   * When an error is caused by markup he can't do anything about it, so we filter those issues.
+   *
+   * @param issues the SEO issues
+   * @return the list of filtered SEO issues
+   */
+  private List<Seov2IssueDocument> filterSeoIssuesForEditor(List<Seov2IssueDocument> issues) {
+    List<Seov2IssueDocument> result = new ArrayList<>();
+
+    List<String> whitelist = Arrays.stream(SeoIssueTypesEditorWhitelist.class.getEnumConstants()).map(Enum::name).collect(Collectors.toList());
+    for (Seov2IssueDocument issue : issues) {
+      if (whitelist.contains(issue.getIssueName())) {
+        result.add(issue);
+      }
+    }
+    return result;
   }
 
 }

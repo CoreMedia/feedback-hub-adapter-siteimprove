@@ -123,3 +123,11 @@ After reloading the preview, the widget should appear on the right:
 
 ![Siteimprove Widget](widget.png "Siteimprove Widget")
 
+
+## Configuring Content Issues
+
+The list of issues shown in the feedback panel is filtered.
+Since the editor can't handle all type of issues reported by Siteimprove (e.g. errors on the markup), 
+the extension filters the issues and returns only those the editor can actually do something about.
+
+The whitelist of issues in configured in the _enum_ class _SeoIssueTypesEditorWhitelist_ and can be customized there.

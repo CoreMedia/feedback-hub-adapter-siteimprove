@@ -15,6 +15,12 @@ public class ScoreCircleBase extends Container {
   [Bindable]
   public var jsonPath:String;
 
+  [Bindable]
+  public var color:String;
+
+  [Bindable]
+  public var label:String;
+
   public function ScoreCircleBase(config:ScoreCircle = null) {
     super(config);
   }
@@ -71,7 +77,7 @@ public class ScoreCircleBase extends Container {
     };
 
     drawCircle('#efefef', options.lineWidth, 100 / 100);
-    drawCircle(ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
+    drawCircle(color, options.lineWidth, options.percent / 100);
   }
 
 }

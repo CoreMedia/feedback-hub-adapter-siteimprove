@@ -5,6 +5,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Accessi
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPageDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentQualitySummaryDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
@@ -17,6 +18,8 @@ import com.coremedia.feedbackhub.provider.FeedbackItem;
 import edu.umd.cs.findbugs.annotations.DefaultAnnotation;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -34,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @DefaultAnnotation(NonNull.class)
 public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvider {
+  private static final Logger LOG = LoggerFactory.getLogger(SiteimproveContentFeedbackProvider.class);
 
   private SiteimproveSettings settings;
   private SiteimproveService siteimproveService;
@@ -50,8 +54,9 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
   @Override
   public CompletionStage<Collection<FeedbackItem>> provideFeedback(Content content) {
-    ContentQualitySummaryDocument previewContentQualitySummary = getPreviewContentQualitySummary(content);
-    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, previewContentQualitySummary);
+    ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(content, settings.getSiteimprovePreviewSiteId());
+    ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(content, settings.getSiteimproveLiveSiteId());
+    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
     return CompletableFuture.completedFuture(feedbackItem)
             .thenApply(this::asFeedbackItems);
   }
@@ -65,51 +70,59 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     return Collections.singleton(feedbackItem);
   }
 
-  private ContentQualitySummaryDocument getPreviewContentQualitySummary(Content content) {
-    PageDocument page = findPage(settings, content);
-    if (page == null) {
-      //TODO: Use on-demand content check (https://api.siteimprove.com/v2/documentation#/Content) and upload the previewed html
-      return null;
+  private ContentQualitySummaryDocument getContentQualitySummary(Content content, String siteimproveSiteId) {
+    try {
+      PageDocument page = findPage(settings, siteimproveSiteId, content);
+      if (page == null) {
+        //TODO: Use on-demand content check (https://api.siteimprove.com/v2/documentation#/Content) and upload the previewed html
+        return null;
+      }
+
+      MultiValueMap<String, String> queryParamContentID = new LinkedMultiValueMap<>();
+      queryParamContentID.add("ids", page.getId());
+
+      ContentQualitySummaryDocument contentQualitySummaryDocument = new ContentQualitySummaryDocument(page, siteimproveSiteId);
+      //Creating content quality summary
+      DciOverallScoreDocument dciScore = siteimproveService.getDCIScore(settings, siteimproveSiteId, page.getId());
+      contentQualitySummaryDocument.setDciOverallScoreDocument(dciScore);
+
+      PageDetailsDocument pageDetailsDocument = siteimproveService.getPageDetails(settings, siteimproveSiteId, page.getId());
+      contentQualitySummaryDocument.setPageDetailsDocument(pageDetailsDocument);
+
+
+      BrokenLinkPagesDocument brokenLinkPagesDocument = siteimproveService.getBrokenLinkPages(settings, siteimproveSiteId, queryParamContentID);
+      if (brokenLinkPagesDocument != null && !brokenLinkPagesDocument.getBrokenPages().isEmpty()) {
+        BrokenLinkPageDocument brokenLinkPageDocument = brokenLinkPagesDocument.getBrokenPages().get(0);
+        contentQualitySummaryDocument.setBrokenLinkPageDocument(brokenLinkPageDocument);
+      }
+
+      PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, siteimproveSiteId, queryParamContentID);
+      if (misspellingPages != null && !misspellingPages.getPages().isEmpty()) {
+        PageDocument misspellingPage = misspellingPages.getPages().get(0);
+        contentQualitySummaryDocument.setMisspellingPage(misspellingPage);
+      }
+
+      Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
+      List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
+      seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
+      contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
+
+      AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
+      contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
+
+      CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
+      contentQualitySummaryDocument.setCrawlStatus(crawlStatus);
+
+      return contentQualitySummaryDocument;
+    } catch (Exception e) {
+      LOG.error("Failed to collect siteimprove report for site {}: {}", siteimproveSiteId, e.getMessage());
+      return new ContentQualitySummaryDocument(null, siteimproveSiteId);
     }
-
-    MultiValueMap<String, String> queryParamContentID = new LinkedMultiValueMap<>();
-    queryParamContentID.add("ids", page.getId());
-
-    ContentQualitySummaryDocument contentQualitySummaryDocument = new ContentQualitySummaryDocument(page);
-    //Creating content quality summary
-    DciOverallScoreDocument dciScore = siteimproveService.getDCIScore(settings, page.getId());
-    contentQualitySummaryDocument.setDciOverallScoreDocument(dciScore);
-
-    PageDetailsDocument pageDetailsDocument = siteimproveService.getPageDetails(settings, page.getId());
-    contentQualitySummaryDocument.setPageDetailsDocument(pageDetailsDocument);
-
-
-    BrokenLinkPagesDocument brokenLinkPagesDocument = siteimproveService.getBrokenLinkPages(settings, queryParamContentID);
-    if (brokenLinkPagesDocument != null && !brokenLinkPagesDocument.getBrokenPages().isEmpty()) {
-      BrokenLinkPageDocument brokenLinkPageDocument = brokenLinkPagesDocument.getBrokenPages().get(0);
-      contentQualitySummaryDocument.setBrokenLinkPageDocument(brokenLinkPageDocument);
-    }
-
-    PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, queryParamContentID);
-    if (misspellingPages != null && !misspellingPages.getPages().isEmpty()) {
-      PageDocument misspellingPage = misspellingPages.getPages().get(0);
-      contentQualitySummaryDocument.setMisspellingPage(misspellingPage);
-    }
-
-    Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, page.getId());
-    List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
-    seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
-    contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
-
-    AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, page.getId());
-    contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
-
-    return contentQualitySummaryDocument;
   }
 
   @Nullable
-  private PageDocument findPage(SiteimproveSettings config, Content content) {
-    return siteimproveService.findPage(config, content);
+  private PageDocument findPage(SiteimproveSettings config, String siteId, Content content) {
+    return siteimproveService.findPage(config, siteId, content);
   }
 
   /**

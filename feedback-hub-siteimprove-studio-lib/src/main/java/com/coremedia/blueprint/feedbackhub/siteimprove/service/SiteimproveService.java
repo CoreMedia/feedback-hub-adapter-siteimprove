@@ -22,58 +22,58 @@ import org.springframework.util.MultiValueMap;
 
 public interface SiteimproveService {
   @Nullable
-  CrawlStatusDocument triggerRecrawlSite(@NonNull SiteimproveSettings config);
+  CrawlStatusDocument getCrawlStatus(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  default DciOverallScoreDocument getDCIScore(@NonNull SiteimproveSettings config) {
-    return getDCIScore(config, null);
+  default DciOverallScoreDocument getDCIScore(@NonNull SiteimproveSettings config, @NonNull String siteId) {
+    return getDCIScore(config, siteId, null);
   }
 
   @Nullable
-  DciOverallScoreDocument getDCIScore(@NonNull SiteimproveSettings config, @Nullable String pageId);
+  DciOverallScoreDocument getDCIScore(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable String pageId);
 
   @Nullable
-  QualitySummaryDocument getQualitySummary(@NonNull SiteimproveSettings config);
+  QualitySummaryDocument getQualitySummary(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config);
+  PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @Nullable MultiValueMap<String, String> queryParamContentID);
+  PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParamContentID);
 
   @Nullable
-  SeoIssuesDocument getSeoIssuePages(@NonNull SiteimproveSettings config);
+  SeoIssuesDocument getSeoIssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  SeoIssuesDocument getSeoIssuePages(@NonNull SiteimproveSettings config, @NonNull String pageId);
+  SeoIssuesDocument getSeoIssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
 
   @Nullable
-  Seov2IssuesDocument getSeov2IssuePages(@NonNull SiteimproveSettings config, @NonNull String pageId);
+  Seov2IssuesDocument getSeov2IssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
 
   @Nullable
-  AccessibilityIssuesDocument getAccessibilityIssuePages(@NonNull SiteimproveSettings config, @NonNull String pageId);
+  AccessibilityIssuesDocument getAccessibilityIssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
 
   @Nullable
-  PageDetailsDocument getPageDetails(@NonNull SiteimproveSettings config, @NonNull String pageId);
+  PageDetailsDocument getPageDetails(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
 
   @Nullable
-  BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config);
+  BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @Nullable MultiValueMap<String, String> queryParamContentID);
+  BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParamContentID);
 
   @Nullable
-  AnalyticsSummaryDocument getAnalyticsSummary(@NonNull SiteimproveSettings config);
+  AnalyticsSummaryDocument getAnalyticsSummary(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  SiteDocument getSite(@NonNull SiteimproveSettings config);
+  SiteDocument getSite(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  PageDocument findPage(@NonNull SiteimproveSettings config, @NonNull Content content);
+  PageDocument findPage(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull Content content);
 
   @Nullable
-  ContentCheckStatusDocument contentCheck(@NonNull SiteimproveSettings config, String body);
+  ContentCheckStatusDocument contentCheck(@NonNull SiteimproveSettings config, @NonNull String body);
 
   @Nullable
-  ContentCheckResultDocument getContentCheckResult(@NonNull SiteimproveSettings config, String contentId);
+  ContentCheckResultDocument getContentCheckResult(@NonNull SiteimproveSettings config, @NonNull String contentId);
 }

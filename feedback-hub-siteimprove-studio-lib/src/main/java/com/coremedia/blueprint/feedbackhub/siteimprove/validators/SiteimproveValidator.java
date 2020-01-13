@@ -18,11 +18,13 @@ import com.coremedia.rest.cap.validation.ContentTypeValidatorBase;
 import com.coremedia.rest.validation.Issues;
 import com.coremedia.rest.validation.Severity;
 import com.coremedia.xml.MarkupUtil;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,21 +44,92 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
 
   @Override
   public void validate(Content content, Issues issues) {
-    SiteimproveSettings settings = findSettings(content);
-    if (settings == null) {
-      LOG.warn("No matching Siteimprove settings found for {}", content.getPath());
+    String text = extractText(content);
+    if(text.length() == 0 ||true ) {
       return;
     }
 
-    LOG.info("Validating {}", content.getPath());
-    String text = MarkupUtil.asPlainText(content.getMarkup(propertyName));
+    List<ContentIssue> results = runSiteimproveAnalysis(content, text);
+    List<IssueHighlight> highlights = filterHighlights(content, results);
 
-    text = text.replaceAll("\\R", " ").trim();
-    System.out.println(text);
+    //sort issues by starting position
+    highlights.sort(Comparator.comparingInt(o -> o.hightlight.getOffset().getStart()));
+
+    for (IssueHighlight h : highlights) {
+      Offset offset = h.hightlight.getOffset();
+      String value = text.substring(offset.getStart(), offset.getStart() + offset.getLength());
+      Object[] params = {value};
+      issues.addIssue(Severity.WARN, propertyName, h.issue.getName(), params);
+    }
+  }
+
+  /**
+   * For markup we are only interested in analysis results that have a highlight information.
+   * Only this allows us to point the editor to the text passage that has issues.
+   *
+   * @param content the content to analyze
+   * @param issues  the list of issues found by Siteimprove
+   */
+  private List<IssueHighlight> filterHighlights(Content content, List<ContentIssue> issues) {
+    List<IssueHighlight> result = new ArrayList<>();
+    for (ContentIssue contentIssue : issues) {
+      if (!contentIssue.getMatches().isEmpty()) {
+        List<Match> matches = contentIssue.getMatches();
+        for (Match match : matches) {
+          if (match.getOccurrence() != null && !match.getOccurrence().getOccurrences().isEmpty()) {
+            List<Highlight> highlights = match.getOccurrence().getOccurrences().get(0).getHighlights();
+            if (highlights != null && !highlights.isEmpty()) {
+              Highlight highlight = highlights.get(0);
+              result.add(new IssueHighlight(contentIssue, highlight));
+            }
+          }
+          else {
+            LOG.info("Issue {} does not have any matching information", content.getName());
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Converts the markup property value to plain text
+   * and replaces all newlines
+   *
+   * @param content the content to extract the markup from
+   * @return plain text to be send to Siteimprove
+   */
+  private String extractText(Content content) {
+    String text = MarkupUtil.asPlainText(content.getMarkup(propertyName));
+    if(text == null) {
+      text = "";
+    }
+    return text.replaceAll("\\R", " ").trim();
+  }
+
+  /**
+   * Executes the Siteimprove content analysis for the configured property of the given document
+   *
+   * @param text the text to analyze
+   * @return the content issues for the given content
+   */
+  @NonNull
+  private List<ContentIssue> runSiteimproveAnalysis(@NonNull Content content, @NonNull String text) {
+    List<ContentIssue> results = new ArrayList<>();
+    SiteimproveSettings settings = findSettings(content);
+    if (settings == null) {
+      LOG.warn("No matching Siteimprove settings found for {}", content.getPath());
+      return results;
+    }
+
+    if (text.trim().length() == 0) {
+      return results;
+    }
+
     ContentCheckStatusDocument contentCheckStatusDocument = siteimproveService.contentCheck(settings, text);
     String contentId = contentCheckStatusDocument.getContentId();
-
     ContentCheckResultDocument result = siteimproveService.getContentCheckResult(settings, contentId);
+
     int count = 0;
     while (result == null) {
       try {
@@ -75,41 +148,15 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
     //We wait additional 2 seconds here to let Siteimprove give time to update additional data on their site.
     //Otherwise it may happen that requesting details are wrong since the data has not been updates completely yet.
     try {
-      Thread.sleep(2000);
-      result = siteimproveService.getContentCheckResult(settings, contentId);
+//      Thread.sleep(2000);
+//      result = siteimproveService.getContentCheckResult(settings, contentId);
     } catch (Exception e) {
       //ignore
     }
 
-    List<ContentIssue> results = new ArrayList<>();
     if (result != null && result.getQualityAssurance() != null) {
       results.addAll(result.getQualityAssurance());
-    }
-    LOG.info("Finished Siteimprove analysis, found {} issues.", results.size());
-    for (ContentIssue contentIssue : results) {
-      String value = "";
-      //check if there are text issues which are described by matches
-      if (!contentIssue.getMatches().isEmpty()) {
-        LOG.info("Found {} issues of property {} for {}", contentIssue.getMatches().size(), this.propertyName, contentIssue.getName());
-
-        List<Match> matches = contentIssue.getMatches();
-        for (Match match : matches) {
-          if (match.getOccurrence() != null && !match.getOccurrence().getOccurrences().isEmpty()) {
-            List<Highlight> highlights = match.getOccurrence().getOccurrences().get(0).getHighlights();
-            if (highlights != null && !highlights.isEmpty()) {
-              Highlight highlight = highlights.get(0);
-              Offset offset = highlight.getOffset();
-//              value = extractText(text, offset.getStart(), offset.getLength());
-              value = text.substring(offset.getStart(), offset.getStart() + offset.getLength());
-              Object[] params = {value};
-              issues.addIssue(Severity.WARN, propertyName, contentIssue.getName(), params);
-            }
-          }
-          else {
-            LOG.info("Issue {} does not have any matching information", content.getName());
-          }
-        }
-      }
+      LOG.info("Finished Siteimprove analysis, found {} issues.", results.size());
     }
 
     if (result != null && result.getSeo() != null && !result.getSeo().isEmpty()) {
@@ -121,46 +168,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
       List<ContentIssue> policy = result.getPolicy();
       LOG.info("Sitemprove validator found also {} policy issues that are ignored for the editor: {}", policy.size(), policy.stream().map(ContentIssue::getName).collect(Collectors.toList()));
     }
-  }
-
-  /**
-   * We do not know the exact position of the text since we converted the markup XML to a string.
-   * This may have let to offsets matches that do not fit to the Siteimprove.
-   * We soften this behaviour by appending and prepending some more text to give the issue more context.
-   *
-   * @param text   the text that has been analyzed
-   * @param start  the Siteimprove issue start index
-   * @param offset the Siteimprove issue offset index
-   * @return the issued text with some additional text
-   */
-  private String extractText(String text, int start, int offset) {
-    String result = text.substring(start, start + offset);
-
-    //append more text at the end
-    int endOffset = offset;
-    while (!result.endsWith(".") && !result.endsWith(",") && !result.endsWith(" ")) {
-      endOffset++;
-      if (text.length() > start + endOffset) {
-        result = text.substring(start, start + endOffset);
-      }
-      else {
-        break;
-      }
-    }
-
-    //prepend more text at start
-    int newStart = start;
-    while (!result.startsWith(" ")) {
-      newStart--;
-      if (newStart >= 0) {
-        result = text.substring(newStart, start + endOffset);
-      }
-      else {
-        break;
-      }
-    }
-
-    return result.trim();
+    return results;
   }
 
   /**
@@ -194,7 +202,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
       if (globalBinding.getFactoryId().equals(SiteimproveFeedbackItem.TYPE)) {
         SiteimproveSettings settings = globalBinding.getSettings(SiteimproveSettings.class);
         String coreMediaSiteId = settings.getCoreMediaSiteId();
-        if(coreMediaSiteId == null) {
+        if (coreMediaSiteId == null) {
           LOG.warn("If you use global Siteimprove Feedback Hub settings you have to configure the CoreMedia site id that should be used for the corresponding Siteimprove site id.");
           break;
         }
@@ -223,5 +231,19 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
 
   public void setSitesService(SitesService sitesService) {
     this.sitesService = sitesService;
+  }
+
+  /**
+   * Just a helper to store the highlight's issue
+   */
+  class IssueHighlight {
+    ContentIssue issue;
+    Highlight hightlight;
+
+    IssueHighlight(ContentIssue issue, Highlight hightlight) {
+      this.issue = issue;
+      this.hightlight = hightlight;
+    }
+
   }
 }

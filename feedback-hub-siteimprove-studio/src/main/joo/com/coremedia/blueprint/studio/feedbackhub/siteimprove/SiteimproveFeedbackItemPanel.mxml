@@ -33,7 +33,7 @@
     [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
   </fx:Metadata>
   <local:items>
-    <editor:CollapsibleFormPanel collapsible="false" header="{false}"
+    <editor:CollapsibleFormPanel header="{false}"
                                  ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_tooltip')}">
       <editor:items>
         <DisplayField value="{getEmptyText(config)}"/>
@@ -43,7 +43,6 @@
       </editor:plugins>
     </editor:CollapsibleFormPanel>
     <editor:CollapsibleFormPanel
-            collapsible="false"
             ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
             title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
       <editor:plugins>
@@ -52,29 +51,29 @@
       <editor:items>
         <Container>
           <items>
-            <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
-                           tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_open_tooltip')}"
-                           handler="{openSiteimprove}"/>
-          </items>
-          <layout>
-            <layout_HBox align="stretch" pack="end"/>
-          </layout>
-        </Container>
-        <Container>
-          <items>
             <components:ScoreCircle
                     flex="1"
                     color="#006cae"
                     label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_preview_site')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
+                    bindTo="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
             <components:ScoreCircle
                     flex="1"
                     color="#959494"
                     label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_live_site')}"
-                    bindTo="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
+                    bindTo="{ValueExpressionFactory.create('liveSummary', config.feedbackItem)}"/>
           </items>
           <layout>
             <layout_HBox align="stretch"/>
+          </layout>
+        </Container>
+        <Container itemId="statusContainer">
+          <items>
+            <ui:IconDisplayField scale="small"
+                                 iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', getStatusIconClass(config))}"/>
+            <DisplayField value="{getStatusMessage(config)}" html="true"/>
+          </items>
+          <layout>
+            <layout_HBox align="stretch" pack="center"/>
           </layout>
         </Container>
       </editor:items>
@@ -83,7 +82,6 @@
       </editor:layout>
     </editor:CollapsibleFormPanel>
     <editor:CollapsibleFormPanel
-            collapsible="false"
             ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}"
             title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}">
       <editor:items>
@@ -96,7 +94,7 @@
                               value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_scorediff')}"/>
               </items>
               <layout>
-                <layout_HBox align="stretch" pack="center" />
+                <layout_HBox align="stretch" pack="center"/>
               </layout>
             </Container>
           </items>
@@ -125,7 +123,6 @@
       </editor:plugins>
     </editor:CollapsibleFormPanel>
     <editor:CollapsibleFormPanel
-            collapsible="false"
             ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}"
             title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}">
       <editor:plugins>

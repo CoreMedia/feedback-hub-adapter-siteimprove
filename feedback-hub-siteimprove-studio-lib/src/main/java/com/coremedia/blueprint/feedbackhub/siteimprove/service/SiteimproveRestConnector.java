@@ -61,9 +61,9 @@ class SiteimproveRestConnector {
 
   @Nullable
   private <T> T perform(SiteimproveSettings config, String resourcePath, Class<T> responseType, HttpMethod method, MultiValueMap<String, String> queryParams, String body) {
+    String url = getUrl(resourcePath, queryParams);
     try {
-      String url = getUrl(resourcePath, queryParams);
-      LOG.debug("Siteimprove request: " + url);
+      LOG.debug("Siteimprove request: {}", url);
 
       HttpEntity<String> requestEntity = null;
       HttpHeaders headers = new HttpHeaders();
@@ -83,11 +83,11 @@ class SiteimproveRestConnector {
       ResponseEntity<T> responseEntity = restTemplate.exchange(url, method, requestEntity, responseType);
       HttpStatus statusCode = responseEntity.getStatusCode();
       if (!statusCode.is2xxSuccessful()) {
-        LOG.error("Failed to execute siteimprove REST call: " + statusCode.getReasonPhrase());
+        LOG.error("Failed to execute siteimprove REST call {}: {}", url, statusCode.getReasonPhrase());
       }
       return responseEntity.getBody();
     } catch (HttpClientErrorException e) {
-      LOG.error("Failed to execute siteimprove REST call: " + e.getResponseBodyAsString());
+      LOG.error("Failed to execute siteimprove REST call {}: {}", url, e.getResponseBodyAsString());
       throw new SiteimproveRemoteException(e);
     }
   }

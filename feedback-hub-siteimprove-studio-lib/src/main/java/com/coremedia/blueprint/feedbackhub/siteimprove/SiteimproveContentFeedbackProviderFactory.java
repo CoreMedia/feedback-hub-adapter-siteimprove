@@ -29,9 +29,9 @@ public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbac
       throw new FeedbackHubException("settings must provide an apiKey", SiteimproveFeedbackHubErrorCode.API_KEY_NOT_SET);
     }
 
-    String siteId = settings.getSiteId();
+    String siteId = settings.getCoreMediaSiteId();
     if (siteId == null) {
-      throw new FeedbackHubException("settings must provide an siteId", SiteimproveFeedbackHubErrorCode.SITE_ID_NOT_SET);
+      throw new FeedbackHubException("settings must provide a CoreMedia siteId", SiteimproveFeedbackHubErrorCode.SITE_ID_NOT_SET);
     }
 
     return new SiteimproveContentFeedbackProvider(settings, siteimproveService);

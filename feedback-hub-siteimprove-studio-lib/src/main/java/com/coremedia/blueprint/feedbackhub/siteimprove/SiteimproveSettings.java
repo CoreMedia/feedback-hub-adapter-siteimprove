@@ -14,9 +14,12 @@ public interface SiteimproveSettings {
   @NonNull
   String getApiKey();
 
-  @NonNull
-  String getSiteId();
-
   @Nullable
   String getCoreMediaSiteId();
+
+  @NonNull
+  String getSiteimproveLiveSiteId();
+
+  @NonNull
+  String getSiteimprovePreviewSiteId();
 }

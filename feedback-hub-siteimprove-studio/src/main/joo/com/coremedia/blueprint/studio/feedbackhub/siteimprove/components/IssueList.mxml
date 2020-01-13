@@ -43,12 +43,12 @@
           </ui:template>
         </ui:BindComponentsPlugin>
       </plugins>
-      <!--<layout>-->
-        <!--<layout_VBox align="stretch"/>-->
-      <!--</layout>-->
     </Container>
   </local:items>
   <local:layout>
     <layout_VBox align="stretch"/>
   </local:layout>
+  <local:plugins>
+    <ui:BindVisibilityPlugin bindTo="{config.bindTo}" />
+  </local:plugins>
 </local:IssueListBase>

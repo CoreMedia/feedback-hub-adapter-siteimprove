@@ -4,7 +4,9 @@ import com.coremedia.cms.studio.feedbackhub.components.FeedbackItemPanel;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 
-public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel{
+import ext.StringUtil;
+
+public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
   private var feedbackLoadedExpression:ValueExpression;
   private var feedbackNotLoadedExpression:ValueExpression;
@@ -31,17 +33,45 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel{
     return feedbackNotLoadedExpression;
   }
 
+  protected function getStatusIconClass(config:SiteimproveFeedbackItemPanel):String {
+    var previewScore:Number = ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+    var liveScore:Number = ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+
+    if (!previewScore || !liveScore) {
+      return 'exclamation_mark';
+    }
+
+    if (previewScore < liveScore) {
+      return 'exclamation_mark';
+    }
+
+    return 'approve';
+  }
+
+  protected function getStatusMessage(config:SiteimproveFeedbackItemPanel):String {
+    var previewScore:Number = ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+    var liveScore:Number = ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+
+    if (!previewScore || !liveScore) {
+      return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_broken_score');
+    }
+
+
+    if (previewScore < liveScore) {
+      var msg:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_lose_score');
+      return StringUtil.format(msg, (liveScore - previewScore).toFixed(2));
+    }
+
+    var msg2:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_gain_score');
+    return StringUtil.format(msg2, (previewScore - liveScore).toFixed(2));
+  }
+
   //TODO fix layout glitch caused by bindComponents panel of issues
   override protected function afterRender():void {
     super.afterRender();
-    window.setTimeout(function():void {
+    window.setTimeout(function ():void {
       updateLayout();
     }, 200);
-  }
-
-  internal function openSiteimprove():void {
-    var url:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimproveSettings', 'siteimprove_url');
-    window.open(url, '_blank');
   }
 }
 }

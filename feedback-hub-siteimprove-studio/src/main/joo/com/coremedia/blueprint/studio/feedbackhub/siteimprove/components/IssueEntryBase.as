@@ -34,7 +34,7 @@ public class IssueEntryBase extends Container {
   }
 
   protected function openIssue():void {
-    var url:String = feedbackData.extendBy('pageDetailsDocument._siteimprove.seo.page_report.href').getValue();
+    var url:String = issue._siteimprove.page_report.href;
     window.open(url, '_blank');
   }
 }

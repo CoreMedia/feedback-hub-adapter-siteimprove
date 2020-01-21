@@ -4,12 +4,14 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AccessibilityIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AnalyticsSummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckResultDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagsDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
@@ -17,7 +19,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Quality
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SeoIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SiteDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.TriggerCrawlResultDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlResultDocument;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -37,28 +39,9 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   @Nullable
   @Override
-  public ContentCheckStatusDocument contentCheck(@NonNull SiteimproveSettings config, @NonNull String body) {
-    return connector.performPost(config, "/content/check", ContentCheckStatusDocument.class, null, body);
-  }
-
-  @Nullable
-  @Override
-  public ContentCheckResultDocument getContentCheckResult(@NonNull SiteimproveSettings config, @NonNull String contentId) {
-    String resourcePath = "/content/checks/" + contentId + "/issues";
-    ContentCheckResultDocument contentCheckResultDocument = connector.performGet(config, resourcePath, ContentCheckResultDocument.class, null);
-    String message = contentCheckResultDocument.getMessage();
-    if (StringUtils.isEmpty(message)) {
-      return contentCheckResultDocument;
-    }
-
-    return null;
-  }
-
-  @Nullable
-  @Override
-  public TriggerCrawlResultDocument triggerCrawl(@NonNull SiteimproveSettings config, @NonNull String siteId) {
+  public CrawlResultDocument crawl(@NonNull SiteimproveSettings config, @NonNull String siteId) {
     String resourcePath = SITES + siteId + "/content/crawl";
-    return connector.performPost(config, resourcePath, TriggerCrawlResultDocument.class, null);
+    return connector.performPost(config, resourcePath, CrawlResultDocument.class, null);
   }
 
   @Override
@@ -66,6 +49,39 @@ public class SiteimproveServiceImpl implements SiteimproveService {
   public CrawlStatusDocument getCrawlStatus(@NonNull SiteimproveSettings config, @NonNull String siteId) {
     String resourcePath = SITES + siteId + "/content/crawl";
     return connector.performGet(config, resourcePath, CrawlStatusDocument.class, null);
+  }
+
+  @Nullable
+  @Override
+  public PageCheckResultDocument pageCheck(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
+    String resourcePath = SITES + siteId + "/content/check/page/" + pageId;
+    return connector.performPost(config, resourcePath, PageCheckResultDocument.class, null);
+  }
+
+  @Nullable
+  @Override
+  public PageCheckStatusDocument getPageCheckStatus(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
+    String resourcePath = SITES + siteId + "/content/check/page/" + pageId;
+    return connector.performGet(config, resourcePath, PageCheckStatusDocument.class, null);
+  }
+
+  @Nullable
+  @Override
+  public ContentCheckResultDocument contentCheck(@NonNull SiteimproveSettings config, @NonNull String body) {
+    return connector.performPost(config, "/content/check", ContentCheckResultDocument.class, null, body);
+  }
+
+  @Nullable
+  @Override
+  public ContentCheckIssuesDocument getContentCheckIssues(@NonNull SiteimproveSettings config, @NonNull String contentId) {
+    String resourcePath = "/content/checks/" + contentId + "/issues";
+    ContentCheckIssuesDocument contentCheckIssuesDocument = connector.performGet(config, resourcePath, ContentCheckIssuesDocument.class, null);
+    String message = contentCheckIssuesDocument.getMessage();
+    if (StringUtils.isEmpty(message)) {
+      return contentCheckIssuesDocument;
+    }
+
+    return null;
   }
 
   @Override

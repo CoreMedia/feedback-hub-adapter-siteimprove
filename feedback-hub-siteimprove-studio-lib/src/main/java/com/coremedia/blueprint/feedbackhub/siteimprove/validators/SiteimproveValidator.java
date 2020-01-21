@@ -3,8 +3,8 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.validators;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackItem;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckResultDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentIssue;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Highlight;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Match;
@@ -126,9 +126,9 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
       return results;
     }
 
-    ContentCheckStatusDocument contentCheckStatusDocument = siteimproveService.contentCheck(settings, text);
-    String contentId = contentCheckStatusDocument.getContentId();
-    ContentCheckResultDocument result = siteimproveService.getContentCheckResult(settings, contentId);
+    ContentCheckResultDocument contentCheckResultDocument = siteimproveService.contentCheck(settings, text);
+    String contentId = contentCheckResultDocument.getContentId();
+    ContentCheckIssuesDocument result = siteimproveService.getContentCheckIssues(settings, contentId);
 
     int count = 0;
     while (result == null) {
@@ -138,7 +138,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
         //ignore
       }
       LOG.info("Waiting on Siteimprove content issues for {}...", contentId);
-      result = siteimproveService.getContentCheckResult(settings, contentId);
+      result = siteimproveService.getContentCheckIssues(settings, contentId);
       count++;
       if (count == 15) {
         break;
@@ -149,7 +149,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
     //Otherwise it may happen that requesting details are wrong since the data has not been updates completely yet.
     try {
 //      Thread.sleep(2000);
-//      result = siteimproveService.getContentCheckResult(settings, contentId);
+//      result = siteimproveService.getContentCheckIssues(settings, contentId);
     } catch (Exception e) {
       //ignore
     }

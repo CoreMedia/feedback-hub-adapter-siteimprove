@@ -3,9 +3,9 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.service.documents;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Result of a site crawl trigger request
+ * Result of a site crawl request
  */
-public class TriggerCrawlResultDocument {
+public class CrawlResultDocument {
 
   @JsonProperty("message")
   private String message;

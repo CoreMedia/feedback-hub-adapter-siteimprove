@@ -4,10 +4,12 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AccessibilityIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AnalyticsSummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckResultDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
@@ -15,7 +17,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Quality
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SeoIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SiteDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.TriggerCrawlResultDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlResultDocument;
 import com.coremedia.cap.content.Content;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
@@ -25,16 +27,35 @@ public interface SiteimproveService {
 
   /**
    * Trigger a crawl request for a site.
-   * Note that this request triggers the whole site which is very expensive
+   * Note that this request triggers the whole site crawl which is very expensive
    * @param config
    * @param siteId
    * @return
    */
   @Nullable
-  TriggerCrawlResultDocument triggerCrawl(@NonNull SiteimproveSettings config, @NonNull String siteId);
+  CrawlResultDocument crawl(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
   CrawlStatusDocument getCrawlStatus(@NonNull SiteimproveSettings config, @NonNull String siteId);
+
+  /**
+   * Trigger a page check
+   * Note that the page check can take up to 30 seconds
+   * @param config
+   * @param siteId
+   * @return
+   */
+  @Nullable
+  PageCheckResultDocument pageCheck(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
+
+  @Nullable
+  PageCheckStatusDocument getPageCheckStatus(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
+
+  @Nullable
+  ContentCheckResultDocument contentCheck(@NonNull SiteimproveSettings config, @NonNull String body);
+
+  @Nullable
+  ContentCheckIssuesDocument getContentCheckIssues(@NonNull SiteimproveSettings config, @NonNull String contentId);
 
   @Nullable
   default DciOverallScoreDocument getDCIScore(@NonNull SiteimproveSettings config, @NonNull String siteId) {
@@ -83,9 +104,4 @@ public interface SiteimproveService {
   @Nullable
   PageDocument findPage(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull Content content);
 
-  @Nullable
-  ContentCheckStatusDocument contentCheck(@NonNull SiteimproveSettings config, @NonNull String body);
-
-  @Nullable
-  ContentCheckResultDocument getContentCheckResult(@NonNull SiteimproveSettings config, @NonNull String contentId);
 }

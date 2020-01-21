@@ -2,42 +2,42 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.service.documents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
-
 /**
  *
  */
 public class ContentCheckResultDocument {
-  private List<ContentIssue> policy;
+  private boolean success;
 
-  @JsonProperty("quality_assurance")
-  private List<ContentIssue> qualityAssurance;
-  private List<ContentIssue> seo;
+  @JsonProperty("content_id")
+  private String contentId;
+
+  @JsonProperty("status_code")
+  private int statusCode;
 
   private String message;
 
-  public List<ContentIssue> getPolicy() {
-    return policy;
+  public boolean isSuccess() {
+    return success;
   }
 
-  public void setPolicy(List<ContentIssue> policy) {
-    this.policy = policy;
+  public void setSuccess(boolean success) {
+    this.success = success;
   }
 
-  public List<ContentIssue> getQualityAssurance() {
-    return qualityAssurance;
+  public String getContentId() {
+    return contentId;
   }
 
-  public void setQualityAssurance(List<ContentIssue> qualityAssurance) {
-    this.qualityAssurance = qualityAssurance;
+  public void setContentId(String contentId) {
+    this.contentId = contentId;
   }
 
-  public List<ContentIssue> getSeo() {
-    return seo;
+  public int getStatusCode() {
+    return statusCode;
   }
 
-  public void setSeo(List<ContentIssue> seo) {
-    this.seo = seo;
+  public void setStatusCode(int statusCode) {
+    this.statusCode = statusCode;
   }
 
   public String getMessage() {

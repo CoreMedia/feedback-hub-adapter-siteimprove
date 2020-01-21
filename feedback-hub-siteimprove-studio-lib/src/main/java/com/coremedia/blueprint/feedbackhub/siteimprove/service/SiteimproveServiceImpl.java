@@ -17,6 +17,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Quality
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SeoIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SiteDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.TriggerCrawlResultDocument;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -51,6 +52,13 @@ public class SiteimproveServiceImpl implements SiteimproveService {
     }
 
     return null;
+  }
+
+  @Nullable
+  @Override
+  public TriggerCrawlResultDocument triggerCrawl(@NonNull SiteimproveSettings config, @NonNull String siteId) {
+    String resourcePath = SITES + siteId + "/content/crawl";
+    return connector.performPost(config, resourcePath, TriggerCrawlResultDocument.class, null);
   }
 
   @Override

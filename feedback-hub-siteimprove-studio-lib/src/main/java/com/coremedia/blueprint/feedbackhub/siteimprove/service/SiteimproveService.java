@@ -15,12 +15,24 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Quality
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SeoIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SiteDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.TriggerCrawlResultDocument;
 import com.coremedia.cap.content.Content;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.util.MultiValueMap;
 
 public interface SiteimproveService {
+
+  /**
+   * Trigger a crawl request for a site.
+   * Note that this request triggers the whole site which is very expensive
+   * @param config
+   * @param siteId
+   * @return
+   */
+  @Nullable
+  TriggerCrawlResultDocument triggerCrawl(@NonNull SiteimproveSettings config, @NonNull String siteId);
+
   @Nullable
   CrawlStatusDocument getCrawlStatus(@NonNull SiteimproveSettings config, @NonNull String siteId);
 

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
+/**
+ * Status information of the site crawl.
+ */
 public class CrawlStatusDocument {
   @JsonProperty("last_crawl")
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -56,48 +56,59 @@
         <ui:BindVisibilityPlugin bindTo="{getFeedbackNotLoadedExpression(config)}"/>
       </editor:plugins>
     </editor:CollapsibleFormPanel>
-    <editor:CollapsibleFormPanel
-            ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
-            title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
-      <editor:plugins>
+    <TabPanel>
+      <items>
+        <Panel title="Preview">
+          <items>
+            <editor:CollapsibleFormPanel
+                    ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
+                    title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
+              <editor:items>
+                <components:ScoreCircle
+                        bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
+                <Panel ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}"
+                       title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}">
+                  <items>
+                    <components:ScoreBar
+                            label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_a11n')}"
+                            bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
+                    <components:ScoreBar
+                            label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_quality')}"
+                            bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
+                    <components:ScoreBar
+                            label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_seo')}"
+                            bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
+                  </items>
+                </Panel>
+              </editor:items>
+              <editor:layout>
+                <layout_VBox align="stretch"/>
+              </editor:layout>
+            </editor:CollapsibleFormPanel>
+            <editor:CollapsibleFormPanel
+                    ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}"
+                    title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}">
+              <editor:items>
+                <components:IssueList
+                        feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
+                        bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
+              </editor:items>
+            </editor:CollapsibleFormPanel>
+            <Panel layout="vbox">
+              <items>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Last update"/>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Last update"/>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Next update scheduled for"/>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Next update scheduled for"/>
+              </items>
+            </Panel>
+          </items>
+        </Panel>
+        <Panel title="Comparison"/>
+      </items>
+      <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
-      </editor:plugins>
-      <editor:items>
-        <components:ScoreCircle
-                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
-      </editor:items>
-      <editor:layout>
-        <layout_VBox align="stretch"/>
-      </editor:layout>
-    </editor:CollapsibleFormPanel>
-    <editor:CollapsibleFormPanel
-            ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}"
-            title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}">
-      <editor:items>
-        <components:ScoreBar
-                label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_a11n')}"
-                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
-        <components:ScoreBar
-                label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_quality')}"
-                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
-        <components:ScoreBar
-                label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_seo')}"
-                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
-      </editor:items>
-      <editor:plugins>
-        <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
-      </editor:plugins>
-    </editor:CollapsibleFormPanel>
-    <editor:CollapsibleFormPanel
-            ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}"
-            title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}">
-      <editor:plugins>
-        <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
-      </editor:plugins>
-      <editor:items>
-        <components:IssueList feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
-                              bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
-      </editor:items>
-    </editor:CollapsibleFormPanel>
+      </plugins>
+    </TabPanel>
   </local:items>
 </local:SiteimproveFeedbackItemPanelBase>

@@ -29,8 +29,8 @@
 
     private function getEmptyText(config:SiteimproveFeedbackItemPanel):String {
       return config.feedbackItem.isStub
-              ? resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimproveFeedbackItemPanel_no_feedback_loaded_text')
-              : resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimproveFeedbackItemPanel_no_feedback_available_text');
+              ? getResource('siteimproveFeedbackItemPanel_no_feedback_loaded_text')
+              : getResource('siteimproveFeedbackItemPanel_no_feedback_available_text');
     }
     ]]></fx:Script>
   <fx:Metadata>
@@ -40,15 +40,15 @@
     <Container layout="hbox">
       <items>
         <DisplayField ui="{null}" style="font-size:18px;font-weight:bold;color:#515151;"
-                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_title')}"/>
+                      value="{getResource('feedbackItemPanel_siteimprove_siteimprove_title')}"/>
         <Container flex="1"/>
         <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
-                       tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'open_siteimprove_btn_text')}"
+                       tooltip="{getResource('open_siteimprove_btn_text')}"
                        handler="{openSiteimprove}"/>
       </items>
     </Container>
     <editor:CollapsibleFormPanel header="{false}"
-                                 ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_tooltip')}">
+                                 ariaLabel="{getResource('feedbackGroupPanel_siteimprove_tooltip')}">
       <editor:items>
         <DisplayField value="{getEmptyText(config)}"/>
       </editor:items>
@@ -61,22 +61,22 @@
         <Panel title="Preview">
           <items>
             <editor:CollapsibleFormPanel
-                    ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
-                    title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
+                    ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
+                    title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
               <editor:items>
                 <components:ScoreCircle
                         bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
-                <Panel ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}"
-                       title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}">
+                <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
+                       title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
                   <items>
                     <components:ScoreBar
-                            label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_a11n')}"
+                            label="{getResource('feedbackItemPanel_siteimprove_siteimprove_a11n')}"
                             bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
                     <components:ScoreBar
-                            label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_quality')}"
+                            label="{getResource('feedbackItemPanel_siteimprove_siteimprove_quality')}"
                             bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
                     <components:ScoreBar
-                            label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_seo')}"
+                            label="{getResource('feedbackItemPanel_siteimprove_siteimprove_seo')}"
                             bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
                   </items>
                 </Panel>
@@ -86,8 +86,8 @@
               </editor:layout>
             </editor:CollapsibleFormPanel>
             <editor:CollapsibleFormPanel
-                    ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}"
-                    title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_issues')}">
+                    ariaLabel="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}"
+                    title="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}">
               <editor:items>
                 <components:IssueList
                         feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
@@ -96,10 +96,20 @@
             </editor:CollapsibleFormPanel>
             <Panel layout="vbox">
               <items>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Last update"/>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Last update"/>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Next update scheduled for"/>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="Next update scheduled for"/>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                              value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
+                <DisplayField>
+                  <plugins>
+                    <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
+                  </plugins>
+                </DisplayField>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                              value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
+                <DisplayField>
+                  <plugins>
+                    <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
+                  </plugins>
+                </DisplayField>
               </items>
             </Panel>
           </items>

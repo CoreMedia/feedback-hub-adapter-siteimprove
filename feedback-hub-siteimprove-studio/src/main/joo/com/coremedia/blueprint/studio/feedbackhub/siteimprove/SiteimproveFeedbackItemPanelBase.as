@@ -1,8 +1,11 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.model.SiteimproveFeedbackItem;
+import com.coremedia.cms.editor.sdk.util.TimeUtil;
 import com.coremedia.cms.studio.feedbackhub.components.FeedbackItemPanel;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
+
+import ext.DateUtil;
 
 import ext.StringUtil;
 
@@ -53,16 +56,16 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
     var liveScore:Number = ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
 
     if (!previewScore || !liveScore) {
-      return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_broken_score');
+      return getResource('feedbackItemPanel_siteimprove_broken_score');
     }
 
 
     if (previewScore < liveScore) {
-      var msg:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_lose_score');
+      var msg:String = getResource('feedbackItemPanel_siteimprove_lose_score');
       return StringUtil.format(msg, (liveScore - previewScore).toFixed(2));
     }
 
-    var msg2:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_gain_score');
+    var msg2:String = getResource('feedbackItemPanel_siteimprove_gain_score');
     return StringUtil.format(msg2, (previewScore - liveScore).toFixed(2));
   }
 
@@ -77,6 +80,38 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
   internal function openSiteimprove():void {
     var url:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimproveSettings', 'siteimprove_url');
     window.open(url, '_blank');
+  }
+
+  internal function getLastCrawlDateExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():String {
+      var date:Date = ValueExpressionFactory.create('previewSummary.crawlStatus.last_crawl', config.feedbackItem).getValue();
+      if(!date) {
+        return getResource('feedbackItemPanel_siteimprove_preview_unknown');
+      }
+
+      if (TimeUtil.isToday(date)) {
+        return getResource('feedbackItemPanel_siteimprove_preview_today');
+      }
+
+      var diff:Number = Math.ceil((new Date().getTime() - date.getTime()) / 86400000); //in days
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_days_ago'), diff);
+    });
+  }
+
+  internal function getNextCrawlDateExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():String {
+      var date:Date = ValueExpressionFactory.create('previewSummary.crawlStatus.next_crawl', config.feedbackItem).getValue();
+      if(!date) {
+        return getResource('feedbackItemPanel_siteimprove_preview_unknown');
+      }
+
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_date'),
+              DateUtil.format(date, resourceManager.getString('com.coremedia.cms.editor.Editor', 'shortDateFormat')));
+    });
+  }
+
+  internal function getResource(resourceName:String):String {
+    return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }
 }
 }

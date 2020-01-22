@@ -94,22 +94,30 @@
                         bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
               </editor:items>
             </editor:CollapsibleFormPanel>
-            <Panel layout="vbox">
+            <Panel layout="hbox">
               <items>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                              value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
-                <DisplayField>
-                  <plugins>
-                    <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
-                  </plugins>
-                </DisplayField>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                              value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
-                <DisplayField>
-                  <plugins>
-                    <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
-                  </plugins>
-                </DisplayField>
+                <Container layout="vbox">
+                  <items>
+                    <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                                  value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
+                    <DisplayField>
+                      <plugins>
+                        <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
+                      </plugins>
+                    </DisplayField>
+                    <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                                  value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
+                    <DisplayField>
+                      <plugins>
+                        <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
+                      </plugins>
+                    </DisplayField>
+                  </items>
+                </Container>
+                <Container flex="1"/>
+                <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
+                               tooltip="{getResource('recrawl_preview_page_btn_text')}"
+                               handler="{recrawlPage}"/>
               </items>
             </Panel>
           </items>

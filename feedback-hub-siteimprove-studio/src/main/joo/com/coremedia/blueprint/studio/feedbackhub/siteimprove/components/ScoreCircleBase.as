@@ -1,10 +1,6 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove.components {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.ScoreUtil;
-import com.coremedia.cms.editor.sdk.util.TimeUtil;
 import com.coremedia.ui.data.ValueExpression;
-
-import ext.DateUtil;
-import ext.StringUtil;
 
 import ext.container.Container;
 
@@ -19,12 +15,6 @@ public class ScoreCircleBase extends Container {
   [Bindable]
   public var jsonPath:String;
 
-  [Bindable]
-  public var color:String;
-
-  [Bindable]
-  public var label:String;
-
   public function ScoreCircleBase(config:ScoreCircle = null) {
     super(config);
   }
@@ -35,30 +25,30 @@ public class ScoreCircleBase extends Container {
   }
 
   private function renderScore():void {
-    var el:* = queryById(SCORE_ITEM_ID).el;
-    var score:Number = bindTo.extendBy('dciOverallScoreDocument.total').getValue();
-    var options:Object = {
+    var el = queryById(SCORE_ITEM_ID).el;
+    var score:Number = bindTo.getValue();
+    var options = {
       percent: el.getAttribute('data-percent') || ScoreUtil.formatScore(score),
       size: el.getAttribute('data-size') || 170,
       lineWidth: el.getAttribute('data-line') || 12,
       rotate: el.getAttribute('data-rotate') || 0
     };
 
-    var canvas:* = window.document.createElement('canvas');
+    var canvas = window.document.createElement('canvas');
     canvas.setAttribute("style", "top:0;left:0;margin-left: -85px;");
 
-    var div:* = window.document.createElement('div');
+    var div = window.document.createElement('div');
     div.setAttribute('style', 'width: 100%;text-align: center;padding-left:85px;');
 
-    var span1:* = window.document.createElement('span');
+    var span1 = window.document.createElement('span');
     span1.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute;margin-left: -66px;top:100px;font-size:44px;font-weight:bold;");
     span1.textContent = options.percent;
 
-    var span2:* = window.document.createElement('span');
+    var span2 = window.document.createElement('span');
     span2.setAttribute("style", " color:#b1b1b1;display:inline;font-family:sans-serif;position:absolute; top: 106px;margin-left:20px;font-size:24px;");
     span2.textContent = '/100';
 
-    var ctx:* = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     canvas.width = canvas.height = options.size;
 
     div.appendChild(span1);
@@ -81,27 +71,8 @@ public class ScoreCircleBase extends Container {
     };
 
     drawCircle('#efefef', options.lineWidth, 100 / 100);
-    drawCircle(color, options.lineWidth, options.percent / 100);
+    drawCircle(ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
   }
 
-  protected function getLastCrawlDate(config:ScoreCircle):String {
-    var date:Date = config.bindTo.extendBy('crawlStatus.last_crawl').getValue();
-    if(!date) {
-      return "-";
-    }
-
-    if (TimeUtil.isToday(date)) {
-      return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_today');
-    }
-
-    var diff:Number = Math.ceil((new Date().getTime() - date.getTime()) / 86400000); //in days
-    return StringUtil.format(resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_days_ago'), diff);
-  }
-
-  internal function openSiteimprove(config:ScoreCircle):void {
-    var url:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimproveSettings', 'siteimprove_url');
-    url = StringUtil.format(url, bindTo.extendBy('siteId').getValue());
-    window.open(url, '_blank');
-  }
 }
 }

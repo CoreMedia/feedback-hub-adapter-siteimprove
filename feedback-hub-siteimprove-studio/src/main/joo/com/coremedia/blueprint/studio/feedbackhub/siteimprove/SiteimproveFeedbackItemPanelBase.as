@@ -73,5 +73,10 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
       updateLayout();
     }, 200);
   }
+
+  internal function openSiteimprove():void {
+    var url:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimproveSettings', 'siteimprove_url');
+    window.open(url, '_blank');
+  }
 }
 }

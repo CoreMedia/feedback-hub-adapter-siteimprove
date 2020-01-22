@@ -3,17 +3,11 @@
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns="exml:ext.config"
-        xmlns:ui="exml:com.coremedia.ui.config"
-        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
-        minWidth="180">
+        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
   <fx:Metadata>
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
   <fx:Script><![CDATA[
-    import com.coremedia.ui.skins.DisplayFieldSkin;
-
-    import ext.DateUtil;
-
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.ScoreCircle";
 
     private var config:ScoreCircle;
@@ -22,40 +16,9 @@
     ]]></fx:Script>
 
   <local:items>
-    <Container>
-      <items>
-        <Container flex="1" />
-        <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
-                       tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_open_tooltip')}"
-                       handler="{openSiteimprove}"/>
-      </items>
-      <layout>
-        <layout_HBox align="stretch" />
-      </layout>
-    </Container>
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
-    <Container>
-      <items>
-        <Container flex="1" />
-        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" itemId="label" value="{config.label}"/>
-        <Container flex="1" />
-      </items>
-      <layout>
-        <layout_HBox align="stretch" />
-      </layout>
-    </Container>
-    <Container>
-      <items>
-        <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_last_crawl') + ' ' + getLastCrawlDate(config)}"/>
-        <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_next_crawl') + ' ' + DateUtil.format(config.bindTo.extendBy('crawlStatus.next_crawl').getValue(), resourceManager.getString('com.coremedia.cms.editor.Editor', 'shortDateFormat'))}"/>
-      </items>
-      <layout>
-        <layout_VBox align="stretch" />
-      </layout>
-    </Container>
-    <Container height="6" />
   </local:items>
   <local:layout>
-    <layout_VBox align="stretch" pack="end"/>
+    <layout_VBox align="stretch" pack="center"/>
   </local:layout>
 </local:ScoreCircleBase>

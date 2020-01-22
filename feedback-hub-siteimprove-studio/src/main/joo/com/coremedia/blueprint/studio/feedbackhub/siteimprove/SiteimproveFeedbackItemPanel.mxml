@@ -8,13 +8,17 @@
         xmlns:ui="exml:com.coremedia.ui.config"
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
-        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
+        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
+        collapsible="false"
+        header="{false}"
+        ui="{ContainerSkin.LIGHT.getSkin()}">
   <fx:Metadata>
     [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveFeedbackItemPanel";
@@ -33,6 +37,16 @@
     [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
   </fx:Metadata>
   <local:items>
+    <Container layout="hbox">
+      <items>
+        <DisplayField ui="{null}" style="font-size:18px;font-weight:bold;color:#515151;"
+                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_title')}"/>
+        <Container flex="1"/>
+        <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+                       tooltip="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'open_siteimprove_btn_text')}"
+                       handler="{openSiteimprove}"/>
+      </items>
+    </Container>
     <editor:CollapsibleFormPanel header="{false}"
                                  ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_tooltip')}">
       <editor:items>
@@ -49,33 +63,8 @@
         <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
       </editor:plugins>
       <editor:items>
-        <Container>
-          <items>
-            <components:ScoreCircle
-                    flex="1"
-                    color="#006cae"
-                    label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_preview_site')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
-            <components:ScoreCircle
-                    flex="1"
-                    color="#959494"
-                    label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_live_site')}"
-                    bindTo="{ValueExpressionFactory.create('liveSummary', config.feedbackItem)}"/>
-          </items>
-          <layout>
-            <layout_HBox align="stretch"/>
-          </layout>
-        </Container>
-        <Container itemId="statusContainer">
-          <items>
-            <ui:IconDisplayField scale="small"
-                                 iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', getStatusIconClass(config))}"/>
-            <DisplayField value="{getStatusMessage(config)}" html="true"/>
-          </items>
-          <layout>
-            <layout_HBox align="stretch" pack="center"/>
-          </layout>
-        </Container>
+        <components:ScoreCircle
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
       </editor:items>
       <editor:layout>
         <layout_VBox align="stretch"/>
@@ -85,38 +74,15 @@
             ariaLabel="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}"
             title="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackGroupPanel_siteimprove_scoreDetails')}">
       <editor:items>
-        <Container style="margin-bottom:-12px;">
-          <items>
-            <Container flex="1"/>
-            <Container width="110">
-              <items>
-                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                              value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_scorediff')}"/>
-              </items>
-              <layout>
-                <layout_HBox align="stretch" pack="center"/>
-              </layout>
-            </Container>
-          </items>
-          <layout>
-            <layout_HBox align="stretch"/>
-          </layout>
-        </Container>
-        <components:ScoreBarComparator
+        <components:ScoreBar
                 label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_a11n')}"
-                bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"
-                bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
-        <Container height="6"/>
-        <components:ScoreBarComparator
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
+        <components:ScoreBar
                 label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_quality')}"
-                bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"
-                bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
-        <Container height="6"/>
-        <components:ScoreBarComparator
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
+        <components:ScoreBar
                 label="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_seo')}"
-                bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"
-                bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
-        <Container height="6"/>
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
       </editor:items>
       <editor:plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>

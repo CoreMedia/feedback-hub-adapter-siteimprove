@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove;
 
+import com.coremedia.blueprint.feedbackhub.siteimprove.job.RecrawlPageJobFactory;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveServiceConfiguration;
 import com.coremedia.blueprint.feedbackhub.siteimprove.validators.SiteimproveValidator;
@@ -26,6 +27,11 @@ public class SiteimproveFeedbackHubConfiguration {
   @Bean
   public ContentFeedbackProviderFactory siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService) {
     return new SiteimproveContentFeedbackProviderFactory(siteimproveService);
+  }
+
+  @Bean
+  public RecrawlPageJobFactory recrawlPageJobFactory(SiteimproveService siteimproveService) {
+    return new RecrawlPageJobFactory(siteimproveService);
   }
 
   @Bean

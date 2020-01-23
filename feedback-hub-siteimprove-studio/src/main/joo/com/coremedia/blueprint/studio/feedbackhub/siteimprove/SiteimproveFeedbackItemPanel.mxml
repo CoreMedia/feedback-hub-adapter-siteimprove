@@ -120,7 +120,9 @@
                 <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
                                tooltip="{getResource('recrawl_preview_page_btn_text')}">
                   <ui:baseAction>
-                    <siteimprove:RecrawlPageAction feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
+                    <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
+                                                   preview="true"
+                                                   feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
                   </ui:baseAction>
                 </ui:IconButton>
               </items>

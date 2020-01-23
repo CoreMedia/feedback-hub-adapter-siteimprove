@@ -24,6 +24,10 @@
       <artifactId>coremedia-rest-plugins</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.coremedia.ui</groupId>
+      <artifactId>cap-rest-service</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>coremedia-spring</artifactId>
     </dependency>

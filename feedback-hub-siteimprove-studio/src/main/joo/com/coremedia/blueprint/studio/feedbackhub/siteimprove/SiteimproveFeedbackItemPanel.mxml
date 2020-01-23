@@ -5,9 +5,11 @@
 <local:SiteimproveFeedbackItemPanelBase
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns:ui="exml:com.coremedia.ui.config"
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
+        xmlns:siteimprove="exml:com.coremedia.blueprint.studio.feedbackhub.siteimprove.config"
         xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
         collapsible="false"
         header="{false}"
@@ -116,8 +118,11 @@
                 </Container>
                 <Container flex="1"/>
                 <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
-                               tooltip="{getResource('recrawl_preview_page_btn_text')}"
-                               handler="{recrawlPage}"/>
+                               tooltip="{getResource('recrawl_preview_page_btn_text')}">
+                  <ui:baseAction>
+                    <siteimprove:RecrawlPageAction feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
+                  </ui:baseAction>
+                </ui:IconButton>
               </items>
             </Panel>
           </items>

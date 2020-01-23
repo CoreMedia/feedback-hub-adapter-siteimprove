@@ -113,9 +113,5 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
   internal function getResource(resourceName:String):String {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }
-
-  internal function recrawlPage():void {
-
-  }
 }
 }

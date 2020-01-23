@@ -23,10 +23,8 @@
         <Container flex="1">
           <items>
             <local:ScoreBar
-                    color="#006cae"
                     bindTo="{config.bindToValue1}"/>
             <local:ScoreBar
-                    color="#959494"
                     bindTo="{config.bindToValue2}"/>
           </items>
           <layout>

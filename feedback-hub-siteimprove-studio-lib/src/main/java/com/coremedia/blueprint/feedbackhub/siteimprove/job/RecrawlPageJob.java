@@ -3,6 +3,11 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.job;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.cap.content.Content;
+import com.coremedia.cap.multisite.Site;
+import com.coremedia.cap.multisite.SitesService;
+import com.coremedia.cap.multisite.impl.SitesServiceImpl;
+import com.coremedia.feedbackhub.Binding;
+import com.coremedia.feedbackhub.FeedbackService;
 import com.coremedia.rest.cap.jobs.GenericJobErrorCode;
 import com.coremedia.rest.cap.jobs.Job;
 import com.coremedia.rest.cap.jobs.JobContext;
@@ -13,6 +18,10 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+
 public class RecrawlPageJob implements Job {
   private static final Logger LOG = LoggerFactory.getLogger(RecrawlPageJob.class);
 
@@ -20,9 +29,13 @@ public class RecrawlPageJob implements Job {
   private Content content;
   private String pageId;
   private SiteimproveService siteimproveService;
+  private FeedbackService feedbackService;
+  private SitesService sitesService;
 
-  public RecrawlPageJob(SiteimproveService siteimproveService) {
+  public RecrawlPageJob(SiteimproveService siteimproveService, FeedbackService feedbackService, SitesService sitesService) {
     this.siteimproveService = siteimproveService;
+    this.feedbackService = feedbackService;
+    this.sitesService = sitesService;
   }
 
   @JsonProperty("preview")
@@ -53,8 +66,29 @@ public class RecrawlPageJob implements Job {
     }
   }
 
+  //Use the injected feedbackService to access the Siteimprove settings
+  //TODO: make it better.
   private SiteimproveSettings getConfig(Content content) {
-    //TODO
+    Site site = ((SitesServiceImpl) sitesService).getSiteFor(content);
+    Map<Site, Collection<Binding>> siteLocalBindings = feedbackService.getSiteLocalBindings();
+    SiteimproveSettings config = getConfig(siteLocalBindings.get(site));
+
+    if (config != null) {
+      return config;
+    }
+
+    return getConfig(feedbackService.getGlobalBindings());
+  }
+
+  private SiteimproveSettings getConfig(Collection<Binding> bindings) {
+    if (bindings != null) {
+      Optional<Binding> siteimprove = bindings.stream()
+              .filter(binding -> binding.getFactoryId().equals("siteimprove"))
+              .findFirst();
+      if (siteimprove.isPresent()) {
+        return siteimprove.get().getSettings(SiteimproveSettings.class);
+      }
+    }
     return null;
   }
 }

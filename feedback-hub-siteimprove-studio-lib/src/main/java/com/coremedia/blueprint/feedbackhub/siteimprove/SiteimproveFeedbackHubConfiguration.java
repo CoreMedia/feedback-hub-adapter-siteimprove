@@ -6,6 +6,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveServic
 import com.coremedia.blueprint.feedbackhub.siteimprove.validators.SiteimproveValidator;
 import com.coremedia.cap.common.CapConnection;
 import com.coremedia.cap.multisite.SitesService;
+import com.coremedia.feedbackhub.FeedbackHubConfiguration;
 import com.coremedia.feedbackhub.FeedbackService;
 import com.coremedia.feedbackhub.provider.ContentFeedbackProviderFactory;
 import com.coremedia.springframework.xml.ResourceAwareXmlBeanDefinitionReader;
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
 @Configuration
-@Import(SiteimproveServiceConfiguration.class)
+@Import({SiteimproveServiceConfiguration.class, FeedbackHubConfiguration.class})
 @ImportResource(
         value = {
                 "classpath:/com/coremedia/cap/multisite/multisite-services.xml"
@@ -30,8 +31,9 @@ public class SiteimproveFeedbackHubConfiguration {
   }
 
   @Bean
-  public RecrawlPageJobFactory recrawlPageJobFactory(SiteimproveService siteimproveService) {
-    return new RecrawlPageJobFactory(siteimproveService);
+  public RecrawlPageJobFactory recrawlPageJobFactory(@NonNull SiteimproveService siteimproveService,
+                                                     @NonNull FeedbackService feedbackService, @NonNull SitesService sitesService) {
+    return new RecrawlPageJobFactory(siteimproveService, feedbackService, sitesService);
   }
 
   @Bean

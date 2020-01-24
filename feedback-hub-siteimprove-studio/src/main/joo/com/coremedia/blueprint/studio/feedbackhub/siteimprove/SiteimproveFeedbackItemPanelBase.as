@@ -89,12 +89,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
         return getResource('feedbackItemPanel_siteimprove_preview_unknown');
       }
 
-      if (TimeUtil.isToday(date)) {
-        return getResource('feedbackItemPanel_siteimprove_preview_today');
-      }
-
-      var diff:Number = Math.ceil((new Date().getTime() - date.getTime()) / 86400000); //in days
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_days_ago'), diff);
+      return getDateDiff(date);
     });
   }
 
@@ -112,6 +107,26 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
   internal function getResource(resourceName:String):String {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
+  }
+
+  private function getDateDiff(date:Date):String {
+    var seconds:Number = (new Date().getTime() - date.getTime()) / 1000;
+    if (seconds < 60) {
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_seconds_ago'), Math.round(seconds));
+    }
+
+    var minutes:Number = seconds / 60;
+    if (minutes < 60) {
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_minutes_ago'), Math.round(minutes));
+    }
+
+    var hours:Number = minutes / 60;
+    if (hours < 24) {
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_hours_ago'), Math.round(hours));
+    }
+
+    var days:Number = hours / 60;
+    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_days_ago'), days);
   }
 }
 }

@@ -84,7 +84,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
   internal function getLastCrawlDateExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
-      var date:Date = ValueExpressionFactory.create('previewSummary.crawlStatus.last_crawl', config.feedbackItem).getValue();
+      var date:Date = ValueExpressionFactory.create('previewSummary.pageDetailsDocument.summary.page.last_seen', config.feedbackItem).getValue();
       if(!date) {
         return getResource('feedbackItemPanel_siteimprove_preview_unknown');
       }

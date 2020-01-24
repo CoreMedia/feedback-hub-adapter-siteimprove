@@ -21,7 +21,10 @@ public class PageDetailsDocument {
   @JsonProperty("size_bytes")
   private int sizeBites;
 
-  //TODO: 'summary' and '_links'
+  //TODO: '_links'
+
+  @JsonProperty("summary")
+  private PageSummaryDocument summary;
 
   @JsonProperty("_siteimprove")
   private SiteimproveLinkDocument siteimprove;
@@ -72,5 +75,13 @@ public class PageDetailsDocument {
 
   public void setSiteimprove(SiteimproveLinkDocument siteimprove) {
     this.siteimprove = siteimprove;
+  }
+
+  public PageSummaryDocument getSummary() {
+    return summary;
+  }
+
+  public void setSummary(PageSummaryDocument summary) {
+    this.summary = summary;
   }
 }

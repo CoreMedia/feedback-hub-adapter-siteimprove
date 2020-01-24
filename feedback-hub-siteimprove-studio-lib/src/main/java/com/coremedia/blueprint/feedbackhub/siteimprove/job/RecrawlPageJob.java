@@ -2,6 +2,8 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.job;
 
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckStatusDocument;
 import com.coremedia.cap.content.Content;
 import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
@@ -21,6 +23,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class RecrawlPageJob implements Job {
   private static final Logger LOG = LoggerFactory.getLogger(RecrawlPageJob.class);
@@ -31,6 +38,8 @@ public class RecrawlPageJob implements Job {
   private SiteimproveService siteimproveService;
   private FeedbackService feedbackService;
   private SitesService sitesService;
+
+  private ScheduledFuture<?> scheduledFuture;
 
   public RecrawlPageJob(SiteimproveService siteimproveService, FeedbackService feedbackService, SitesService sitesService) {
     this.siteimproveService = siteimproveService;
@@ -59,13 +68,37 @@ public class RecrawlPageJob implements Job {
     SiteimproveSettings config = getConfig(content);
     String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
     try {
-      return siteimproveService.pageCheck(config, siteId, pageId);
+      PageCheckResultDocument pageCheckResultDocument = siteimproveService.pageCheck(config, siteId, pageId);
+      if (!pageCheckResultDocument.getSuccess()) {
+        throw new JobExecutionException(GenericJobErrorCode.FAILED);
+      }
+
+      ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+      scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
+        PageCheckStatusDocument pageCheckStatus = siteimproveService.getPageCheckStatus(config, siteId, pageId);
+        if (!pageCheckStatus.getCheckingNow()) {
+          cancel();
+        }
+      }, 1, 1, TimeUnit.SECONDS);
+
+      //wait until the the future is canceled.
+      try {
+        scheduledFuture.get();
+      } catch (CancellationException ignore) {
+        //expected
+      }
+      return "page recrawl completed";
     } catch (Exception e) {
       LOG.error("Cannot trigger page recrawl for {} / {}", siteId, pageId, e);
       throw new JobExecutionException(GenericJobErrorCode.FAILED);
     }
   }
 
+  private void cancel() {
+    if (scheduledFuture != null) {
+      scheduledFuture.cancel(false);
+    }
+  }
   //Use the injected feedbackService to access the Siteimprove settings
   //TODO: make it better.
   private SiteimproveSettings getConfig(Content content) {

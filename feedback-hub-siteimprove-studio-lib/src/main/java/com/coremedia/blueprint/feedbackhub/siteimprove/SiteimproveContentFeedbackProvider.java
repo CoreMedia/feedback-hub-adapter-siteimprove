@@ -41,11 +41,14 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
   private SiteimproveSettings settings;
   private SiteimproveService siteimproveService;
+  private HistoryService historyService;
 
   SiteimproveContentFeedbackProvider(SiteimproveSettings settings,
-                                     SiteimproveService siteimproveService) {
+                                     SiteimproveService siteimproveService,
+                                     HistoryService historyService) {
     this.settings = settings;
     this.siteimproveService = siteimproveService;
+    this.historyService =historyService;
   }
 
   public SiteimproveSettings getSettings() {
@@ -56,7 +59,10 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
   public CompletionStage<Collection<FeedbackItem>> provideFeedback(Content content) {
     ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(content, settings.getSiteimprovePreviewSiteId());
     ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(content, settings.getSiteimproveLiveSiteId());
-    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
+
+    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(
+            historyService.withHistory(content, settings.getSiteimprovePreviewSiteId(), previewContentQualitySummary),
+            historyService.withHistory(content, settings.getSiteimproveLiveSiteId(), liveContentQualitySummary));
     return CompletableFuture.completedFuture(feedbackItem)
             .thenApply(this::asFeedbackItems);
   }

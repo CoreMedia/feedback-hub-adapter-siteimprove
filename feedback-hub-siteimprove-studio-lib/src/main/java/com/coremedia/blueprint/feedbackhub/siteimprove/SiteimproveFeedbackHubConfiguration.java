@@ -26,8 +26,9 @@ import org.springframework.context.annotation.ImportResource;
 )
 public class SiteimproveFeedbackHubConfiguration {
   @Bean
-  public ContentFeedbackProviderFactory siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService) {
-    return new SiteimproveContentFeedbackProviderFactory(siteimproveService);
+  public ContentFeedbackProviderFactory siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService,
+                                                                                  @NonNull HistoryService historyService) {
+    return new SiteimproveContentFeedbackProviderFactory(siteimproveService, historyService);
   }
 
   @Bean
@@ -36,6 +37,10 @@ public class SiteimproveFeedbackHubConfiguration {
     return new RecrawlPageJobFactory(siteimproveService, feedbackService, sitesService);
   }
 
+  @Bean
+  public HistoryService historyService() {
+    return new HistoryService();
+  }
   @Bean
   SiteimproveValidator siteimproveValidator(@NonNull CapConnection connection,
                                             @NonNull SiteimproveService siteimproveService,

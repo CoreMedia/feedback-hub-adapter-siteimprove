@@ -7,9 +7,12 @@ import com.coremedia.feedbackhub.provider.ContentFeedbackProviderFactory;
 
 public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbackProviderFactory<SiteimproveSettings> {
   private SiteimproveService siteimproveService;
+  private HistoryService historyService;
 
-  public SiteimproveContentFeedbackProviderFactory(SiteimproveService siteimproveService) {
+  public SiteimproveContentFeedbackProviderFactory(SiteimproveService siteimproveService,
+                                                   HistoryService historyService) {
     this.siteimproveService = siteimproveService;
+    this.historyService = historyService;
   }
 
   @Override
@@ -34,6 +37,6 @@ public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbac
       throw new FeedbackHubException("settings must provide a CoreMedia siteId", SiteimproveFeedbackHubErrorCode.SITE_ID_NOT_SET);
     }
 
-    return new SiteimproveContentFeedbackProvider(settings, siteimproveService);
+    return new SiteimproveContentFeedbackProvider(settings, siteimproveService, historyService);
   }
 }

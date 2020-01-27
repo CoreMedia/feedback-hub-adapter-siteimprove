@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.job;
 
+import com.coremedia.blueprint.feedbackhub.siteimprove.HistoryService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
@@ -36,13 +37,15 @@ public class RecrawlPageJob implements Job {
   private Content content;
   private String pageId;
   private SiteimproveService siteimproveService;
+  private HistoryService historyService;
   private FeedbackService feedbackService;
   private SitesService sitesService;
 
   private ScheduledFuture<?> scheduledFuture;
 
-  public RecrawlPageJob(SiteimproveService siteimproveService, FeedbackService feedbackService, SitesService sitesService) {
+  public RecrawlPageJob(SiteimproveService siteimproveService, HistoryService historyService, FeedbackService feedbackService, SitesService sitesService) {
     this.siteimproveService = siteimproveService;
+    this.historyService = historyService;
     this.feedbackService = feedbackService;
     this.sitesService = sitesService;
   }
@@ -87,6 +90,7 @@ public class RecrawlPageJob implements Job {
       } catch (CancellationException ignore) {
         //expected
       }
+      historyService.invalidate(content, siteId);
       return "page recrawl completed";
     } catch (Exception e) {
       LOG.error("Cannot trigger page recrawl for {} / {}", siteId, pageId, e);

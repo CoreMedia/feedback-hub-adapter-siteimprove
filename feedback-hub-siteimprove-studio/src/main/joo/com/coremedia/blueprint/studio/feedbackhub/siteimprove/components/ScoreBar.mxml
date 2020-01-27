@@ -23,6 +23,12 @@
     <Container>
       <items>
         <DisplayField value="{config.label}"/>
+        <DisplayField margin="0 0 0 5">
+          <plugins>
+            <ui:BindPropertyPlugin bindTo="{getDiffExpression(config)}"/>
+            <ui:BindVisibilityPlugin bindTo="{getDiffExpression(config)}"/>
+          </plugins>
+        </DisplayField>
         <Container flex="1"/>
         <DisplayField ui="{null}" style="color:#000;font-weight:bold;font-size: 14px;">
           <plugins>

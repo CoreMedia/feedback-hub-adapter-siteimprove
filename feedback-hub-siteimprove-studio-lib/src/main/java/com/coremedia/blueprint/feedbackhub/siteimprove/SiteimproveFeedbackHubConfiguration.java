@@ -32,9 +32,9 @@ public class SiteimproveFeedbackHubConfiguration {
   }
 
   @Bean
-  public RecrawlPageJobFactory recrawlPageJobFactory(@NonNull SiteimproveService siteimproveService,
+  public RecrawlPageJobFactory recrawlPageJobFactory(@NonNull SiteimproveService siteimproveService, @NonNull HistoryService historyService,
                                                      @NonNull FeedbackService feedbackService, @NonNull SitesService sitesService) {
-    return new RecrawlPageJobFactory(siteimproveService, feedbackService, sitesService);
+    return new RecrawlPageJobFactory(siteimproveService, historyService, feedbackService, sitesService);
   }
 
   @Bean

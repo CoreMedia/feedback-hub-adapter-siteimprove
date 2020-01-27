@@ -60,9 +60,7 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(content, settings.getSiteimprovePreviewSiteId());
     ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(content, settings.getSiteimproveLiveSiteId());
 
-    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(
-            historyService.withHistory(content, settings.getSiteimprovePreviewSiteId(), previewContentQualitySummary),
-            historyService.withHistory(content, settings.getSiteimproveLiveSiteId(), liveContentQualitySummary));
+    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
     return CompletableFuture.completedFuture(feedbackItem)
             .thenApply(this::asFeedbackItems);
   }
@@ -77,6 +75,12 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
   }
 
   private ContentQualitySummaryDocument getContentQualitySummary(Content content, String siteimproveSiteId) {
+    ContentQualitySummaryDocument summary = historyService.get(content, siteimproveSiteId);
+
+    if (summary != null) {
+      return summary;
+    }
+
     try {
       PageDocument page = findPage(settings, siteimproveSiteId, content);
       if (page == null) {
@@ -119,6 +123,7 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
       CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
       contentQualitySummaryDocument.setCrawlStatus(crawlStatus);
 
+      historyService.save(content, siteimproveSiteId, contentQualitySummaryDocument);
       return contentQualitySummaryDocument;
     } catch (Exception e) {
       LOG.error("Failed to collect siteimprove report for site {}: {}", siteimproveSiteId, e.getMessage());

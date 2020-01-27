@@ -126,7 +126,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
     }
 
     var days:Number = hours / 60;
-    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_days_ago'), days);
+    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_days_ago'), Math.round(days));
   }
 }
 }

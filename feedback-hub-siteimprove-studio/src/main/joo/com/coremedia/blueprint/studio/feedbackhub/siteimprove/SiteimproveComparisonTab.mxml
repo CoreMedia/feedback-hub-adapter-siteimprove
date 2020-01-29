@@ -21,6 +21,9 @@
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveComparisonTab";
 
+    private static const PREVIEW_COLOR:String = "#006cae";
+    private static const LIVE_COLOR:String = "#959494";
+
     private var config:SiteimproveComparisonTab;
 
     public native function SiteimproveComparisonTab(config:SiteimproveComparisonTab = null);
@@ -34,13 +37,13 @@
           <items>
             <components:ScoreCircle
                     flex="1"
-                    color="#006cae"
+                    color="{PREVIEW_COLOR}"
                     label="{getResource('feedbackItemPanel_siteimprove_preview_site')}"
                     bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
                     crawlDateExpression="{getLastCrawlDateExpression(config)}"/>
             <components:ScoreCircle
                     flex="1"
-                    color="#959494"
+                    color="{LIVE_COLOR}"
                     label="{getResource('feedbackItemPanel_siteimprove_live_site')}"
                     bindTo="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
                     crawlDateExpression="{getLastCrawlDateExpression(config, true)}"/>
@@ -52,15 +55,24 @@
         <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
                title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
           <items>
-            <components:ScoreBar
+            <components:ScoreBarComparator
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_a11n')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
-            <components:ScoreBar
+                    bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"
+                    bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"
+                    color1="{PREVIEW_COLOR}"
+                    color2="{LIVE_COLOR}"/>
+            <components:ScoreBarComparator
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_quality')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
-            <components:ScoreBar
+                    bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"
+                    bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"
+                    color1="{PREVIEW_COLOR}"
+                    color2="{LIVE_COLOR}"/>
+            <components:ScoreBarComparator
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_seo')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
+                    bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"
+                    bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"
+                    color1="{PREVIEW_COLOR}"
+                    color2="{LIVE_COLOR}"/>
           </items>
         </Panel>
       </editor:items>

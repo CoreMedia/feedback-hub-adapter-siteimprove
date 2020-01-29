@@ -22,7 +22,7 @@
   <local:items>
     <Container>
       <items>
-        <DisplayField value="{config.label}"/>
+        <DisplayField value="{config.label}" hidden="{!config.label}" hideMode="display"/>
         <DisplayField margin="0 0 0 5">
           <plugins>
             <ui:BindPropertyPlugin bindTo="{getDiffExpression(config)}"/>
@@ -30,12 +30,12 @@
           </plugins>
         </DisplayField>
         <Container flex="1"/>
-        <DisplayField ui="{null}" style="color:#000;font-weight:bold;font-size: 14px;">
+        <DisplayField ui="{null}" style="color:#000;font-weight:bold;font-size: 14px;" hidden="{!config.showPoints}" hideMode="display">
           <plugins>
             <ui:BindPropertyPlugin componentProperty="value" bindTo="{config.bindTo}" transformer="{ScoreUtil.formatScore}"/>
           </plugins>
         </DisplayField>
-        <DisplayField ui="{null}" value="/100" style="color:#b3b1b1;"/>
+        <DisplayField ui="{null}" value="/100" style="color:#b3b1b1;" hidden="{!config.showPoints}" hideMode="display"/>
       </items>
       <layout>
         <layout_HBox align="stretch"/>

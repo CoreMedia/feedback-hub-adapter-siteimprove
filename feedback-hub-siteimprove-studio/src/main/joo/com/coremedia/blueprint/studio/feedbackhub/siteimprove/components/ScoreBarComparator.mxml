@@ -17,14 +17,16 @@
     ]]></fx:Script>
 
   <local:items>
-    <DisplayField value="{config.label}"/>
     <Container>
       <items>
         <Container flex="1">
           <items>
             <local:ScoreBar
+                    label="{config.label}"
+                    color="{config.color1}"
                     bindTo="{config.bindToValue1}"/>
             <local:ScoreBar
+                    color="{config.color2}"
                     bindTo="{config.bindToValue2}"/>
           </items>
           <layout>

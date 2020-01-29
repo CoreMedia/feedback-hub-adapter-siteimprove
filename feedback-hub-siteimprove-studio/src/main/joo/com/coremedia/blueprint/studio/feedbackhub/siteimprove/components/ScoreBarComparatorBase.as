@@ -15,6 +15,12 @@ public class ScoreBarComparatorBase extends Container {
   [Bindable]
   public var bindToValue2:ValueExpression;
 
+  [Bindable]
+  public var color1:String;
+
+  [Bindable]
+  public var color2:String;
+
   public function ScoreBarComparatorBase(config:ScoreBarComparator = null) {
     super(config);
   }

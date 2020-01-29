@@ -36,7 +36,7 @@
     <Container>
       <items>
         <Container flex="1" />
-        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" itemId="label" value="{config.label}"/>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" itemId="label" value="{config.label}" hidden="{!config.label}"/>
         <Container flex="1" />
       </items>
       <layout>

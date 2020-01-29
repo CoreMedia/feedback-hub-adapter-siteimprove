@@ -20,7 +20,13 @@ public class ScoreBarBase extends Container {
   public var bindTo:ValueExpression;
 
   [Bindable]
+  public var color:String;
+
+  [Bindable]
   public var showDiff:Boolean;
+
+  [Bindable]
+  public var showPoints:Boolean;
 
   private var diffExpression:ValueExpression;
 
@@ -37,7 +43,7 @@ public class ScoreBarBase extends Container {
     field.setValue('<div style="width: 100%;text-align: center;margin-top: -6px;">' +
             '<div style="height:' + barHeight + 'px;border-radius: 2px;background-color:#dcdbdb;width: 100%;"></div>' +
             '<div style="height:' + barHeight + 'px;margin-top:-' + barHeight + 'px;border-radius: 2px;background-color:' +
-            ScoreUtil.getColor(score) + ';width: ' + ScoreUtil.formatScore(score) + '%;"></div>' +
+            (color || ScoreUtil.getColor(score)) + ';width: ' + ScoreUtil.formatScore(score) + '%;"></div>' +
             '</div>');
   }
 

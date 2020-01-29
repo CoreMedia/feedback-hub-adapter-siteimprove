@@ -39,14 +39,17 @@
           <items>
             <components:ScoreBar
                     showDiff="true"
+                    showPoints="true"
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_a11n')}"
                     bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
             <components:ScoreBar
                     showDiff="true"
+                    showPoints="true"
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_quality')}"
                     bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
             <components:ScoreBar
                     showDiff="true"
+                    showPoints="true"
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_seo')}"
                     bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
           </items>

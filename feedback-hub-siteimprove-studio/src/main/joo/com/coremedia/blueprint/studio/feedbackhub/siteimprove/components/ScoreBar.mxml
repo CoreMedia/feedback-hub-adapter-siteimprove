@@ -28,7 +28,11 @@
                          hideMode="display"
                          margin="0 0 0 5"
                          bindToValue1="{config.bindTo}"
-                         bindToValue2="{getLastExpression(config)}"/>
+                         bindToValue2="{ScoreUtil.getLastExpression(config.bindTo)}">
+          <local:plugins>
+            <ui:BindVisibilityPlugin bindTo="{ScoreUtil.getLastExpression(config.bindTo)}"/>
+          </local:plugins>
+        </local:ScoreDiff>
         <Container flex="1"/>
         <DisplayField ui="{null}" style="color:#000;font-weight:bold;font-size: 14px;" hidden="{!config.showPoints}" hideMode="display">
           <plugins>

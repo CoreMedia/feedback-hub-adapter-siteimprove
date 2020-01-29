@@ -19,6 +19,9 @@ public class ScoreBarBase extends Container {
   [Bindable]
   public var bindTo:ValueExpression;
 
+  [Bindable]
+  public var showDiff:Boolean;
+
   private var diffExpression:ValueExpression;
 
   public function ScoreBarBase(config:ScoreBar = null) {
@@ -41,6 +44,9 @@ public class ScoreBarBase extends Container {
   internal function getDiffExpression(config:ScoreBar):ValueExpression {
     if (!diffExpression) {
       diffExpression = ValueExpressionFactory.createFromFunction(function():String {
+        if (!config.showDiff) {
+          return null;
+        }
         var lastExpression:ValueExpression = getLastExpression(config.bindTo as PropertyPathExpression);
         var lastScore:Number = lastExpression.getValue();
         if (!lastScore) {

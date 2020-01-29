@@ -47,7 +47,7 @@
         </Container>
       </items>
       <layout>
-        <layout_HBox align="stretch"/>
+        <layout_HBox align="middle" pack="center"/>
       </layout>
     </Container>
   </local:items>

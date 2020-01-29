@@ -52,9 +52,20 @@
             <layout_HBox align="stretch"/>
           </layout>
         </Container>
-        <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
-               title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
+        <Container>
           <items>
+            <Container>
+              <items>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                              value="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"/>
+                <Component flex="1"/>
+                <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                              value="{getResource('feedbackGroupPanel_siteimprove_scoreDifferences')}"/>
+              </items>
+              <layout>
+                <layout_HBox align="stretch"/>
+              </layout>
+            </Container>
             <components:ScoreBarComparator
                     label="{getResource('feedbackItemPanel_siteimprove_siteimprove_a11n')}"
                     bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"
@@ -74,7 +85,7 @@
                     color1="{PREVIEW_COLOR}"
                     color2="{LIVE_COLOR}"/>
           </items>
-        </Panel>
+        </Container>
       </editor:items>
       <editor:layout>
         <layout_VBox align="stretch"/>

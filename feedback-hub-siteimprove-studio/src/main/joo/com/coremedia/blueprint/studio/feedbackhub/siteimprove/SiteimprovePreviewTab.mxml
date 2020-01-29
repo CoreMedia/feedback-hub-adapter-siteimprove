@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!---
+ A CollapsiblePanel showing the preview site of siteimprove feedback item
+-->
+<local:SiteimprovePreviewTabBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns="exml:ext.config"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
+        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
+        xmlns:siteimprove="exml:com.coremedia.blueprint.studio.feedbackhub.siteimprove.config"
+        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
+  <fx:Metadata>
+    [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
+    [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
+  </fx:Metadata>
+  <fx:Script><![CDATA[
+    import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.skins.DisplayFieldSkin;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimprovePreviewTab";
+
+    private var config:SiteimprovePreviewTab;
+
+    public native function SiteimprovePreviewTab(config:SiteimprovePreviewTab = null);
+    ]]></fx:Script>
+  <local:items>
+    <editor:CollapsibleFormPanel
+            ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
+            title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
+      <editor:items>
+        <components:ScoreCircle
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
+                crawlDateExpression="{getLastCrawlDateExpression(config)}"/>
+        <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
+               title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
+          <items>
+            <components:ScoreBar
+                    label="{getResource('feedbackItemPanel_siteimprove_siteimprove_a11n')}"
+                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
+            <components:ScoreBar
+                    label="{getResource('feedbackItemPanel_siteimprove_siteimprove_quality')}"
+                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
+            <components:ScoreBar
+                    label="{getResource('feedbackItemPanel_siteimprove_siteimprove_seo')}"
+                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
+          </items>
+        </Panel>
+      </editor:items>
+      <editor:layout>
+        <layout_VBox align="stretch"/>
+      </editor:layout>
+    </editor:CollapsibleFormPanel>
+    <editor:CollapsibleFormPanel
+            ariaLabel="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}"
+            title="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}">
+      <editor:items>
+        <components:IssueList
+                feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
+      </editor:items>
+    </editor:CollapsibleFormPanel>
+    <Panel layout="hbox">
+      <items>
+        <Container layout="vbox">
+          <items>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
+              </plugins>
+            </DisplayField>
+          </items>
+        </Container>
+        <Container flex="1"/>
+        <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
+                       tooltip="{getResource('recrawl_preview_page_btn_text')}">
+          <ui:baseAction>
+            <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
+                                           preview="true"
+                                           feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
+          </ui:baseAction>
+        </ui:IconButton>
+      </items>
+    </Panel>
+  </local:items>
+</local:SiteimprovePreviewTabBase>

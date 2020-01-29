@@ -3,7 +3,8 @@
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns="exml:ext.config"
-        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
+        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
+        xmlns:ui="exml:com.coremedia.ui.config">
   <fx:Metadata>
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
@@ -17,6 +18,12 @@
 
   <local:items>
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
+    <DisplayField margin="5 0 0 0">
+      <plugins>
+        <ui:BindPropertyPlugin bindTo="{getDiffExpression(config)}"/>
+        <ui:BindVisibilityPlugin bindTo="{getDiffExpression(config)}"/>
+      </plugins>
+    </DisplayField>
   </local:items>
   <local:layout>
     <layout_VBox align="stretch" pack="center"/>

@@ -1,6 +1,9 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove.components {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.ScoreUtil;
+import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
+import com.coremedia.ui.data.PropertyPathExpression;
 import com.coremedia.ui.data.ValueExpression;
+import com.coremedia.ui.data.ValueExpressionFactory;
 
 import ext.container.Container;
 
@@ -12,8 +15,7 @@ public class ScoreCircleBase extends Container {
   [Bindable]
   public var bindTo:ValueExpression;
 
-  [Bindable]
-  public var jsonPath:String;
+  private var diffExpression:ValueExpression;
 
   public function ScoreCircleBase(config:ScoreCircle = null) {
     super(config);
@@ -73,6 +75,37 @@ public class ScoreCircleBase extends Container {
     drawCircle('#efefef', options.lineWidth, 100 / 100);
     drawCircle(ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
   }
+
+  internal function getDiffExpression(config:ScoreCircle):ValueExpression {
+    if (!diffExpression) {
+      diffExpression = ValueExpressionFactory.createFromFunction(function():String {
+        var lastExpression:ValueExpression = getLastExpression(config.bindTo as PropertyPathExpression);
+        var lastScore:Number = lastExpression.getValue();
+        if (!lastScore) {
+          return null;
+        }
+        var diff:int = config.bindTo.getValue() - lastScore;
+
+        if (diff > 0) {
+          return "up " + diff;
+        } else if (diff < 0) {
+          return "down " + diff
+        }
+        return "no change " + diff;
+      });
+    }
+
+    return diffExpression;
+  }
+
+  private function getLastExpression(ppe:PropertyPathExpression):ValueExpression {
+    var feedbackItem:FeedbackItem = ppe.getBean() as FeedbackItem;
+    var propertyPathArcs:Array = ppe.getPropertyPathArcs().concat();
+    //previewSummary.dciOverallScoreDocument.seo.total --> previewSummary.last.dciOverallScoreDocument.seo.total
+    propertyPathArcs.splice(1, 0, "last");
+    return ValueExpressionFactory.create(propertyPathArcs.join('.'), feedbackItem);
+  }
+
 
 }
 }

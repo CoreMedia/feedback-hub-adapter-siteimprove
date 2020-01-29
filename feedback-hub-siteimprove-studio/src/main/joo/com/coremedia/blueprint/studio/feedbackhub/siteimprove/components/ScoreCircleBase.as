@@ -15,6 +15,9 @@ public class ScoreCircleBase extends Container {
   [Bindable]
   public var bindTo:ValueExpression;
 
+  [Bindable]
+  public var crawlDateExpression:ValueExpression;
+
   private var diffExpression:ValueExpression;
 
   public function ScoreCircleBase(config:ScoreCircle = null) {

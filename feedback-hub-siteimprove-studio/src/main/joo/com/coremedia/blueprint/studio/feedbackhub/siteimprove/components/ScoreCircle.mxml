@@ -17,6 +17,11 @@
     ]]></fx:Script>
 
   <local:items>
+    <DisplayField>
+      <plugins>
+        <ui:BindPropertyPlugin bindTo="{config.crawlDateExpression}"/>
+      </plugins>
+    </DisplayField>
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
     <DisplayField margin="5 0 0 0">
       <plugins>

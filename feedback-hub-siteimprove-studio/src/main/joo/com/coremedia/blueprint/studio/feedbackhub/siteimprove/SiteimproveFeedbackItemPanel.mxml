@@ -67,7 +67,8 @@
                     title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
               <editor:items>
                 <components:ScoreCircle
-                        bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"/>
+                        bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
+                        crawlDateExpression="{getLastCrawlDateExpression(config)}"/>
                 <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
                        title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
                   <items>

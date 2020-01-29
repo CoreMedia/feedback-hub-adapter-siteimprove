@@ -28,14 +28,14 @@ public class ScoreBarComparatorBase extends Container {
 
   protected function getScore(config:ScoreBarComparator):String {
     var val1:Number = parseFloat(config.bindToValue1.getValue());
-    var val2:Number = parseFloat(config.bindToValue1.getValue());
+    var val2:Number = parseFloat(config.bindToValue2.getValue());
     var diff:Number = val1 - val2;
     return (val1 - val2).toFixed(2);
   }
 
   protected function getIconClass(config:ScoreBarComparator):String {
     var val1:Number = parseFloat(config.bindToValue1.getValue());
-    var val2:Number = parseFloat(config.bindToValue1.getValue());
+    var val2:Number = parseFloat(config.bindToValue2.getValue());
     var diff:Number = val1 - val2;
 
     var iconCls:String = 'long_arrow_right';

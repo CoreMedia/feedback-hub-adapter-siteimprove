@@ -22,13 +22,13 @@
   <local:items>
     <Container>
       <items>
-        <DisplayField value="{config.label}" hidden="{!config.label}" hideMode="display"/>
-        <DisplayField margin="0 0 0 5">
-          <plugins>
-            <ui:BindPropertyPlugin bindTo="{getDiffExpression(config)}"/>
-            <ui:BindVisibilityPlugin bindTo="{getDiffExpression(config)}"/>
-          </plugins>
-        </DisplayField>
+        <DisplayField value="{config.label}"
+                      hidden="{!config.label}" hideMode="display"/>
+        <local:ScoreDiff hidden="{!config.showDiff}"
+                         hideMode="display"
+                         margin="0 0 0 5"
+                         bindToValue1="{config.bindTo}"
+                         bindToValue2="{getLastExpression(config)}"/>
         <Container flex="1"/>
         <DisplayField ui="{null}" style="color:#000;font-weight:bold;font-size: 14px;" hidden="{!config.showPoints}" hideMode="display">
           <plugins>

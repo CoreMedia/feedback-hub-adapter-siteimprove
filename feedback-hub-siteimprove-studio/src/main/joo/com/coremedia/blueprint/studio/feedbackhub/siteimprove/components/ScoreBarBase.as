@@ -28,8 +28,6 @@ public class ScoreBarBase extends Container {
   [Bindable]
   public var showPoints:Boolean;
 
-  private var diffExpression:ValueExpression;
-
   public function ScoreBarBase(config:ScoreBar = null) {
     super(config);
   }
@@ -47,32 +45,8 @@ public class ScoreBarBase extends Container {
             '</div>');
   }
 
-  internal function getDiffExpression(config:ScoreBar):ValueExpression {
-    if (!diffExpression) {
-      diffExpression = ValueExpressionFactory.createFromFunction(function():String {
-        if (!config.showDiff) {
-          return null;
-        }
-        var lastExpression:ValueExpression = getLastExpression(config.bindTo as PropertyPathExpression);
-        var lastScore:Number = lastExpression.getValue();
-        if (!lastScore) {
-          return null;
-        }
-        var diff:int = config.bindTo.getValue() - lastScore;
-
-        if (diff > 0) {
-          return "up " + diff;
-        } else if (diff < 0) {
-          return "down " + diff
-        }
-        return "no change " + diff;
-      });
-    }
-
-    return diffExpression;
-  }
-
-  private function getLastExpression(ppe:PropertyPathExpression):ValueExpression {
+  internal function getLastExpression(config:ScoreBar):ValueExpression {
+    var ppe:PropertyPathExpression = config.bindTo as PropertyPathExpression;
     var feedbackItem:FeedbackItem = ppe.getBean() as FeedbackItem;
     var propertyPathArcs:Array = ppe.getPropertyPathArcs().concat();
     //previewSummary.dciOverallScoreDocument.seo.total --> previewSummary.last.dciOverallScoreDocument.seo.total

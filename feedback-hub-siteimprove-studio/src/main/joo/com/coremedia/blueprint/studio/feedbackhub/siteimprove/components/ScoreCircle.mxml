@@ -9,6 +9,8 @@
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
   <fx:Script><![CDATA[
+    import com.coremedia.ui.skins.DisplayFieldSkin;
+
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.ScoreCircle";
 
     private var config:ScoreCircle;
@@ -17,20 +19,32 @@
     ]]></fx:Script>
 
   <local:items>
-    <DisplayField>
-      <plugins>
-        <ui:BindPropertyPlugin bindTo="{config.crawlDateExpression}"/>
-      </plugins>
-    </DisplayField>
+    <Container>
+      <items>
+        <Component flex="1"/>
+        <DisplayField>
+          <plugins>
+            <ui:BindPropertyPlugin bindTo="{config.crawlDateExpression}"/>
+          </plugins>
+        </DisplayField>
+      </items>
+      <layout>
+        <layout_HBox align="stretch" />
+      </layout>
+    </Container>
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
-    <DisplayField margin="5 0 0 0">
-      <plugins>
-        <ui:BindPropertyPlugin bindTo="{getDiffExpression(config)}"/>
-        <ui:BindVisibilityPlugin bindTo="{getDiffExpression(config)}"/>
-      </plugins>
-    </DisplayField>
+    <Container>
+      <items>
+        <Container flex="1" />
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" itemId="label" value="{config.label}"/>
+        <Container flex="1" />
+      </items>
+      <layout>
+        <layout_HBox align="stretch" />
+      </layout>
+    </Container>
   </local:items>
   <local:layout>
-    <layout_VBox align="stretch" pack="center"/>
+    <layout_VBox align="stretch" pack="end"/>
   </local:layout>
 </local:ScoreCircleBase>

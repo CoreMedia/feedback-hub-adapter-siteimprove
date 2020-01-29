@@ -2,7 +2,7 @@
 <!---
  A CollapsiblePanel showing the preview site of siteimprove feedback item
 -->
-<local:SiteimprovePreviewTabBase
+<local:SiteimproveComparisonTabBase
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
@@ -19,21 +19,36 @@
     import com.coremedia.ui.data.ValueExpressionFactory;
     import com.coremedia.ui.skins.DisplayFieldSkin;
 
-    public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimprovePreviewTab";
+    public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveComparisonTab";
 
-    private var config:SiteimprovePreviewTab;
+    private var config:SiteimproveComparisonTab;
 
-    public native function SiteimprovePreviewTab(config:SiteimprovePreviewTab = null);
+    public native function SiteimproveComparisonTab(config:SiteimproveComparisonTab = null);
     ]]></fx:Script>
   <local:items>
     <editor:CollapsibleFormPanel
             ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
             title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
       <editor:items>
-        <components:ScoreCircle
-                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
-                crawlDateExpression="{getLastCrawlDateExpression(config)}"
-                showDiff="true"/>
+        <Container>
+          <items>
+            <components:ScoreCircle
+                    flex="1"
+                    color="#006cae"
+                    label="{getResource('feedbackItemPanel_siteimprove_preview_site')}"
+                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
+                    crawlDateExpression="{getLastCrawlDateExpression(config)}"/>
+            <components:ScoreCircle
+                    flex="1"
+                    color="#959494"
+                    label="{getResource('feedbackItemPanel_siteimprove_live_site')}"
+                    bindTo="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
+                    crawlDateExpression="{getLastCrawlDateExpression(config, true)}"/>
+          </items>
+          <layout>
+            <layout_HBox align="stretch"/>
+          </layout>
+        </Container>
         <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
                title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
           <items>
@@ -94,4 +109,4 @@
       </items>
     </Panel>
   </local:items>
-</local:SiteimprovePreviewTabBase>
+</local:SiteimproveComparisonTabBase>

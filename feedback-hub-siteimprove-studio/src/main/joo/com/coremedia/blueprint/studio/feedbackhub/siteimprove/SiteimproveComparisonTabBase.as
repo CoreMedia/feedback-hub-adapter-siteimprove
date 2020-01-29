@@ -8,18 +8,18 @@ import ext.StringUtil;
 
 import ext.panel.Panel;
 
-public class SiteimprovePreviewTabBase extends Panel {
+public class SiteimproveComparisonTabBase extends Panel {
   [Bindable]
   public var feedbackItem:FeedbackItem;
 
   [Bindable]
   public var contentExpression:ValueExpression;
 
-  public function SiteimprovePreviewTabBase(config:SiteimprovePreviewTab = null) {
+  public function SiteimproveComparisonTabBase(config:SiteimproveComparisonTab = null) {
     super(config);
   }
 
-  internal function getNextCrawlDateExpression(config:SiteimprovePreviewTab):ValueExpression {
+  internal function getNextCrawlDateExpression(config:SiteimproveComparisonTab):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
       var date:Date = ValueExpressionFactory.create('previewSummary.crawlStatus.next_crawl', config.feedbackItem).getValue();
       if(!date) {
@@ -35,11 +35,14 @@ public class SiteimprovePreviewTabBase extends Panel {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }
 
-  internal function getLastCrawlDateExpression(config:SiteimprovePreviewTab):ValueExpression {
+  internal function getLastCrawlDateExpression(config:SiteimproveComparisonTab, live:Boolean = false):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
-      var date:Date = ValueExpressionFactory.create('previewSummary.pageDetailsDocument.summary.page.last_seen', config.feedbackItem).getValue();
+      var prefix:String = live ? 'liveSummary' : 'previewSummary';
+      var expression:String = prefix + '.pageDetailsDocument.summary.page.last_seen';
+      var date:Date = ValueExpressionFactory.create(expression, config.feedbackItem).getValue();
       if(!date) {
-        return getResource('feedbackItemPanel_siteimprove_preview_unknown');
+        var resourceName:String = live ? 'feedbackItemPanel_siteimprove_live_unknown' : 'feedbackItemPanel_siteimprove_preview_unknown';
+        return getResource(resourceName);
       }
 
       return getDateDiff(date);

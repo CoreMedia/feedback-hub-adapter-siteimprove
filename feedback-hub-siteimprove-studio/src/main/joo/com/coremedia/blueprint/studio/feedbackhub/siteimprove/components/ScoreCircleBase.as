@@ -18,7 +18,14 @@ public class ScoreCircleBase extends Container {
   [Bindable]
   public var crawlDateExpression:ValueExpression;
 
-  private var diffExpression:ValueExpression;
+  [Bindable]
+  public var color:String;
+
+  [Bindable]
+  public var label:String;
+
+  [Bindable]
+  public var showDiff:Boolean;
 
   public function ScoreCircleBase(config:ScoreCircle = null) {
     super(config);
@@ -45,19 +52,29 @@ public class ScoreCircleBase extends Container {
     var div = window.document.createElement('div');
     div.setAttribute('style', 'width: 100%;text-align: center;padding-left:85px;');
 
-    var span1 = window.document.createElement('span');
-    span1.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute;margin-left: -66px;top:100px;font-size:44px;font-weight:bold;");
-    span1.textContent = options.percent;
+    var spanScore = window.document.createElement('span');
+    spanScore.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute;margin-left: -66px;top:100px;font-size:44px;font-weight:bold;");
+    spanScore.textContent = options.percent;
 
-    var span2 = window.document.createElement('span');
-    span2.setAttribute("style", " color:#b1b1b1;display:inline;font-family:sans-serif;position:absolute; top: 106px;margin-left:20px;font-size:24px;");
-    span2.textContent = '/100';
+    var span100 = window.document.createElement('span');
+    span100.setAttribute("style", " color:#b1b1b1;display:inline;font-family:sans-serif;position:absolute; top: 106px;margin-left:20px;font-size:24px;");
+    span100.textContent = '/100';
 
     var ctx = canvas.getContext('2d');
     canvas.width = canvas.height = options.size;
 
-    div.appendChild(span1);
-    div.appendChild(span2);
+    div.appendChild(spanScore);
+    div.appendChild(span100);
+
+    if (showDiff) {
+      var diff:String = getDiffExpression().getValue();
+      if (diff) {
+        var spanDiff = window.document.createElement('span');
+        spanDiff.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute; top: 136px;margin-left: -50px;font-size:22px;");
+        spanDiff.textContent = diff;
+        div.appendChild(spanDiff);
+      }
+    }
     div.appendChild(canvas);
     el.appendChild(div);
 
@@ -76,29 +93,25 @@ public class ScoreCircleBase extends Container {
     };
 
     drawCircle('#efefef', options.lineWidth, 100 / 100);
-    drawCircle(ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
+    drawCircle(color || ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
   }
 
-  internal function getDiffExpression(config:ScoreCircle):ValueExpression {
-    if (!diffExpression) {
-      diffExpression = ValueExpressionFactory.createFromFunction(function():String {
-        var lastExpression:ValueExpression = getLastExpression(config.bindTo as PropertyPathExpression);
-        var lastScore:Number = lastExpression.getValue();
-        if (!lastScore) {
-          return null;
-        }
-        var diff:int = config.bindTo.getValue() - lastScore;
+  internal function getDiffExpression():ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():String {
+      var lastExpression:ValueExpression = getLastExpression(bindTo as PropertyPathExpression);
+      var lastScore:Number = lastExpression.getValue();
+      if (!lastScore) {
+        return null;
+      }
+      var diff:int = bindTo.getValue() - lastScore;
 
-        if (diff > 0) {
-          return "up " + diff;
-        } else if (diff < 0) {
-          return "down " + diff
-        }
-        return "no change " + diff;
-      });
-    }
-
-    return diffExpression;
+      if (diff > 0) {
+        return "up " + diff;
+      } else if (diff < 0) {
+        return "down " + diff
+      }
+      return "no change " + diff;
+    });
   }
 
   private function getLastExpression(ppe:PropertyPathExpression):ValueExpression {

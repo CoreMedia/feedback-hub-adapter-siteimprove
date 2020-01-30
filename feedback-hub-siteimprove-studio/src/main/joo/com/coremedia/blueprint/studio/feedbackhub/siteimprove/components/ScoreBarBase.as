@@ -1,6 +1,7 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove.components {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.ScoreUtil;
 import com.coremedia.ui.data.ValueExpression;
+import com.coremedia.ui.data.ValueExpressionFactory;
 
 import ext.container.Container;
 import ext.form.field.DisplayField;
@@ -41,5 +42,14 @@ public class ScoreBarBase extends Container {
             (color || ScoreUtil.getColor(score)) + ';width: ' + ScoreUtil.formatScore(score) + '%;"></div>' +
             '</div>');
   }
-}
+
+  internal function getScoreVisibleExpression(config:ScoreBar):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():Boolean {
+      if (!config.showDiff) {
+        return false;
+      }
+      return ScoreUtil.getLastExpression(config.bindTo).getValue();
+    });
+  }
+ }
 }

@@ -49,7 +49,8 @@
     <ui:IconDisplayField scale="small"
                          iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', getIconClass(config))}"/>
     <Container width="3" />
-    <DisplayField value="{getScore(config)} {resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_points')}"/>
+    <DisplayField value="{getScore(config)} {resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+    'feedbackItemPanel_siteimprove_points')}"/>
   </items>
   <layout>
     <layout_HBox align="stretch"/>

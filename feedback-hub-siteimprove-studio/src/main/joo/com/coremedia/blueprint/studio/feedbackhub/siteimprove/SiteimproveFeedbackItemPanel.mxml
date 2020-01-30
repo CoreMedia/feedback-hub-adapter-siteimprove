@@ -36,7 +36,7 @@
     <Container layout="hbox">
       <items>
         <DisplayField ui="{null}" style="font-size:18px;font-weight:bold;color:#515151;"
-                      value="{getResource('feedbackItemPanel_siteimprove_siteimprove_title')}"/>
+                      value="{getResource('feedbackItemPanel_siteimprove_title')}"/>
         <Container flex="1"/>
         <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
                        tooltip="{getResource('open_siteimprove_btn_text')}"

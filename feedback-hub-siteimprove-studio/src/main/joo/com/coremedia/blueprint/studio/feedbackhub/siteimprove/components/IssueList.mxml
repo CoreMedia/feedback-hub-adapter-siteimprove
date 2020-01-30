@@ -23,10 +23,12 @@
       <items>
         <Container width="8" />
         <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issue')}"/>
+                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+                      'feedbackItemPanel_siteimprove_issue')}"/>
         <Container flex="1"/>
         <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_points')}"/>
+                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+                      'feedbackItemPanel_siteimprove_points_to_gain')}"/>
       </items>
       <layout>
         <layout_HBox align="stretch"/>

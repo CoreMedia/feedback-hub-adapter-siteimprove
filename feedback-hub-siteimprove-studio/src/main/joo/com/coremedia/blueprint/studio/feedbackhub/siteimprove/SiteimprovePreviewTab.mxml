@@ -71,7 +71,7 @@
                 bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
       </editor:items>
     </editor:CollapsibleFormPanel>
-    <Panel layout="hbox">
+    <Container>
       <items>
         <Container layout="vbox">
           <items>
@@ -92,15 +92,26 @@
           </items>
         </Container>
         <Container flex="1"/>
-        <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
-                       tooltip="{getResource('recrawl_preview_page_btn_text')}">
-          <ui:baseAction>
-            <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
-                                           preview="true"
-                                           feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
-          </ui:baseAction>
-        </ui:IconButton>
+        <Container minWidth="40" minHeight="40">
+          <items>
+            <ui:IconButton scale="large"
+                           iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
+                           tooltip="{getResource('recrawl_preview_page_btn_text')}">
+              <ui:baseAction>
+                <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
+                                               preview="true"
+                                               feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
+              </ui:baseAction>
+            </ui:IconButton>
+          </items>
+          <layout>
+            <layout_Fit/>
+          </layout>
+        </Container>
       </items>
-    </Panel>
+      <layout>
+        <layout_HBox align="middle"/>
+      </layout>
+    </Container>
   </local:items>
 </local:SiteimprovePreviewTabBase>

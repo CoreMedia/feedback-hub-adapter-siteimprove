@@ -34,6 +34,7 @@
                 bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
                 crawlDateExpression="{getLastCrawlDateExpression(config)}"
                 showDiff="true"/>
+        <Container height="20"/>
         <Panel ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
                title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
           <items>

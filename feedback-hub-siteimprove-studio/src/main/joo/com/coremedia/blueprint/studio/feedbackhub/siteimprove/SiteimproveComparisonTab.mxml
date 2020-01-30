@@ -102,15 +102,6 @@
         <layout_VBox align="stretch"/>
       </editor:layout>
     </editor:CollapsibleFormPanel>
-    <editor:CollapsibleFormPanel
-            ariaLabel="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}"
-            title="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}">
-      <editor:items>
-        <components:IssueList
-                feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
-                bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
-      </editor:items>
-    </editor:CollapsibleFormPanel>
     <Panel layout="hbox">
       <items>
         <Container layout="vbox">

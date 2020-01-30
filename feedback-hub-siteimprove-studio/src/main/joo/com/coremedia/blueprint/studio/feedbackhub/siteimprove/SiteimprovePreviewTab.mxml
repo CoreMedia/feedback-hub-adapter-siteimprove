@@ -64,6 +64,8 @@
             ariaLabel="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}"
             title="{getResource('feedbackItemPanel_siteimprove_siteimprove_issues')}">
       <editor:items>
+        <Label text="{getResource('feedbackItemPanel_siteimprove_issues_help')}"/>
+        <Container height="20"/>
         <components:IssueList
                 feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
                 bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>

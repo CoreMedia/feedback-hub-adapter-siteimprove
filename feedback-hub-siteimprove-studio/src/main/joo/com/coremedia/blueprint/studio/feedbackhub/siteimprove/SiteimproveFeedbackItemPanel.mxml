@@ -18,6 +18,7 @@
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.skins.ContainerSkin;
+    import com.coremedia.ui.skins.DisplayFieldSkin;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveFeedbackItemPanel";
 
@@ -41,16 +42,18 @@
                        tooltip="{getResource('open_siteimprove_btn_text')}"
                        handler="{openSiteimprove}"/>
       </items>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
+      </plugins>
     </Container>
-    <editor:CollapsibleFormPanel header="{false}"
-                                 ariaLabel="{getResource('feedbackGroupPanel_siteimprove_tooltip')}">
-      <editor:items>
-        <DisplayField value="{getEmptyText(config)}"/>
-      </editor:items>
-      <editor:plugins>
+    <Container>
+      <items>
+        <DisplayField ui="{DisplayFieldSkin.ITALIC.getSkin()}" value="{getEmptyText(config)}"/>
+      </items>
+      <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackNotLoadedExpression(config)}"/>
-      </editor:plugins>
-    </editor:CollapsibleFormPanel>
+      </plugins>
+    </Container>
     <TabPanel>
       <items>
         <local:SiteimprovePreviewTab title="{getResource('feedbackItemPanel_siteimprove_preview_tab_title')}"

@@ -71,6 +71,36 @@ public class SiteimproveComparisonTabBase extends Panel {
     return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
   }
 
+  internal function getStatusMessage(config:SiteimproveComparisonTab):String {
+    var previewScore:Number = ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+    var liveScore:Number = ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
 
+    if (!previewScore || !liveScore) {
+      return getResource('feedbackItemPanel_siteimprove_broken_score');
+    }
+
+    if (previewScore < liveScore) {
+      var msg:String = getResource('feedbackItemPanel_siteimprove_lose_score');
+      return StringUtil.format(msg, (liveScore - previewScore).toFixed(2));
+    }
+
+    var msg2:String = getResource('feedbackItemPanel_siteimprove_gain_score');
+    return StringUtil.format(msg2, (previewScore - liveScore).toFixed(2));
+  }
+
+  protected function getStatusIconClass(config:SiteimproveComparisonTab):String {
+    var previewScore:Number = ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+    var liveScore:Number = ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
+
+    if (!previewScore || !liveScore) {
+      return 'exclamation_mark';
+    }
+
+    if (previewScore < liveScore) {
+      return 'exclamation_mark';
+    }
+
+    return 'approve';
+  }
 }
 }

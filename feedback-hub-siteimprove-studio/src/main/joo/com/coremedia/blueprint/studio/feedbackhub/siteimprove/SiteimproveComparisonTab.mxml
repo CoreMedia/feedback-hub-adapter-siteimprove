@@ -52,6 +52,17 @@
             <layout_HBox align="stretch"/>
           </layout>
         </Container>
+        <Container itemId="statusContainer">
+          <items>
+            <ui:IconDisplayField scale="small"
+                                 iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', getStatusIconClass(config))}"/>
+            <DisplayField value="{getStatusMessage(config)}" html="true"/>
+          </items>
+          <layout>
+            <layout_HBox align="stretch" pack="center"/>
+          </layout>
+        </Container>
+        <Container height="20"/>
         <Container>
           <items>
             <Container>

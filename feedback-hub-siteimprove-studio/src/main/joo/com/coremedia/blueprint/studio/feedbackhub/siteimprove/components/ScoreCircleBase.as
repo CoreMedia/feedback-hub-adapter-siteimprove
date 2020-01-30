@@ -5,6 +5,8 @@ import com.coremedia.ui.data.PropertyPathExpression;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 
+import ext.Ext;
+
 import ext.container.Container;
 
 [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
@@ -66,17 +68,22 @@ public class ScoreCircleBase extends Container {
     div.appendChild(spanScore);
     div.appendChild(span100);
 
-    if (showDiff) {
-      var diff:String = getDiffExpression().getValue();
-      if (diff) {
-        var spanDiff = window.document.createElement('span');
-        spanDiff.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute; top: 136px;margin-left: -50px;font-size:22px;");
-        spanDiff.textContent = diff;
-        div.appendChild(spanDiff);
-      }
-    }
     div.appendChild(canvas);
     el.appendChild(div);
+
+    if (showDiff) {
+      //render the diff only if there is the last value
+      if (ScoreUtil.getLastExpression(bindTo).getValue()) {
+        var spanDiff = window.document.createElement('span');
+        spanDiff.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute; top: 136px;margin-left: -130px;font-size:22px;");
+        div.appendChild(spanDiff);
+        var scoreDiffConfig:ScoreDiff = ScoreDiff({});
+        scoreDiffConfig.bindToValue1 = bindTo;
+        scoreDiffConfig.bindToValue2 = ScoreUtil.getLastExpression(bindTo);
+        scoreDiffConfig.renderTo = spanDiff;
+        Ext.create(ScoreDiff, scoreDiffConfig);
+      }
+    }
 
     ctx.translate(options.size / 2, options.size / 2); // change center
     ctx.rotate((-1 / 2 + options.rotate / 180) * Math.PI); // rotate -90 deg
@@ -95,33 +102,5 @@ public class ScoreCircleBase extends Container {
     drawCircle('#efefef', options.lineWidth, 100 / 100);
     drawCircle(color || ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
   }
-
-  internal function getDiffExpression():ValueExpression {
-    return ValueExpressionFactory.createFromFunction(function ():String {
-      var lastExpression:ValueExpression = getLastExpression(bindTo as PropertyPathExpression);
-      var lastScore:Number = lastExpression.getValue();
-      if (!lastScore) {
-        return null;
-      }
-      var diff:int = bindTo.getValue() - lastScore;
-
-      if (diff > 0) {
-        return "up " + diff;
-      } else if (diff < 0) {
-        return "down " + diff
-      }
-      return "no change " + diff;
-    });
-  }
-
-  private function getLastExpression(ppe:PropertyPathExpression):ValueExpression {
-    var feedbackItem:FeedbackItem = ppe.getBean() as FeedbackItem;
-    var propertyPathArcs:Array = ppe.getPropertyPathArcs().concat();
-    //previewSummary.dciOverallScoreDocument.seo.total --> previewSummary.last.dciOverallScoreDocument.seo.total
-    propertyPathArcs.splice(1, 0, "last");
-    return ValueExpressionFactory.create(propertyPathArcs.join('.'), feedbackItem);
-  }
-
-
 }
 }

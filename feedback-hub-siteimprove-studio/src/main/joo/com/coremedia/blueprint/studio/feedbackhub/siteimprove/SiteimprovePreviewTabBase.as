@@ -23,11 +23,10 @@ public class SiteimprovePreviewTabBase extends Panel {
     return ValueExpressionFactory.createFromFunction(function():String {
       var date:Date = ValueExpressionFactory.create('previewSummary.crawlStatus.next_crawl', config.feedbackItem).getValue();
       if(!date) {
-        return getResource('feedbackItemPanel_siteimprove_preview_unknown');
+        return getResource('feedbackItemPanel_siteimprove_unknown');
       }
 
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_date'),
-              DateUtil.format(date, resourceManager.getString('com.coremedia.cms.editor.Editor', 'shortDateFormat')));
+      return DateUtil.format(date, resourceManager.getString('com.coremedia.cms.editor.Editor', 'shortDateFormat'));
     });
   }
 
@@ -39,7 +38,7 @@ public class SiteimprovePreviewTabBase extends Panel {
     return ValueExpressionFactory.createFromFunction(function():String {
       var date:Date = ValueExpressionFactory.create('previewSummary.pageDetailsDocument.summary.page.last_seen', config.feedbackItem).getValue();
       if(!date) {
-        return getResource('feedbackItemPanel_siteimprove_preview_unknown');
+        return getResource('feedbackItemPanel_siteimprove_unknown');
       }
 
       return getDateDiff(date);
@@ -49,21 +48,21 @@ public class SiteimprovePreviewTabBase extends Panel {
   private function getDateDiff(date:Date):String {
     var seconds:Number = (new Date().getTime() - date.getTime()) / 1000;
     if (seconds < 60) {
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_seconds_ago'), Math.round(seconds));
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_seconds_ago'), Math.round(seconds));
     }
 
     var minutes:Number = seconds / 60;
     if (minutes < 60) {
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_minutes_ago'), Math.round(minutes));
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_minutes_ago'), Math.round(minutes));
     }
 
     var hours:Number = minutes / 60;
     if (hours < 24) {
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_hours_ago'), Math.round(hours));
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_hours_ago'), Math.round(hours));
     }
 
     var days:Number = hours / 60;
-    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_preview_days_ago'), Math.round(days));
+    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
   }
 
 

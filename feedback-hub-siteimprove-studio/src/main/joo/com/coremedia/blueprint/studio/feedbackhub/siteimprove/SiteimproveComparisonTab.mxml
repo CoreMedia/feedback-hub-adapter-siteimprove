@@ -40,13 +40,13 @@
                     color="{PREVIEW_COLOR}"
                     label="{getResource('feedbackItemPanel_siteimprove_preview_site')}"
                     bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
-                    crawlDateExpression="{getLastCrawlDateExpression(config)}"/>
+                    crawlDateExpression="{getLastCrawlDateExpression(config, false, false)}"/>
             <components:ScoreCircle
                     flex="1"
                     color="{LIVE_COLOR}"
                     label="{getResource('feedbackItemPanel_siteimprove_live_site')}"
                     bindTo="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
-                    crawlDateExpression="{getLastCrawlDateExpression(config, true)}"/>
+                    crawlDateExpression="{getLastCrawlDateExpression(config, true, false)}"/>
           </items>
           <layout>
             <layout_HBox align="stretch"/>
@@ -108,7 +108,12 @@
                           value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
             <DisplayField>
               <plugins>
-                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, false, true)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, true, true)}"/>
               </plugins>
             </DisplayField>
             <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
@@ -116,6 +121,11 @@
             <DisplayField>
               <plugins>
                 <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config, true)}"/>
               </plugins>
             </DisplayField>
           </items>

@@ -28,7 +28,7 @@ public class SiteimproveComparisonTabBase extends Panel {
               DateUtil.format(date, resourceManager.getString('com.coremedia.cms.editor.Editor', 'shortDateFormat')) :
               getResource('feedbackItemPanel_siteimprove_unknown');
       var siteResourceName:String = live ? 'feedbackItemPanel_siteimprove_live_site' : 'feedbackItemPanel_siteimprove_preview_site';
-      return getResource(siteResourceName) + ": " + dateString;
+      return getResource(siteResourceName) + " - " + dateString;
     });
   }
 

@@ -147,14 +147,30 @@ public class SiteimproveServiceImpl implements SiteimproveService {
   @Override
   public Seov2IssuesDocument getSeov2IssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
     String seov2PageIssuesUrl = SITES + siteId + "/seov2/pages/" + pageId + "/issues";
-    return connector.performGet(config, seov2PageIssuesUrl, Seov2IssuesDocument.class, null);
+    Seov2IssuesDocument issues = connector.performGet(config, seov2PageIssuesUrl, Seov2IssuesDocument.class, null);
+
+    //paging
+    Seov2IssuesDocument nextIssues = issues;
+    while (nextIssues.hasNext()) {
+      nextIssues = connector.performGet(config, nextIssues.nextUrl(), Seov2IssuesDocument.class, null);
+      issues.add(nextIssues);
+    }
+    return issues;
   }
 
   @Nullable
   @Override
   public AccessibilityIssuesDocument getAccessibilityIssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
     String seov2PageIssuesUrl = SITES + siteId + "/accessibility/pages/" + pageId + "/issues";
-    return connector.performGet(config, seov2PageIssuesUrl, AccessibilityIssuesDocument.class, null);
+    AccessibilityIssuesDocument issues = connector.performGet(config, seov2PageIssuesUrl, AccessibilityIssuesDocument.class, null);
+
+    //paging
+    AccessibilityIssuesDocument nextIssues = issues;
+    while (nextIssues.hasNext()) {
+      nextIssues = connector.performGet(config, nextIssues.nextUrl(), AccessibilityIssuesDocument.class, null);
+      issues.add(nextIssues);
+    }
+    return issues;
   }
 
   @Nullable

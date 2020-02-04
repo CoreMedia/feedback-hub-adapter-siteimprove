@@ -8,8 +8,10 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Content
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckResultDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagsDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagNameContentDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagNameContentListDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagNameDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagNameListDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
@@ -208,41 +210,8 @@ public class SiteimproveServiceImpl implements SiteimproveService {
     return connector.performGet(config, resourcePath, SiteDocument.class, queryParam);
   }
 
-  @Nullable
-  @Override
-  public PageDocument findPage(@NonNull SiteimproveSettings config,
-                               @NonNull String siteId,
-                               @NonNull Content content) {
-
-    MultiValueMap<String, String> contentMetatagQueryParam = new LinkedMultiValueMap<>();
-    contentMetatagQueryParam.add("query", createMetaTag(content));
-    String metaTagsResourcePath = SITES + siteId + "/quality_assurance/inventory/meta_tags";
-    MetatagsDocument metatagsDocument = connector.performGet(config, metaTagsResourcePath, MetatagsDocument.class, contentMetatagQueryParam);
-
-    if (metatagsDocument == null || metatagsDocument.getItems().isEmpty()) {
-      return null;
-    }
-
-    MetatagDocument metatagDocument = metatagsDocument.getItems().get(0);
-    metaTagsResourcePath = metaTagsResourcePath + "/" + metatagDocument.getId() + "/contents";
-    metatagsDocument = connector.performGet(config, metaTagsResourcePath, MetatagsDocument.class, null);
-
-    if (metatagsDocument == null || metatagsDocument.getItems().isEmpty()) {
-      return null;
-    }
-
-    metatagDocument = metatagsDocument.getItems().get(0);
-    metaTagsResourcePath += "/" + metatagDocument.getId() + "/pages";
-    PagesDocument pagesDocument = connector.performGet(config, metaTagsResourcePath, PagesDocument.class, null);
-
-    if (pagesDocument == null || pagesDocument.getPages().isEmpty()) {
-      return null;
-    }
-
-    return pagesDocument.getPages().get(0);
-  }
-
   /**
+   * Find a page to the given content using the siteImprove metatag service:
    * This means that you can now add your meta-tags with the id properly in the content-attribute, not tacked onto the tag-name itself. Something like this:
    *
    * <meta name="coremedia:content-id" content="xyz123_the_id_goes_here">
@@ -253,8 +222,40 @@ public class SiteimproveServiceImpl implements SiteimproveService {
    * The documentation for the endpoint will be updated once deployed:
    * https://api.siteimprove.com/v2/documentation#!/Quality_Assurance/get_sites_site_id_quality_assurance_inventory_meta_tags_meta_name_id_contents
    */
-  private String createMetaTag(@NonNull Content content) {
-    return String.valueOf(IdHelper.parseContentId(content.getId()));
+  @Nullable
+  @Override
+  public PageDocument findPage(@NonNull SiteimproveSettings config,
+                               @NonNull String siteId,
+                               @NonNull Content content) {
+
+    MultiValueMap<String, String> metatagNameQueryParam = new LinkedMultiValueMap<>();
+    metatagNameQueryParam.add("query", "coremedia:content-id");
+    String metaTagsResourcePath = SITES + siteId + "/quality_assurance/inventory/meta_tags";
+    MetatagNameListDocument metatagNameListDocument = connector.performGet(config, metaTagsResourcePath,
+            MetatagNameListDocument.class, metatagNameQueryParam);
+
+    if (metatagNameListDocument == null || metatagNameListDocument.getItems().isEmpty()) {
+      return null;
+    }
+
+    MetatagNameDocument metatagNameDocument = metatagNameListDocument.getItems().get(0);
+    MultiValueMap<String, String> metatagNameContentQueryParam = new LinkedMultiValueMap<>();
+    metatagNameContentQueryParam.add("query", String.valueOf(IdHelper.parseContentId(content.getId())));
+    MetatagNameContentListDocument metatagNameContentListDocument = connector.performGet(config, metatagNameDocument.getContentsUrl(),
+            MetatagNameContentListDocument.class, metatagNameContentQueryParam);
+
+    if (metatagNameContentListDocument == null || metatagNameContentListDocument.getItems().isEmpty()) {
+      return null;
+    }
+
+    MetatagNameContentDocument metatagNameContentDocument = metatagNameContentListDocument.getItems().get(0);
+    PagesDocument pagesDocument = connector.performGet(config, metatagNameContentDocument.getPagesUrl(), PagesDocument.class, null);
+
+    if (pagesDocument == null || pagesDocument.getPages().isEmpty()) {
+      return null;
+    }
+
+    return pagesDocument.getPages().get(0);
   }
 
 }

@@ -28,6 +28,12 @@ public class LinkDocument {
   @JsonProperty("page_report")
   private HrefDocument pageReport;
 
+  @JsonProperty("contents")
+  private HrefDocument contents;
+
+  @JsonProperty("pages")
+  private HrefDocument pages;
+
   public HrefDocument getDetails() {
     return details;
   }
@@ -74,5 +80,21 @@ public class LinkDocument {
 
   public void setPageReport(HrefDocument pageReport) {
     this.pageReport = pageReport;
+  }
+
+  public HrefDocument getContents() {
+    return contents;
+  }
+
+  public void setContents(HrefDocument contents) {
+    this.contents = contents;
+  }
+
+  public HrefDocument getPages() {
+    return pages;
+  }
+
+  public void setPages(HrefDocument pages) {
+    this.pages = pages;
   }
 }

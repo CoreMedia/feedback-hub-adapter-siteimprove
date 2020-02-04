@@ -1,6 +1,5 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.job;
 
-import com.coremedia.blueprint.feedbackhub.siteimprove.HistoryService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.feedbackhub.FeedbackService;
@@ -11,13 +10,11 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 public class RecrawlPageJobFactory implements JobFactory {
 
   private SiteimproveService siteimproveService;
-  private HistoryService historyService;
   private FeedbackService feedbackService;
   private SitesService sitesService;
 
-  public RecrawlPageJobFactory(SiteimproveService siteimproveService, HistoryService historyService, FeedbackService feedbackService, SitesService sitesService) {
+  public RecrawlPageJobFactory(SiteimproveService siteimproveService, FeedbackService feedbackService, SitesService sitesService) {
     this.siteimproveService = siteimproveService;
-    this.historyService = historyService;
     this.feedbackService = feedbackService;
     this.sitesService = sitesService;
   }
@@ -30,6 +27,6 @@ public class RecrawlPageJobFactory implements JobFactory {
   @NonNull
   @Override
   public Job createJob() {
-    return new RecrawlPageJob(siteimproveService, historyService, feedbackService, sitesService);
+    return new RecrawlPageJob(siteimproveService, feedbackService, sitesService);
   }
 }

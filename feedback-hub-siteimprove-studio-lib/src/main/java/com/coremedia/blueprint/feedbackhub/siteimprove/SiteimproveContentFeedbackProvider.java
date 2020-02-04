@@ -41,14 +41,11 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
   private SiteimproveSettings settings;
   private SiteimproveService siteimproveService;
-  private HistoryService historyService;
 
   SiteimproveContentFeedbackProvider(SiteimproveSettings settings,
-                                     SiteimproveService siteimproveService,
-                                     HistoryService historyService) {
+                                     SiteimproveService siteimproveService) {
     this.settings = settings;
     this.siteimproveService = siteimproveService;
-    this.historyService =historyService;
   }
 
   public SiteimproveSettings getSettings() {
@@ -75,11 +72,6 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
   }
 
   private ContentQualitySummaryDocument getContentQualitySummary(Content content, String siteimproveSiteId) {
-    ContentQualitySummaryDocument summary = historyService.get(content, siteimproveSiteId);
-
-    if (summary != null) {
-      return summary;
-    }
 
     try {
       PageDocument page = findPage(settings, siteimproveSiteId, content);
@@ -123,7 +115,6 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
       CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
       contentQualitySummaryDocument.setCrawlStatus(crawlStatus);
 
-      historyService.save(content, siteimproveSiteId, contentQualitySummaryDocument);
       return contentQualitySummaryDocument;
     } catch (Exception e) {
       LOG.error("Failed to collect siteimprove report for site {}: {}", siteimproveSiteId, e.getMessage());

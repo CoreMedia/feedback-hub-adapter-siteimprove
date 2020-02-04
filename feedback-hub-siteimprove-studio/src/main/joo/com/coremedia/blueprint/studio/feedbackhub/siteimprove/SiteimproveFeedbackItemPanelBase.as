@@ -1,18 +1,33 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.model.SiteimproveFeedbackItem;
 import com.coremedia.cms.studio.feedbackhub.components.FeedbackItemPanel;
+import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 
 import ext.StringUtil;
+
+import js.JSON;
 
 public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
   private var feedbackLoadedExpression:ValueExpression;
   private var feedbackNotLoadedExpression:ValueExpression;
 
+  private static const PREVIEW_LASTSEEN:String = 'previewSummary.pageDetailsDocument.summary.page.lastSeen';
+
   public function SiteimproveFeedbackItemPanelBase(config:SiteimproveFeedbackItemPanel = null) {
+    if(!config.feedbackItem.isStub && config.feedbackItem[PREVIEW_LASTSEEN]) {
+      var lastFeedbackItem:FeedbackItem = getLastFeedbackItem();
+      if (lastFeedbackItem) {
+        if (lastFeedbackItem[PREVIEW_LASTSEEN] !== config.feedbackItem[PREVIEW_LASTSEEN])  {
+          config.feedbackItem['last'] = lastFeedbackItem;
+        }
+      }
+      save(config.feedbackItem)
+    }
     super(config);
+
   }
 
   internal function getFeedbackLoadedExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
@@ -52,5 +67,16 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }
 
+  private function save(feebackItem:FeedbackItem):void {
+    window.sessionStorage.setItem(getContentKey(), JSON.stringify(feebackItem));
+  }
+
+  private function getLastFeedbackItem():FeedbackItem {
+    return JSON.parse(window.sessionStorage.getItem(getContentKey())) as FeedbackItem;
+  }
+
+  private function getContentKey():String {
+    return "siteImprove." + contentExpression.getValue();
+  }
 }
 }

@@ -36,7 +36,7 @@ public class SiteimprovePreviewTabBase extends Panel {
 
   internal function getLastCrawlDateExpression(config:SiteimprovePreviewTab):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
-      var date:Date = ValueExpressionFactory.create('previewSummary.pageDetailsDocument.summary.page.last_seen', config.feedbackItem).getValue();
+      var date:Date = ValueExpressionFactory.create('previewSummary.pageDetailsDocument.summary.page.lastSeen', config.feedbackItem).getValue();
       if(!date) {
         return getResource('feedbackItemPanel_siteimprove_unknown');
       }

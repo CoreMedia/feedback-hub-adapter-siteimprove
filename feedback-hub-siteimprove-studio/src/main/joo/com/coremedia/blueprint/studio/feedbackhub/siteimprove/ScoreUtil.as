@@ -41,10 +41,9 @@ public class ScoreUtil {
   public static function getLastExpression(bindTo:ValueExpression):ValueExpression {
     var ppe:PropertyPathExpression = bindTo as PropertyPathExpression;
     var feedbackItem:FeedbackItem = ppe.getBean() as FeedbackItem;
-    var propertyPathArcs:Array = ppe.getPropertyPathArcs().concat();
-    //previewSummary.dciOverallScoreDocument.seo.total --> previewSummary.last.dciOverallScoreDocument.seo.total
-    propertyPathArcs.splice(1, 0, "last");
-    return ValueExpressionFactory.create(propertyPathArcs.join('.'), feedbackItem);
+    //previewSummary.dciOverallScoreDocument.seo.total --> last.previewSummary.dciOverallScoreDocument.seo.total
+    var lastPropertyPathArcs:Array = ['last'].concat(ppe.getPropertyPathArcs());
+    return ValueExpressionFactory.create(lastPropertyPathArcs.join('.'), feedbackItem);
   }
 
 }

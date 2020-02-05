@@ -16,8 +16,6 @@ public class ContentQualitySummaryDocument {
   private CrawlStatusDocument crawlStatus;
   private String siteId;
 
-  private ContentQualitySummaryDocument last;
-
   public ContentQualitySummaryDocument(@Nullable PageDocument page, @NonNull String siteId) {
     this.page = page;
     this.siteId = siteId;
@@ -93,13 +91,5 @@ public class ContentQualitySummaryDocument {
 
   public void setSiteId(String siteId) {
     this.siteId = siteId;
-  }
-
-  public ContentQualitySummaryDocument getLast() {
-    return last;
-  }
-
-  public void setLast(ContentQualitySummaryDocument last) {
-    this.last = last;
   }
 }

@@ -14,7 +14,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
   private var feedbackLoadedExpression:ValueExpression;
   private var feedbackNotLoadedExpression:ValueExpression;
 
-  private static const PREVIEW_LASTSEEN:String = 'previewSummary.pageDetailsDocument.summary.page.lastSeen';
+  private static const PREVIEW_LASTSEEN:String = 'previewSummary.pageDetailsDocument.summary.page.last_seen';
 
   public function SiteimproveFeedbackItemPanelBase(config:SiteimproveFeedbackItemPanel = null) {
     if(!config.feedbackItem.isStub && config.feedbackItem[PREVIEW_LASTSEEN]) {

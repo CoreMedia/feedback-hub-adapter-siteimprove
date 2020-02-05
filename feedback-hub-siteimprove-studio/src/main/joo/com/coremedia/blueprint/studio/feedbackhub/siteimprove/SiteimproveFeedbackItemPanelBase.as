@@ -41,7 +41,7 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
       if (StringUtil.endsWith(value, 'Z')) {
         value = String(value).substr(0, String(value).length - 1);
       }
-      value = DateUtil.parse(value, "Y-m-dTg:i:s.000");
+      value = DateUtil.parse(value, "Y-m-dTG:i:s.000");
     }
     return value;
   }

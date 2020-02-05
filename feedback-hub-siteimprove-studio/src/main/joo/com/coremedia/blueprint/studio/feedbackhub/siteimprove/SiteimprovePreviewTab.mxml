@@ -83,6 +83,18 @@
               </plugins>
             </DisplayField>
             <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          value="{getResource('feedbackItemPanel_siteimprove_second_last_crawl')}">
+              <plugins>
+                <ui:BindVisibilityPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
+                <ui:BindVisibilityPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
                           value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
             <DisplayField>
               <plugins>

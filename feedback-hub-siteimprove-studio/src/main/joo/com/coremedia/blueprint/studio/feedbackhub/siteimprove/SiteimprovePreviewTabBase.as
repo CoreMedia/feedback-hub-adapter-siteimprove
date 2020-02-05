@@ -45,7 +45,34 @@ public class SiteimprovePreviewTabBase extends Panel {
     });
   }
 
+  internal function getSecondLastCrawlDateExpression(config:SiteimprovePreviewTab):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():String {
+      var date:* = ValueExpressionFactory.create('last.previewSummary.pageDetailsDocument.summary.page.last_seen', config.feedbackItem).getValue();
+
+      if(!date) {
+        return null;
+      }
+
+      //TODO:this is a workaround
+      //when from the parsed json then the value is a string like "2020-02-05T12:51:51.000Z"
+      //only without the trailing 'Z' the string can be parsed.
+      if (date is String) {
+        var dateString:String = String(date);
+        if (StringUtil.endsWith(dateString, 'Z')) {
+          dateString = dateString.substr(0, dateString.length - 1);
+        }
+        date = DateUtil.parse(dateString, "Y-m-dTG:i:s.000");
+      }
+
+      return getDateDiff(date);
+    });
+  }
+
   private function getDateDiff(date:Date):String {
+    if (!date) {
+      return null;
+    }
+
     var seconds:Number = (new Date().getTime() - date.getTime()) / 1000;
     if (seconds < 60) {
       return StringUtil.format(getResource('feedbackItemPanel_siteimprove_seconds_ago'), Math.round(seconds));

@@ -93,21 +93,19 @@ class SiteimproveRestConnector {
   }
 
   private String getUrl(String resourcePath, MultiValueMap<String, String> queryParams) {
+    UriComponentsBuilder uriComponentsBuilder;
     //resourcePath can be absolute when it is from extracted from a json of a previous request.
     if (resourcePath.contains(host)) {
-      return resourcePath;
+      uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(resourcePath);
+    } else {
+      uriComponentsBuilder = UriComponentsBuilder.newInstance()
+              .scheme(protocol)
+              .host(host)
+              .path(resourcePath);
     }
-    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance()
-            .scheme(protocol)
-            .host(host);
 
     if (queryParams != null) {
       uriComponentsBuilder.queryParams(queryParams);
-    }
-
-    // Add resource path
-    if (resourcePath != null) {
-      uriComponentsBuilder.path(resourcePath);
     }
 
     UriComponents uriComponents = uriComponentsBuilder.build();

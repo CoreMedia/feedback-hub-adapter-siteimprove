@@ -53,17 +53,6 @@ public class SiteimprovePreviewTabBase extends Panel {
         return null;
       }
 
-      //TODO:this is a workaround
-      //when from the parsed json then the value is a string like "2020-02-05T12:51:51.000Z"
-      //only without the trailing 'Z' the string can be parsed.
-      if (date is String) {
-        var dateString:String = String(date);
-        if (StringUtil.endsWith(dateString, 'Z')) {
-          dateString = dateString.substr(0, dateString.length - 1);
-        }
-        date = DateUtil.parse(dateString, "Y-m-dTG:i:s.000");
-      }
-
       return getDateDiff(date);
     });
   }

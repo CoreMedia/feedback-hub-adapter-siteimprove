@@ -4,11 +4,7 @@ import com.coremedia.cms.studio.feedbackhub.components.FeedbackItemPanel;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 
-import ext.DateUtil;
-
 import ext.StringUtil;
-
-import js.JSON;
 
 public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
@@ -18,32 +14,23 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
   private static const PREVIEW_LASTSEEN:String = 'previewSummary.pageDetailsDocument.summary.page.last_seen';
 
   public function SiteimproveFeedbackItemPanelBase(config:SiteimproveFeedbackItemPanel = null) {
+
     if(!config.feedbackItem.isStub && getLastSeenDate(config.feedbackItem)) {
-      var lastFeedbackItem:Object = getLastFeedbackItem(config);
+      var lastFeedbackItem:Object = StoreUtil.getFeedbackItem(config);
       if (lastFeedbackItem) {
         if (getLastSeenDate(lastFeedbackItem) !== getLastSeenDate(config.feedbackItem))  {
+          lastFeedbackItem['last'] = null;
           config.feedbackItem['last'] = lastFeedbackItem;
         }
       }
-      save(config)
+      StoreUtil.saveFeedbackItem(config);
     }
     super(config);
 
   }
 
-  private function getLastSeenDate(item:Object) {
-    var value:* = ValueExpressionFactory.create(PREVIEW_LASTSEEN, item).getValue();
-
-    //TODO:this is a workaround
-    //when from the parsed json then the value is a string like "2020-02-05T12:51:51.000Z"
-    //only without the trailing 'Z' the string can be parsed.
-    if (value is String) {
-      if (StringUtil.endsWith(value, 'Z')) {
-        value = String(value).substr(0, String(value).length - 1);
-      }
-      value = DateUtil.parse(value, "Y-m-dTG:i:s.000");
-    }
-    return value;
+  private function getLastSeenDate(item:Object):Date {
+    return ValueExpressionFactory.create(PREVIEW_LASTSEEN, item).getValue();
   }
 
   internal function getFeedbackLoadedExpression(config:SiteimproveFeedbackItemPanel):ValueExpression {
@@ -81,18 +68,6 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
   internal function getResource(resourceName:String):String {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
-  }
-
-  private function save(config:SiteimproveFeedbackItemPanel):void {
-    window.sessionStorage.setItem(getContentKey(config), JSON.stringify(config.feedbackItem));
-  }
-
-  private function getLastFeedbackItem(config:SiteimproveFeedbackItemPanel):Object {
-    return JSON.parse(window.sessionStorage.getItem(getContentKey(config)));
-  }
-
-  private function getContentKey(config:SiteimproveFeedbackItemPanel):String {
-    return "siteImprove." + config.contentExpression.getValue();
   }
 }
 }

@@ -67,7 +67,7 @@ public class SiteimproveComparisonTabBase extends Panel {
       return StringUtil.format(getResource('feedbackItemPanel_siteimprove_hours_ago'), Math.round(hours));
     }
 
-    var days:Number = hours / 60;
+    var days:Number = hours / 24;
     return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
   }
 

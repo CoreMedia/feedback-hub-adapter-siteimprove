@@ -25,7 +25,7 @@ public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbac
     }
 
     String apiKey = settings.getApiKey();
-    if (apiKey == null) {
+    if (apiKey == null || apiKey.isEmpty()) {
       throw new FeedbackHubException("settings must provide an apiKey", SiteimproveFeedbackHubErrorCode.API_KEY_NOT_SET);
     }
 

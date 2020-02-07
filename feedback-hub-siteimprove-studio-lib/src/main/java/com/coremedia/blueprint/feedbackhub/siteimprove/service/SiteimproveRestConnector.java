@@ -1,7 +1,8 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.service;
 
-import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveRemoteException;
+import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
+import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
@@ -88,7 +89,8 @@ class SiteimproveRestConnector {
       return responseEntity.getBody();
     } catch (HttpClientErrorException e) {
       LOG.error("Failed to execute siteimprove REST call {}: {}", url, e.getResponseBodyAsString());
-      throw new SiteimproveRemoteException(e);
+      throw new FeedbackHubException("Rest Connector throws an exception",
+              e, SiteimproveFeedbackHubErrorCode.REST_ERROR, null);
     }
   }
 

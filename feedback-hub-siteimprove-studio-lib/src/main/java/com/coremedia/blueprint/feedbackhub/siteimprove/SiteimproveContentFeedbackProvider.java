@@ -13,6 +13,8 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDo
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssueDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.cap.content.Content;
+import com.coremedia.feedbackhub.ErrorFeedbackItem;
+import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import com.coremedia.feedbackhub.provider.ContentFeedbackProvider;
 import com.coremedia.feedbackhub.provider.FeedbackItem;
 import edu.umd.cs.findbugs.annotations.DefaultAnnotation;
@@ -61,7 +63,12 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
       SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
       return CompletableFuture.completedFuture(feedbackItem)
               .thenApply(this::asFeedbackItems);
+    } catch (FeedbackHubException e) {
+      ErrorFeedbackItem errorFeedbackItem = new ErrorFeedbackItem(e.getErrorCode(), e.getArguments());
+      return CompletableFuture.completedFuture(errorFeedbackItem)
+              .thenApply(this::asFeedbackItems);
     } catch (Exception e) {
+      LOG.error("Failed to collect siteimprove report for content {}: {}", content, e.getMessage());
       return CompletableFuture.failedFuture(e);
     }
   }
@@ -71,59 +78,50 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     return SiteimproveFeedbackItem.TYPE;
   }
 
-  private Collection<FeedbackItem> asFeedbackItems(SiteimproveFeedbackItem feedbackItem) {
+  private Collection<FeedbackItem> asFeedbackItems(FeedbackItem feedbackItem) {
     return Collections.singleton(feedbackItem);
   }
 
   private ContentQualitySummaryDocument getContentQualitySummary(Content content, String siteimproveSiteId) {
 
-    try {
-      PageDocument page = findPage(settings, siteimproveSiteId, content);
-      if (page == null) {
-        //TODO: Use on-demand content check (https://api.siteimprove.com/v2/documentation#/Content) and upload the previewed html
-        return null;
-      }
+    PageDocument page = findPage(settings, siteimproveSiteId, content);
 
-      MultiValueMap<String, String> queryParamContentID = new LinkedMultiValueMap<>();
-      queryParamContentID.add("ids", page.getId());
+    MultiValueMap<String, String> queryParamContentID = new LinkedMultiValueMap<>();
+    queryParamContentID.add("ids", page.getId());
 
-      ContentQualitySummaryDocument contentQualitySummaryDocument = new ContentQualitySummaryDocument(page, siteimproveSiteId);
-      //Creating content quality summary
-      DciOverallScoreDocument dciScore = siteimproveService.getDCIScore(settings, siteimproveSiteId, page.getId());
-      contentQualitySummaryDocument.setDciOverallScoreDocument(dciScore);
+    ContentQualitySummaryDocument contentQualitySummaryDocument = new ContentQualitySummaryDocument(page, siteimproveSiteId);
+    //Creating content quality summary
+    DciOverallScoreDocument dciScore = siteimproveService.getDCIScore(settings, siteimproveSiteId, page.getId());
+    contentQualitySummaryDocument.setDciOverallScoreDocument(dciScore);
 
-      PageDetailsDocument pageDetailsDocument = siteimproveService.getPageDetails(settings, siteimproveSiteId, page.getId());
-      contentQualitySummaryDocument.setPageDetailsDocument(pageDetailsDocument);
+    PageDetailsDocument pageDetailsDocument = siteimproveService.getPageDetails(settings, siteimproveSiteId, page.getId());
+    contentQualitySummaryDocument.setPageDetailsDocument(pageDetailsDocument);
 
 
-      BrokenLinkPagesDocument brokenLinkPagesDocument = siteimproveService.getBrokenLinkPages(settings, siteimproveSiteId, queryParamContentID);
-      if (brokenLinkPagesDocument != null && !brokenLinkPagesDocument.getBrokenPages().isEmpty()) {
-        BrokenLinkPageDocument brokenLinkPageDocument = brokenLinkPagesDocument.getBrokenPages().get(0);
-        contentQualitySummaryDocument.setBrokenLinkPageDocument(brokenLinkPageDocument);
-      }
-
-      PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, siteimproveSiteId, queryParamContentID);
-      if (misspellingPages != null && !misspellingPages.getPages().isEmpty()) {
-        PageDocument misspellingPage = misspellingPages.getPages().get(0);
-        contentQualitySummaryDocument.setMisspellingPage(misspellingPage);
-      }
-
-      Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
-      List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
-      seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
-      contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
-
-      AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
-      contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
-
-      CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
-      contentQualitySummaryDocument.setCrawlStatus(crawlStatus);
-
-      return contentQualitySummaryDocument;
-    } catch (Exception e) {
-      LOG.error("Failed to collect siteimprove report for site {}: {}", siteimproveSiteId, e.getMessage());
-      return new ContentQualitySummaryDocument(null, siteimproveSiteId);
+    BrokenLinkPagesDocument brokenLinkPagesDocument = siteimproveService.getBrokenLinkPages(settings, siteimproveSiteId, queryParamContentID);
+    if (brokenLinkPagesDocument != null && !brokenLinkPagesDocument.getBrokenPages().isEmpty()) {
+      BrokenLinkPageDocument brokenLinkPageDocument = brokenLinkPagesDocument.getBrokenPages().get(0);
+      contentQualitySummaryDocument.setBrokenLinkPageDocument(brokenLinkPageDocument);
     }
+
+    PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, siteimproveSiteId, queryParamContentID);
+    if (misspellingPages != null && !misspellingPages.getPages().isEmpty()) {
+      PageDocument misspellingPage = misspellingPages.getPages().get(0);
+      contentQualitySummaryDocument.setMisspellingPage(misspellingPage);
+    }
+
+    Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
+    List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
+    seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
+    contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
+
+    AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
+    contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
+
+    CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
+    contentQualitySummaryDocument.setCrawlStatus(crawlStatus);
+
+    return contentQualitySummaryDocument;
   }
 
   @Nullable

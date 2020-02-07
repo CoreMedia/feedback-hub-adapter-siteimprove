@@ -1,11 +1,13 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.service;
 
+import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AccessibilityIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AnalyticsSummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentCheckResultDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlResultDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.MetatagNameContentDocument;
@@ -21,9 +23,9 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Quality
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SeoIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.SiteDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlResultDocument;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
+import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
@@ -235,7 +237,7 @@ public class SiteimproveServiceImpl implements SiteimproveService {
             MetatagNameListDocument.class, metatagNameQueryParam);
 
     if (metatagNameListDocument == null || metatagNameListDocument.getItems().isEmpty()) {
-      return null;
+      throw new FeedbackHubException("No Content Meta-Tag found", SiteimproveFeedbackHubErrorCode.NO_CONTENT_METATAG_FOUND);
     }
 
     MetatagNameDocument metatagNameDocument = metatagNameListDocument.getItems().get(0);
@@ -245,14 +247,16 @@ public class SiteimproveServiceImpl implements SiteimproveService {
             MetatagNameContentListDocument.class, metatagNameContentQueryParam);
 
     if (metatagNameContentListDocument == null || metatagNameContentListDocument.getItems().isEmpty()) {
-      return null;
+      throw new FeedbackHubException("No Content Meta-Tag with the content found",
+              SiteimproveFeedbackHubErrorCode.NO_CONTENT_METATAG_WITH_CONTENT_ID_FOUND);
     }
 
     MetatagNameContentDocument metatagNameContentDocument = metatagNameContentListDocument.getItems().get(0);
     PagesDocument pagesDocument = connector.performGet(config, metatagNameContentDocument.getPagesUrl(), PagesDocument.class, null);
 
     if (pagesDocument == null || pagesDocument.getPages().isEmpty()) {
-      return null;
+      throw new FeedbackHubException("No content found",
+              SiteimproveFeedbackHubErrorCode.NO_CONTENT_FOUND);
     }
 
     return pagesDocument.getPages().get(0);

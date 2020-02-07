@@ -54,12 +54,16 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
   @Override
   public CompletionStage<Collection<FeedbackItem>> provideFeedback(Content content) {
-    ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(content, settings.getSiteimprovePreviewSiteId());
-    ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(content, settings.getSiteimproveLiveSiteId());
+    try {
+      ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(content, settings.getSiteimprovePreviewSiteId());
+      ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(content, settings.getSiteimproveLiveSiteId());
 
-    SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
-    return CompletableFuture.completedFuture(feedbackItem)
-            .thenApply(this::asFeedbackItems);
+      SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
+      return CompletableFuture.completedFuture(feedbackItem)
+              .thenApply(this::asFeedbackItems);
+    } catch (Exception e) {
+      return CompletableFuture.failedFuture(e);
+    }
   }
 
   @Override

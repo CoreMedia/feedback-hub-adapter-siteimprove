@@ -7,7 +7,6 @@
         xmlns="exml:ext.config"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns:ui="exml:com.coremedia.ui.config"
-        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
         collapsible="false"
         header="{false}"
@@ -26,11 +25,6 @@
 
     public native function SiteimproveFeedbackItemPanel(config:SiteimproveFeedbackItemPanel = null);
 
-    private function getEmptyText(config:SiteimproveFeedbackItemPanel):String {
-      return config.feedbackItem.isStub
-              ? getResource('siteimproveFeedbackItemPanel_no_feedback_loaded_text')
-              : getResource('siteimproveFeedbackItemPanel_no_feedback_available_text');
-    }
     ]]></fx:Script>
   <local:items>
     <Container layout="hbox">

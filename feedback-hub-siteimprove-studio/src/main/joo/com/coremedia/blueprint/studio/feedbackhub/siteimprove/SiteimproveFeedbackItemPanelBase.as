@@ -29,6 +29,12 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
 
   }
 
+  internal function getEmptyText(config:SiteimproveFeedbackItemPanel):String {
+    return config.feedbackItem.isStub
+            ? getResource('siteimproveFeedbackItemPanel_no_feedback_loaded_text')
+            : getResource('siteimproveFeedbackItemPanel_no_feedback_available_text');
+  }
+
   private function getLastSeenDate(item:Object):Date {
     return ValueExpressionFactory.create(PREVIEW_LASTSEEN, item).getValue();
   }

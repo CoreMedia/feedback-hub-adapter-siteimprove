@@ -22,7 +22,7 @@
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveComparisonTab";
 
     private static const PREVIEW_COLOR:String = "#006cae";
-    private static const LIVE_COLOR:String = "#959494";
+    private static const LIVE_COLOR:String = "#A2509C";
 
     private var config:SiteimproveComparisonTab;
 

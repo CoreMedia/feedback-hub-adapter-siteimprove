@@ -40,6 +40,7 @@
                 color="{config.color1}"
                 bindTo="{config.bindToValue1}"/>
         <local:ScoreBar
+                margin="-14 0 0 0"
                 color="{config.color2}"
                 bindTo="{config.bindToValue2}"/>
       </items>

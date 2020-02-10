@@ -77,7 +77,10 @@ public class SiteimprovePreviewTabBase extends Panel {
       return StringUtil.format(getResource('feedbackItemPanel_siteimprove_hours_ago'), Math.round(hours));
     }
 
-    var days:Number = hours / 60;
+    var days:Number = hours / 24;
+    if (Math.round(days) === 1) {
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_one_day_ago'), Math.round(days));
+    }
     return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
   }
 

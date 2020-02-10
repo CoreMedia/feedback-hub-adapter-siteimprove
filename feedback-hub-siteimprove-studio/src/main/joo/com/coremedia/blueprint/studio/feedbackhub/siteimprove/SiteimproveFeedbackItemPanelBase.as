@@ -65,13 +65,6 @@ public class SiteimproveFeedbackItemPanelBase extends FeedbackItemPanel {
     }, 200);
   }
 
-  internal function openSiteimprove():void {
-    var url:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimproveSettings', 'siteimprove_url');
-    var siteId:String = ValueExpressionFactory.create('previewSummary.siteId', feedbackItem).getValue();
-    url = StringUtil.format(url, siteId);
-    window.open(url, '_blank');
-  }
-
   internal function getResource(resourceName:String):String {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }

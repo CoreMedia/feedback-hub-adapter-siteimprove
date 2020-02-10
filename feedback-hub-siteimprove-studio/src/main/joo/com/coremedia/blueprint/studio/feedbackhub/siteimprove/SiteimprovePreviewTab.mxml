@@ -30,6 +30,14 @@
             ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
             title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
       <editor:items>
+        <Container layout="hbox">
+          <items>
+            <Component flex="1"/>
+            <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+                           tooltip="{getResource('open_siteimprove_btn_text')}"
+                           handler="{openPageInSiteimprove}"/>
+          </items>
+        </Container>
         <components:ScoreCircle
                 bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
                 crawlDateExpression="{getLastCrawlDateExpression(config)}"

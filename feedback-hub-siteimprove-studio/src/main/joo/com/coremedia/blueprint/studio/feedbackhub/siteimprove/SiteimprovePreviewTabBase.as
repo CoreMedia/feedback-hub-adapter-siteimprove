@@ -84,6 +84,10 @@ public class SiteimprovePreviewTabBase extends Panel {
     return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
   }
 
+  internal function openPageInSiteimprove():void {
+    var url:String = ValueExpressionFactory.create('previewSummary.pageDetailsDocument._siteimprove.seo.page_report.href', feedbackItem).getValue();
+    window.open(url, '_blank');
+  }
 
 }
 }

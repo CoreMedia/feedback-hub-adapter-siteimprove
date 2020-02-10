@@ -33,6 +33,18 @@
             ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
             title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
       <editor:items>
+        <Container layout="hbox">
+          <items>
+            <Component flex="1"/>
+            <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+                           tooltip="{getResource('open_siteimprove_btn_text')}"
+                           handler="{openPreviewPageInSiteimprove}"/>
+            <Component flex="1"/>
+            <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+                           tooltip="{getResource('open_siteimprove_btn_text')}"
+                           handler="{openLivePageInSiteimprove}"/>
+          </items>
+        </Container>
         <Container>
           <items>
             <components:ScoreCircle

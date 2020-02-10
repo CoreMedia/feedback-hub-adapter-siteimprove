@@ -105,5 +105,16 @@ public class SiteimproveComparisonTabBase extends Panel {
 
     return 'approve';
   }
+
+  internal function openPreviewPageInSiteimprove():void {
+    var url:String = ValueExpressionFactory.create('previewSummary.pageDetailsDocument._siteimprove.seo.page_report.href', feedbackItem).getValue();
+    window.open(url, '_blank');
+  }
+
+  internal function openLivePageInSiteimprove():void {
+    var url:String = ValueExpressionFactory.create('liveSummary.pageDetailsDocument._siteimprove.seo.page_report.href', feedbackItem).getValue();
+    window.open(url, '_blank');
+  }
+
 }
 }

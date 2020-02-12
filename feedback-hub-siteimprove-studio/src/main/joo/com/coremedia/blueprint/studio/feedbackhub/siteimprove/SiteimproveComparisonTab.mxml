@@ -10,7 +10,8 @@
         xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
         xmlns:siteimprove="exml:com.coremedia.blueprint.studio.feedbackhub.siteimprove.config"
-        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
+        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
+        ui="{PanelSkin.CARD_200.getSkin()}">
   <fx:Metadata>
     [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
@@ -18,6 +19,7 @@
   <fx:Script><![CDATA[
     import com.coremedia.ui.data.ValueExpressionFactory;
     import com.coremedia.ui.skins.DisplayFieldSkin;
+    import com.coremedia.ui.skins.PanelSkin;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveComparisonTab";
 

@@ -1,15 +1,11 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove.components {
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
-import com.coremedia.ui.data.ValueExpressionFactory;
 
-import ext.container.Container;
-import ext.form.field.DisplayField;
+import ext.panel.Panel;
 
 [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
-public class IssueListBase extends Container {
-  public static const VIEW_LIMIT:int = 3;
-
+public class IssueListBase extends Panel {
   private static const VIEW_INCREMENT:int = 3;
 
   private var loadCount:int = 0;
@@ -30,7 +26,7 @@ public class IssueListBase extends Container {
   internal function showMore():void {
     loadCount++;
     var allIssues:Array = bindTo.getValue() || [];
-    var endIndex:int = loadCount * VIEW_LIMIT;
+    var endIndex:int = loadCount * VIEW_INCREMENT;
     issuesExpression.setValue(allIssues.slice(0, endIndex));
 
   }

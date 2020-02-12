@@ -18,6 +18,7 @@
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
     import com.coremedia.ui.skins.PanelSkin;
 
@@ -82,7 +83,7 @@
                 bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
       </editor:items>
     </editor:CollapsibleFormPanel>
-    <Container>
+    <Container ui="{ContainerSkin.DARK_200.getSkin()}">
       <items>
         <Container layout="vbox">
           <items>

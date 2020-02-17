@@ -57,6 +57,21 @@ public class SiteimprovePreviewTabBase extends Panel {
     });
   }
 
+  internal function getFeedbackErrorExpression(config:SiteimprovePreviewTab):ValueExpression {
+    return ValueExpressionFactory.create("previewSummary.page.errorCode", config.feedbackItem);
+  }
+
+  internal function getFeedbackNoErrorExpression(config:SiteimprovePreviewTab):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():Boolean {
+      return !getFeedbackErrorExpression(config).getValue();
+    });
+  }
+
+  internal function getErrorMessage(config:SiteimprovePreviewTab):String {
+    var errorCode:String = getFeedbackErrorExpression(config).getValue();
+    return getResource("feedbackItemPanel_error_SiteimproveFeedbackHubErrorCode_" + errorCode);
+  }
+
   private function getDateDiff(date:Date):String {
     if (!date) {
       return null;

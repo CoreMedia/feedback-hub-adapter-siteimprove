@@ -29,6 +29,14 @@
     public native function SiteimprovePreviewTab(config:SiteimprovePreviewTab = null);
     ]]></fx:Script>
   <local:items>
+    <Container>
+      <items>
+        <DisplayField value="{getErrorMessage(config)}" html="true"/>
+      </items>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackErrorExpression(config)}"/>
+      </plugins>
+    </Container>
     <editor:CollapsibleFormPanel
             ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
             title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
@@ -71,6 +79,9 @@
       <editor:layout>
         <layout_VBox align="stretch"/>
       </editor:layout>
+      <editor:plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
+      </editor:plugins>
     </editor:CollapsibleFormPanel>
     <editor:CollapsibleFormPanel
             ariaLabel="{getResource('feedbackItemPanel_siteimprove_issues')}"
@@ -82,6 +93,9 @@
                 feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
                 bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
       </editor:items>
+      <editor:plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
+      </editor:plugins>
     </editor:CollapsibleFormPanel>
     <Container ui="{ContainerSkin.DARK_200.getSkin()}">
       <items>
@@ -136,6 +150,9 @@
       <layout>
         <layout_HBox align="middle"/>
       </layout>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
+      </plugins>
     </Container>
   </local:items>
 </local:SiteimprovePreviewTabBase>

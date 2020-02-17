@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.service.documents;
 
+import com.coremedia.feedbackhub.adapter.FeedbackHubErrorCode;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PageDocument {
@@ -21,6 +22,11 @@ public class PageDocument {
 
   @JsonProperty("potential_misspellings")
   private String potentialMisspellingCount;
+
+  private FeedbackHubErrorCode errorCode;
+
+  public PageDocument() {
+  }
 
   public String getId() {
     return id;
@@ -60,5 +66,13 @@ public class PageDocument {
 
   public void setPotentialMisspellingCount(String potentialMisspellingCount) {
     this.potentialMisspellingCount = potentialMisspellingCount;
+  }
+
+  public FeedbackHubErrorCode getErrorCode() {
+    return errorCode;
+  }
+
+  public void setErrorCode(FeedbackHubErrorCode errorCode) {
+    this.errorCode = errorCode;
   }
 }

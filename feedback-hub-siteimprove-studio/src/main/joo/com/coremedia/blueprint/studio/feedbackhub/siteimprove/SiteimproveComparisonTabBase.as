@@ -51,6 +51,21 @@ public class SiteimproveComparisonTabBase extends Panel {
     });
   }
 
+  internal function getFeedbackErrorExpression(config:SiteimproveComparisonTab):ValueExpression {
+    return ValueExpressionFactory.create("liveSummary.page.errorCode", config.feedbackItem);
+  }
+
+  internal function getFeedbackNoErrorExpression(config:SiteimproveComparisonTab):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():Boolean {
+      return !getFeedbackErrorExpression(config).getValue();
+    });
+  }
+
+  internal function getErrorMessage(config:SiteimproveComparisonTab):String {
+    var errorCode:String = getFeedbackErrorExpression(config).getValue();
+    return getResource("feedbackItemPanel_error_SiteimproveFeedbackHubErrorCode_live_" + errorCode);
+  }
+
   private function getDateDiff(date:Date):String {
     var seconds:Number = (new Date().getTime() - date.getTime()) / 1000;
     if (seconds < 60) {

@@ -84,7 +84,14 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
   private ContentQualitySummaryDocument getContentQualitySummary(Content content, String siteimproveSiteId) {
 
-    PageDocument page = findPage(settings, siteimproveSiteId, content);
+    PageDocument page;
+    try {
+      page = findPage(settings, siteimproveSiteId, content);
+    } catch (FeedbackHubException e) {
+      page = new PageDocument();
+      page.setErrorCode(e.getErrorCode());
+      return new ContentQualitySummaryDocument(page, siteimproveSiteId);
+    }
 
     MultiValueMap<String, String> queryParamContentID = new LinkedMultiValueMap<>();
     queryParamContentID.add("ids", page.getId());

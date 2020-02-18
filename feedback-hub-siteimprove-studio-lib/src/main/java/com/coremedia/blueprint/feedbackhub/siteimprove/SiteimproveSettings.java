@@ -22,4 +22,11 @@ public interface SiteimproveSettings {
 
   @NonNull
   String getSiteimprovePreviewSiteId();
+
+  @NonNull
+  String getPreviewCaeBaseUrl();
+
+  @NonNull
+  String getLiveCaeBaseUrl();
+
 }

@@ -34,6 +34,26 @@ public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbac
       throw new FeedbackHubException("settings must provide a CoreMedia siteId", SiteimproveFeedbackHubErrorCode.SITE_ID_NOT_SET);
     }
 
+    String siteimprovePreviewSiteId = settings.getSiteimprovePreviewSiteId();
+    if (siteimprovePreviewSiteId == null) {
+      throw new FeedbackHubException("settings must provide the id of the Siteimprove preview site", SiteimproveFeedbackHubErrorCode.SITEIMPROVE_PREVIEW_SITE_ID_NOT_SET);
+    }
+
+    String siteimproveLiveSiteId = settings.getSiteimproveLiveSiteId();
+    if (siteimproveLiveSiteId == null) {
+      throw new FeedbackHubException("settings must provide the id of the Siteimprove live site", SiteimproveFeedbackHubErrorCode.SITEIMPROVE_LIVE_SITE_ID_NOT_SET);
+    }
+
+    String previewCaeBaseUrl = settings.getPreviewCaeBaseUrl();
+    if (previewCaeBaseUrl == null) {
+      throw new FeedbackHubException("settings must provide the base url of the preview cae", SiteimproveFeedbackHubErrorCode.PREVIEW_BASE_URL_NOT_SET);
+    }
+
+    String liveCaeBaseUrl = settings.getLiveCaeBaseUrl();
+    if (liveCaeBaseUrl == null) {
+      throw new FeedbackHubException("settings must provide the base url of the live cae", SiteimproveFeedbackHubErrorCode.LIVE_BASE_URL_NOT_SET);
+    }
+
     return new SiteimproveContentFeedbackProvider(settings, siteimproveService);
   }
 }

@@ -18,6 +18,7 @@
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.skins.ButtonSkin;
     import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
     import com.coremedia.ui.skins.PanelSkin;
@@ -161,14 +162,14 @@
         <Container flex="1"/>
         <Container minWidth="40" minHeight="40">
           <items>
-            <ui:IconButton scale="large"
-                           iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
-                           tooltip="{getResource('recrawl_live_page_btn_text')}">
-              <ui:baseAction>
+            <Button ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
+                    text="{getResource('recrawl_live_page_btn_text')}"
+                    tooltip="{getResource('recrawl_live_page_btn_tooltip')}">
+              <baseAction>
                 <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
                                                feedbackExpression="{ValueExpressionFactory.create('liveSummary', config.feedbackItem)}"/>
-              </ui:baseAction>
-            </ui:IconButton>
+              </baseAction>
+            </Button>
           </items>
           <layout>
             <layout_Fit/>

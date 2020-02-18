@@ -18,6 +18,7 @@
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.skins.ButtonSkin;
     import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
     import com.coremedia.ui.skins.PanelSkin;
@@ -108,6 +109,7 @@
                 <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
               </plugins>
             </DisplayField>
+            <!--
             <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
                           value="{getResource('feedbackItemPanel_siteimprove_second_last_crawl')}">
               <plugins>
@@ -120,6 +122,7 @@
                 <ui:BindVisibilityPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
               </plugins>
             </DisplayField>
+            -->
             <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
                           value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
             <DisplayField>
@@ -132,15 +135,15 @@
         <Container flex="1"/>
         <Container minWidth="40" minHeight="40">
           <items>
-            <ui:IconButton scale="large"
-                           iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'reload')}"
-                           tooltip="{getResource('recrawl_preview_page_btn_text')}">
-              <ui:baseAction>
+            <Button ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
+                    text="{getResource('recrawl_preview_page_btn_text')}"
+                    tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
+              <baseAction>
                 <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
                                                preview="true"
                                                feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
-              </ui:baseAction>
-            </ui:IconButton>
+              </baseAction>
+            </Button>
           </items>
           <layout>
             <layout_Fit/>

@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class RecrawlPageJob implements Job {
   private static final Logger LOG = LoggerFactory.getLogger(RecrawlPageJob.class);
 
-  private Boolean preview;
+  private Boolean preview = false;
   private Content content;
   private String pageId;
   private SiteimproveService siteimproveService;

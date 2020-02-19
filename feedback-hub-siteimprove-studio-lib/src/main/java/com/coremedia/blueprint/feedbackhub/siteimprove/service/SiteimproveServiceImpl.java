@@ -36,9 +36,11 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   private static final String SITES = "/sites/";
   private SiteimproveRestConnector connector;
+  private ContentLinkBuilder contentLinkBuilder;
 
   SiteimproveServiceImpl(SiteimproveRestConnector siteimproveRestConnector) {
     this.connector = siteimproveRestConnector;
+    contentLinkBuilder = new ContentLinkBuilder();
   }
 
   @Nullable
@@ -57,17 +59,39 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   @Nullable
   @Override
-  public PageCheckResultDocument pageCheck(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
-    String resourcePath = SITES + siteId + "/content/check/page/" + pageId;
-    return connector.performPost(config, resourcePath, PageCheckResultDocument.class, null);
+  public PageCheckResultDocument pageCheck(@NonNull SiteimproveSettings config, @NonNull Boolean preview, @NonNull Content content, @Nullable String pageId) {
+    String resourcePath = getPageCheckResourcePath(config, preview, pageId);
+    MultiValueMap<String, String> queryParams = getPageUrlQueryParams(config, preview, content, pageId);
+
+    return connector.performPost(config, resourcePath, PageCheckResultDocument.class, queryParams);
   }
 
   @Nullable
   @Override
-  public PageCheckStatusDocument getPageCheckStatus(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
-    String resourcePath = SITES + siteId + "/content/check/page/" + pageId;
-    return connector.performGet(config, resourcePath, PageCheckStatusDocument.class, null);
+  public PageCheckStatusDocument getPageCheckStatus(@NonNull SiteimproveSettings config, @NonNull Boolean preview, @NonNull Content content, @Nullable String pageId) {
+    String resourcePath = getPageCheckResourcePath(config, preview, pageId);
+    MultiValueMap<String, String> queryParams = getPageUrlQueryParams(config, preview, content, pageId);
+
+    return connector.performGet(config, resourcePath, PageCheckStatusDocument.class, queryParams);
   }
+
+  private String getPageCheckResourcePath(@NonNull SiteimproveSettings config, @NonNull Boolean preview, @Nullable String pageId) {
+    String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
+    return pageId == null ? SITES + siteId + "/content/check/page" : SITES + siteId + "/content/check/page/" + pageId;
+  }
+
+  private MultiValueMap<String, String> getPageUrlQueryParams(@NonNull SiteimproveSettings config, @NonNull Boolean preview, @NonNull Content content, @Nullable String pageId) {
+    MultiValueMap<String, String> queryParams = null;
+
+    if (pageId == null) {
+      queryParams = new LinkedMultiValueMap<>();
+      String pageUrl = findPageUrl(config, content, preview);
+      queryParams.add("url", pageUrl);
+    }
+
+    return queryParams;
+  }
+
 
   @Nullable
   @Override
@@ -260,6 +284,34 @@ public class SiteimproveServiceImpl implements SiteimproveService {
     }
 
     return pagesDocument.getPages().get(0);
+  }
+
+  @Nullable
+  @Override
+  public PageDocument findPageByUrl(@NonNull SiteimproveSettings config, @NonNull Content content, Boolean preview) {
+    String pageUrl = findPageUrl(config, content, preview);
+    String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
+
+    String resourcePath = SITES + siteId + "/content/pages";
+    MultiValueMap<String, String> queryParams = getPageUrlQueryParams(config, preview, content, null);
+
+    PagesDocument pagesDocument = connector.performGet(config, resourcePath, PagesDocument.class, queryParams);
+
+    if (pagesDocument == null || pagesDocument.getPages().isEmpty()) {
+      throw new FeedbackHubException("No content found",
+              SiteimproveFeedbackHubErrorCode.NO_CONTENT_FOUND);
+    }
+
+    return pagesDocument.getPages().get(0);
+  }
+
+  private String findPageUrl(@NonNull SiteimproveSettings config, @NonNull Content content, Boolean preview) {
+    String baseUrl = preview ? config.getPreviewCaeBaseUrl() : config.getLiveCaeBaseUrl();
+    if (preview) {
+      return contentLinkBuilder.buildPreviewLink(baseUrl, content.getId());
+    } else {
+      return contentLinkBuilder.buildLiveLink(baseUrl, content.getId());
+    }
   }
 
 }

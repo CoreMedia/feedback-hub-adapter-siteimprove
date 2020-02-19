@@ -42,14 +42,23 @@ public interface SiteimproveService {
    * Trigger a page check
    * Note that the page check can take up to 30 seconds
    * @param config
-   * @param siteId
+   * @param content
+   * @param pageId if not given the check will be done against the url of the content
    * @return
    */
   @Nullable
-  PageCheckResultDocument pageCheck(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
+  PageCheckResultDocument pageCheck(@NonNull SiteimproveSettings config, @NonNull Boolean preview, @NonNull Content content, @Nullable String pageId);
 
+  /**
+   * Get the status of page check
+   * Note that the page check can take up to 30 seconds
+   * @param config
+   * @param content
+   * @param pageId if not given the check will be done against the url of the content
+   * @return
+   */
   @Nullable
-  PageCheckStatusDocument getPageCheckStatus(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId);
+  PageCheckStatusDocument getPageCheckStatus(@NonNull SiteimproveSettings config, @NonNull Boolean preview, @NonNull Content content, @Nullable String pageId);
 
   @Nullable
   ContentCheckResultDocument contentCheck(@NonNull SiteimproveSettings config, @NonNull String body);
@@ -103,5 +112,8 @@ public interface SiteimproveService {
 
   @Nullable
   PageDocument findPage(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull Content content);
+
+  @Nullable
+  PageDocument findPageByUrl(@NonNull SiteimproveSettings config, @NonNull Content content, Boolean preview);
 
 }

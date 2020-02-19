@@ -68,14 +68,14 @@ public class RecrawlPageJob implements Job {
     SiteimproveSettings config = getConfig(content);
     String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
     try {
-      PageCheckResultDocument pageCheckResultDocument = siteimproveService.pageCheck(config, siteId, pageId);
+      PageCheckResultDocument pageCheckResultDocument = siteimproveService.pageCheck(config, preview, content, pageId);
       if (!pageCheckResultDocument.getSuccess()) {
         throw new JobExecutionException(GenericJobErrorCode.FAILED);
       }
 
       ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
       scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
-        PageCheckStatusDocument pageCheckStatus = siteimproveService.getPageCheckStatus(config, siteId, pageId);
+        PageCheckStatusDocument pageCheckStatus = siteimproveService.getPageCheckStatus(config, preview, content, pageId);
         if (!pageCheckStatus.getCheckingNow()) {
           cancel();
         }

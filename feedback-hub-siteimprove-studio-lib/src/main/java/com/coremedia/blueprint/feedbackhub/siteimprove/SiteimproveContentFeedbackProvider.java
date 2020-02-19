@@ -57,8 +57,8 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
   @Override
   public CompletionStage<Collection<FeedbackItem>> provideFeedback(Content content) {
     try {
-      ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(content, settings.getSiteimprovePreviewSiteId());
-      ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(content, settings.getSiteimproveLiveSiteId());
+      ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(settings, content, true);
+      ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, content, false);
 
       SiteimproveFeedbackItem feedbackItem = new SiteimproveFeedbackItem(previewContentQualitySummary, liveContentQualitySummary);
       return CompletableFuture.completedFuture(feedbackItem)
@@ -82,11 +82,12 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     return Collections.singleton(feedbackItem);
   }
 
-  private ContentQualitySummaryDocument getContentQualitySummary(Content content, String siteimproveSiteId) {
+  private ContentQualitySummaryDocument getContentQualitySummary(SiteimproveSettings config, Content content, Boolean preview) {
 
     PageDocument page;
+    String siteimproveSiteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
     try {
-      page = findPage(settings, siteimproveSiteId, content);
+      page = findPage(settings, content, preview);
     } catch (FeedbackHubException e) {
       page = new PageDocument();
       page.setErrorCode(e.getErrorCode());
@@ -132,8 +133,19 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
   }
 
   @Nullable
-  private PageDocument findPage(SiteimproveSettings config, String siteId, Content content) {
-    return siteimproveService.findPage(config, siteId, content);
+  private PageDocument findPage(SiteimproveSettings config, Content content, Boolean preview) {
+    PageDocument page;
+    try {
+      String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
+      page = siteimproveService.findPage(config, siteId, content);
+    } catch (FeedbackHubException e) {
+      page = siteimproveService.findPageByUrl(config, content, preview);
+      if (page == null) {
+        throw e;
+      }
+      return page;
+    }
+    return page;
   }
 
   /**

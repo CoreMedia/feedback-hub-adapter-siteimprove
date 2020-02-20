@@ -27,6 +27,14 @@
 
     ]]></fx:Script>
   <local:items>
+    <Container>
+      <items>
+        <DisplayField ui="{DisplayFieldSkin.ITALIC.getSkin()}" value="{getEmptyText(config)}"/>
+      </items>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNotLoadedExpression(config)}"/>
+      </plugins>
+    </Container>
     <Container layout="hbox">
       <items>
         <DisplayField ui="{null}" style="font-size:18px;font-weight:bold;color:#515151;"
@@ -37,14 +45,7 @@
         <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
       </plugins>
     </Container>
-    <Container>
-      <items>
-        <DisplayField ui="{DisplayFieldSkin.ITALIC.getSkin()}" value="{getEmptyText(config)}"/>
-      </items>
-      <plugins>
-        <ui:BindVisibilityPlugin bindTo="{getFeedbackNotLoadedExpression(config)}"/>
-      </plugins>
-    </Container>
+    <Container height="12"/>
     <TabPanel>
       <items>
         <local:SiteimprovePreviewTab title="{getResource('feedbackItemPanel_siteimprove_preview_tab_title')}"

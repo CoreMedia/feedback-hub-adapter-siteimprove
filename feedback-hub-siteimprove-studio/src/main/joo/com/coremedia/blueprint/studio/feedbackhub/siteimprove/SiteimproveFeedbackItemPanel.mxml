@@ -18,6 +18,7 @@
   <fx:Script><![CDATA[
     import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
+    import com.coremedia.ui.skins.TabBarSkin;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimproveFeedbackItemPanel";
 
@@ -46,7 +47,7 @@
       </plugins>
     </Container>
     <Container height="12"/>
-    <TabPanel>
+    <TabPanel ui="{TabBarSkin.WORKAREA_PANEL.getSkin()}">
       <items>
         <local:SiteimprovePreviewTab title="{getResource('feedbackItemPanel_siteimprove_preview_tab_title')}"
                                      contentExpression="{config.contentExpression}"
@@ -58,6 +59,9 @@
       <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
       </plugins>
+      <tabBar>
+        <TabBar style="background-color:transparent;"/>
+      </tabBar>
     </TabPanel>
   </local:items>
 </local:SiteimproveFeedbackItemPanelBase>

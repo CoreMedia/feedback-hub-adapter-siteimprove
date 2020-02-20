@@ -23,6 +23,8 @@
     import com.coremedia.ui.skins.DisplayFieldSkin;
     import com.coremedia.ui.skins.PanelSkin;
 
+    public static const RECRAWL_BUTTON_ITEM_ID:String = "recrawlButton";
+
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimprovePreviewTab";
 
     private var config:SiteimprovePreviewTab;
@@ -35,7 +37,7 @@
         <DisplayField value="{getErrorMessage(config)}" html="true"/>
       </items>
       <plugins>
-        <ui:BindVisibilityPlugin bindTo="{getFeedbackErrorExpression(config)}"/>
+        <ui:BindVisibilityPlugin bindTo="{getShowErrorExpression(config)}"/>
       </plugins>
     </Container>
     <editor:CollapsibleFormPanel
@@ -135,7 +137,8 @@
         <Container flex="1"/>
         <Container minWidth="40" minHeight="40">
           <items>
-            <Button ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
+            <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
+                    ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
                     text="{getResource('recrawl_preview_page_btn_text')}"
                     tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
               <baseAction>

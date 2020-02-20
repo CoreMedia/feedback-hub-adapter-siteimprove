@@ -16,5 +16,6 @@ public enum SiteimproveFeedbackHubErrorCode implements FeedbackHubErrorCode {
   REST_ERROR,
   NO_CONTENT_METATAG_FOUND,
   NO_CONTENT_METATAG_WITH_CONTENT_ID_FOUND,
-  NO_CONTENT_FOUND
+  NO_CONTENT_FOUND,
+  NOT_PUBLISHED
 }

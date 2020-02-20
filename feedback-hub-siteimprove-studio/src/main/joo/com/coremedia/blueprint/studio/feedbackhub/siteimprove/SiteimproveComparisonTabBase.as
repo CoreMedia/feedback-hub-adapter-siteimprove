@@ -1,10 +1,13 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
+import com.coremedia.blueprint.studio.feedbackhub.siteimprove.actions.RecrawlPageAction;
 import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
+import com.coremedia.ui.util.createComponentSelector;
 
 import ext.DateUtil;
 import ext.StringUtil;
+import ext.button.Button;
 
 import ext.panel.Panel;
 
@@ -15,8 +18,27 @@ public class SiteimproveComparisonTabBase extends Panel {
   [Bindable]
   public var contentExpression:ValueExpression;
 
+  private var recheckingExpression:ValueExpression;
+
   public function SiteimproveComparisonTabBase(config:SiteimproveComparisonTab = null) {
     super(config);
+  }
+
+  override protected function beforeRender():void {
+    //TODO: When not published nothing todo
+    var checkingNowExpression:ValueExpression = ValueExpressionFactory.create("liveSummary.pageDetailsDocument.summary.page.checking_now", feedbackItem);
+    if (checkingNowExpression.getValue()) {
+      checkPageStatus();
+    }
+  }
+
+  private function checkPageStatus():void {
+    getRecheckingExpression().setValue(true);
+    var recrawlButton:Button = down(createComponentSelector().itemId(SiteimprovePreviewTab.RECRAWL_BUTTON_ITEM_ID).build()) as Button;
+    var recrawlAction:RecrawlPageAction = recrawlButton.baseAction as RecrawlPageAction;
+    recrawlAction.setCheckStatusOnly(true);
+    recrawlAction.handler();
+    recrawlAction.setCheckStatusOnly(false);
   }
 
   internal function getNextCrawlDateExpression(config:SiteimproveComparisonTab, live:Boolean = false):ValueExpression {
@@ -36,6 +58,13 @@ public class SiteimproveComparisonTabBase extends Panel {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }
 
+  internal function getRecheckingExpression():ValueExpression {
+    if (!recheckingExpression) {
+      recheckingExpression = ValueExpressionFactory.createFromValue(false);
+    }
+    return recheckingExpression;
+  }
+
   internal function getLastCrawlDateExpression(config:SiteimproveComparisonTab, live:Boolean, sitePrefix:Boolean):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
       var prefix:String = live ? 'liveSummary' : 'previewSummary';
@@ -53,6 +82,15 @@ public class SiteimproveComparisonTabBase extends Panel {
 
   internal function getFeedbackErrorExpression(config:SiteimproveComparisonTab):ValueExpression {
     return ValueExpressionFactory.create("liveSummary.page.errorCode", config.feedbackItem);
+  }
+
+  internal function getShowErrorExpression(config:SiteimproveComparisonTab):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():Boolean {
+      if (getRecheckingExpression().getValue()) {
+        return false;
+      }
+      return getFeedbackErrorExpression(config).getValue();
+    });
   }
 
   internal function getFeedbackNoErrorExpression(config:SiteimproveComparisonTab):ValueExpression {

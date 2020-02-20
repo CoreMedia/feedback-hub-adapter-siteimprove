@@ -1,11 +1,13 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
+import com.coremedia.blueprint.studio.feedbackhub.siteimprove.actions.RecrawlPageAction;
 import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
+import com.coremedia.ui.util.createComponentSelector;
 
 import ext.DateUtil;
 import ext.StringUtil;
-
+import ext.button.Button;
 import ext.panel.Panel;
 
 public class SiteimprovePreviewTabBase extends Panel {
@@ -15,8 +17,34 @@ public class SiteimprovePreviewTabBase extends Panel {
   [Bindable]
   public var contentExpression:ValueExpression;
 
+  private var feedbackErrorExpression:ValueExpression;
+  private var recheckingExpression:ValueExpression;
+
   public function SiteimprovePreviewTabBase(config:SiteimprovePreviewTab = null) {
     super(config);
+  }
+
+  override protected function beforeRender():void {
+    var checkingNowExpression:ValueExpression = ValueExpressionFactory.create("previewSummary.pageDetailsDocument.summary.page.checking_now", feedbackItem);
+    if (checkingNowExpression.getValue()) {
+      checkPageStatus();
+    }
+  }
+
+  private function checkPageStatus():void {
+    getRecheckingExpression().setValue(true);
+    var recrawlButton:Button = down(createComponentSelector().itemId(SiteimprovePreviewTab.RECRAWL_BUTTON_ITEM_ID).build()) as Button;
+    var recrawlAction:RecrawlPageAction = recrawlButton.baseAction as RecrawlPageAction;
+    recrawlAction.setCheckStatusOnly(true);
+    recrawlButton.handler();
+    recrawlAction.setCheckStatusOnly(false);
+  }
+
+  private function getRecheckingExpression():ValueExpression {
+    if (!recheckingExpression) {
+      recheckingExpression = ValueExpressionFactory.createFromValue(false);
+    }
+    return recheckingExpression;
   }
 
   internal function getNextCrawlDateExpression(config:SiteimprovePreviewTab):ValueExpression {
@@ -57,8 +85,20 @@ public class SiteimprovePreviewTabBase extends Panel {
     });
   }
 
-  internal function getFeedbackErrorExpression(config:SiteimprovePreviewTab):ValueExpression {
-    return ValueExpressionFactory.create("previewSummary.page.errorCode", config.feedbackItem);
+  internal function getShowErrorExpression(config:SiteimprovePreviewTab):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():Boolean {
+      if (getRecheckingExpression().getValue()) {
+        return false;
+      }
+      return getFeedbackErrorExpression(config).getValue();
+    });
+  }
+
+  private function getFeedbackErrorExpression(config:SiteimprovePreviewTab):ValueExpression {
+    if (!feedbackErrorExpression) {
+      feedbackErrorExpression = ValueExpressionFactory.create("previewSummary.page.errorCode", config.feedbackItem);
+    }
+    return feedbackErrorExpression;
   }
 
   internal function getFeedbackNoErrorExpression(config:SiteimprovePreviewTab):ValueExpression {

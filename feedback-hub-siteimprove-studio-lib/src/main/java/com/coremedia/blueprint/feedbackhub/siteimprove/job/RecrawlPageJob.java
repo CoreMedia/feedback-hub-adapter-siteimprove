@@ -35,6 +35,7 @@ public class RecrawlPageJob implements Job {
   private Boolean preview = false;
   private Content content;
   private String pageId;
+  private Boolean checkStatusOnly = false;
   private SiteimproveService siteimproveService;
   private FeedbackService feedbackService;
   private SitesService sitesService;
@@ -62,15 +63,22 @@ public class RecrawlPageJob implements Job {
     this.pageId = pageId;
   }
 
+  @JsonProperty("checkStatusOnly")
+  public void setCheckStatusOnly(Boolean checkStatusOnly) {
+    this.checkStatusOnly = checkStatusOnly;
+  }
+
   @Nullable
   @Override
   public Object call(@NonNull JobContext jobContext) throws JobExecutionException {
     SiteimproveSettings config = getConfig(content);
     String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
     try {
-      PageCheckResultDocument pageCheckResultDocument = siteimproveService.pageCheck(config, preview, content, pageId);
-      if (!pageCheckResultDocument.getSuccess()) {
-        throw new JobExecutionException(GenericJobErrorCode.FAILED);
+      if (!checkStatusOnly) {
+        PageCheckResultDocument pageCheckResultDocument = siteimproveService.pageCheck(config, preview, content, pageId);
+        if (!pageCheckResultDocument.getSuccess()) {
+          throw new JobExecutionException(GenericJobErrorCode.FAILED);
+        }
       }
 
       ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();

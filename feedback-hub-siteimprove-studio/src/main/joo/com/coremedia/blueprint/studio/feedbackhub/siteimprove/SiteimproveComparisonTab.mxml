@@ -28,18 +28,26 @@
     private static const PREVIEW_COLOR:String = "#006cae";
     private static const LIVE_COLOR:String = "#A2509C";
 
+    public static const RECRAWL_BUTTON_ITEM_ID:String = "recrawlButton";
+
     private var config:SiteimproveComparisonTab;
 
     public native function SiteimproveComparisonTab(config:SiteimproveComparisonTab = null);
     ]]></fx:Script>
   <local:items>
-    <Container>
+    <Container minHeight="100">
       <items>
-        <DisplayField value="{getErrorMessage(config)}" html="true"/>
+        <Component flex="1"/>
+        <DisplayField value="{getResource('feedbackItemPanel_error_title')}" ui="{DisplayFieldSkin.BOLD.getSkin()}"/>
+        <DisplayField value="{getErrorMessage(config)}" html="true" padding="0 10 0 10" />
+        <Component flex="1"/>
       </items>
       <plugins>
-        <ui:BindVisibilityPlugin bindTo="{getFeedbackErrorExpression(config)}"/>
+        <ui:BindVisibilityPlugin bindTo="{getShowErrorExpression(config)}"/>
       </plugins>
+      <layout>
+        <layout_VBox align="middle"/>
+      </layout>
     </Container>
     <editor:CollapsibleFormPanel
             ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
@@ -162,11 +170,13 @@
         <Container flex="1"/>
         <Container minWidth="40" minHeight="40">
           <items>
-            <Button ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
+            <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
+                    ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
                     text="{getResource('recrawl_live_page_btn_text')}"
                     tooltip="{getResource('recrawl_live_page_btn_tooltip')}">
               <baseAction>
-                <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
+                <siteimprove:RecrawlPageAction itemId="{RECRAWL_BUTTON_ITEM_ID}"
+                                               contentValueExpression="{config.contentExpression}"
                                                feedbackExpression="{ValueExpressionFactory.create('liveSummary', config.feedbackItem)}"/>
               </baseAction>
             </Button>

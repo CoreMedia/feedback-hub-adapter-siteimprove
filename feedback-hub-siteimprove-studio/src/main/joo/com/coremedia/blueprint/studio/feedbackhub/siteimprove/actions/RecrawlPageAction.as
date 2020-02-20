@@ -26,6 +26,8 @@ public class RecrawlPageAction extends ContentAction {
 
   private var owner:Component;
 
+  private var checkStatusOnly:Boolean;
+
   public function RecrawlPageAction(config:RecrawlPageAction = null) {
     super(RecrawlPageAction(ActionConfigUtil.extendConfig(config, 'recrawlPage', {handler: recrawlPage})));
     feedbackExpression = config.feedbackExpression;
@@ -37,25 +39,43 @@ public class RecrawlPageAction extends ContentAction {
     owner = comp;
   }
 
+  public function setCheckStatusOnly(checkStatusOnly:Boolean):void {
+    this.checkStatusOnly = checkStatusOnly
+  }
+
   private function recrawlPage():void {
     var content:Content = getContents()[0];
     if (!content) {
       return;
     }
 
-    setDisabled(true);
+    var loadMaskTarget:Component;
+    if (owner.isVisible()) {
+      loadMaskTarget = owner;
+      setDisabled(true);
+    } else {
+      //the recrawl action is programmtically triggered.
+      //show the load mask over the load feedback button
+      loadMaskTarget = getFeedbackButton();
+      loadMaskTarget.setDisabled(true);
+    }
+
     var JOB_TYPE:String = "recrawlPage";
     var pageId:String = feedbackExpression.extendBy("page.id").getValue();
 
     jobService.executeJob(
-            new GenericRemoteJob(JOB_TYPE, {content: content, preview: preview, pageId: pageId}),
+            new GenericRemoteJob(JOB_TYPE, {content: content, preview: preview, pageId: pageId, checkStatusOnly: checkStatusOnly}),
             //on success
             function (result:Object):void {
 
               if (loadMask && !loadMask.destroyed) {
                 loadMask.destroy();
               }
-              setDisabled(false);
+              if (owner.isVisible()) {
+                setDisabled(false);
+              } else {
+                loadMaskTarget.setDisabled(false);
+              }
 
               reloadFeedback();
             },
@@ -68,10 +88,11 @@ public class RecrawlPageAction extends ContentAction {
               setDisabled(false);
             }
     );
+
     var loadMaskConfig:LoadMask = LoadMask({});
     loadMaskConfig.ui = LoadMaskSkin.TRANSPARENT.getSkin();
     loadMaskConfig.msg = '';
-    loadMaskConfig.target = owner;
+    loadMaskConfig.target = loadMaskTarget;
     var loadMask:LoadMask = new LoadMask(loadMaskConfig);
     loadMask.show();
 
@@ -88,10 +109,15 @@ public class RecrawlPageAction extends ContentAction {
    * TODO: this is a workaround
    */
   private function reloadFeedback():void {
+    var feebackButton:Button = getFeedbackButton();
+    feebackButton.handler();
+  }
+
+  private function getFeedbackButton():Button {
     var feedbackGroupPanel:FeedbackGroupPanel = owner.up(createComponentSelector()._xtype(FeedbackGroupPanel.xtype).build())
             as FeedbackGroupPanel;
     var feebackButton:Button = feedbackGroupPanel.down(createComponentSelector().itemId("loadFeedbackButton").build()) as Button;
-    feebackButton.handler();
+    return feebackButton;
   }
 }
 }

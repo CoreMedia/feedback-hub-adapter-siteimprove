@@ -7,6 +7,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenL
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentQualitySummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
@@ -33,6 +34,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
+
+import static com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode.NOT_PUBLISHED;
 
 /**
  * SiteimproveContentFeedbackProvider provides Feedbacks for the page of the {@link Content}.
@@ -86,6 +89,14 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
     PageDocument page;
     String siteimproveSiteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
+
+    //when not published there is no summary for live document
+    if (!preview && !content.getRepository().getPublicationService().isPublished(content)) {
+      page = new PageDocument();
+      page.setErrorCode(NOT_PUBLISHED);
+      return new ContentQualitySummaryDocument(page, siteimproveSiteId);
+    }
+
     try {
       page = findPage(settings, content, preview);
     } catch (FeedbackHubException e) {
@@ -139,6 +150,10 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
       String siteId = preview ? config.getSiteimprovePreviewSiteId() : config.getSiteimproveLiveSiteId();
       page = siteimproveService.findPage(config, siteId, content);
     } catch (FeedbackHubException e) {
+      PageCheckResultDocument pageCheckResultDocument = siteimproveService.pageCheck(config, preview, content, null);
+      if (!pageCheckResultDocument.getSuccess()) {
+        throw e;
+      }
       page = siteimproveService.findPageByUrl(config, content, preview);
       if (page == null) {
         throw e;

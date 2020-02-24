@@ -3,8 +3,6 @@ package com.coremedia.blueprint.feedbackhub.siteimprove;
 import com.coremedia.blueprint.feedbackhub.siteimprove.job.RecrawlPageJobFactory;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveServiceConfiguration;
-import com.coremedia.blueprint.feedbackhub.siteimprove.validators.SiteimproveValidator;
-import com.coremedia.cap.common.CapConnection;
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.feedbackhub.FeedbackHubConfiguration;
 import com.coremedia.feedbackhub.FeedbackService;
@@ -35,6 +33,8 @@ public class SiteimproveFeedbackHubConfiguration {
     return new RecrawlPageJobFactory(siteimproveService, feedbackService, sitesService);
   }
 
+/* Out of scope
+
   @Bean
   SiteimproveValidator siteimproveValidator(@NonNull CapConnection connection,
                                             @NonNull SiteimproveService siteimproveService,
@@ -50,4 +50,5 @@ public class SiteimproveFeedbackHubConfiguration {
     validator.setMarkupProperty("detailText");
     return validator;
   }
+*/
 }

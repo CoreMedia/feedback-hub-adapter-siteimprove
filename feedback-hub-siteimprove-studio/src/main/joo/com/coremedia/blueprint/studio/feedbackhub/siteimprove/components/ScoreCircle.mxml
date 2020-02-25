@@ -35,16 +35,14 @@
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
     <Container>
       <items>
-        <Container flex="1" />
         <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" itemId="label" value="{config.label}" hidden="{!config.label}"/>
-        <Container flex="1" />
       </items>
       <layout>
-        <layout_HBox align="stretch" />
+        <layout_Center/>
       </layout>
     </Container>
   </local:items>
   <local:layout>
-    <layout_VBox align="stretch" pack="end"/>
+    <layout_VBox align="stretch"/>
   </local:layout>
 </local:ScoreCircleBase>

@@ -19,6 +19,7 @@
   <fx:Script><![CDATA[
     import com.coremedia.ui.bem.SpacingBEMEntities;
     import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.mixins.OverflowBehaviour;
     import com.coremedia.ui.skins.ButtonSkin;
     import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
@@ -33,18 +34,39 @@
     public native function SiteimprovePreviewTab(config:SiteimprovePreviewTab = null);
     ]]></fx:Script>
   <local:items>
-    <Container>
+    <Container minHeight="300">
       <items>
-        <DisplayField value="{getErrorMessage(config)}" html="true"/>
+        <Container>
+          <items>
+            <ui:IconDisplayField
+                    scale="large"
+                    iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'warning')}" />
+          </items>
+          <layout>
+            <layout_Center/>
+          </layout>
+        </Container>
+        <DisplayField
+                value="{getResource('feedbackItemPanel_error_title')}"
+                fieldStyle="text-align: center;"
+                ui="{DisplayFieldSkin.BOLD.getSkin()}"/>
+        <ui:ExtendedDisplayField overflowBehaviour="{OverflowBehaviour.BREAK_WORD}"
+                                 fieldStyle="text-align: center;"
+                                 value="{getErrorMessage(config)}"/>
       </items>
       <plugins>
         <ui:BindVisibilityPlugin bindTo="{getShowErrorExpression(config)}"/>
       </plugins>
+      <layout>
+        <layout_VBox
+                align="stretch"
+                pack="center"/>
+      </layout>
     </Container>
-    <editor:CollapsiblePanel
-            ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
-            title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
-      <editor:items>
+    <Panel ui="{PanelSkin.CARD_200.getSkin()}"
+           ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
+           title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
+      <items>
         <Container layout="hbox">
           <items>
             <Component flex="1"/>
@@ -57,57 +79,46 @@
                 bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
                 crawlDateExpression="{getLastCrawlDateExpression(config)}"
                 showDiff="true"/>
-        <Container height="20"/>
-        <Panel ui="{PanelSkin.CARD_200.getSkin()}"
-               ariaLabel="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"
-               title="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}">
-          <items>
-            <components:ScoreBar
-                    showDiff="true"
-                    showPoints="true"
-                    label="{getResource('feedbackItemPanel_siteimprove_a11n')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
-            <components:ScoreBar
-                    showDiff="true"
-                    showPoints="true"
-                    label="{getResource('feedbackItemPanel_siteimprove_quality')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
-            <components:ScoreBar
-                    showDiff="true"
-                    showPoints="true"
-                    label="{getResource('feedbackItemPanel_siteimprove_seo')}"
-                    bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
-          </items>
-        </Panel>
-      </editor:items>
-      <editor:layout>
-        <layout_VBox align="stretch"/>
-      </editor:layout>
-      <editor:plugins>
-        <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
-      </editor:plugins>
-    </editor:CollapsiblePanel>
-    <editor:CollapsiblePanel
-            ariaLabel="{getResource('feedbackItemPanel_siteimprove_issues')}"
-            title="{getResource('feedbackItemPanel_siteimprove_issues')}">
-      <editor:items>
-        <Label text="{getResource('feedbackItemPanel_siteimprove_issues_help')}"/>
-        <Container height="20"/>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                      value="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"/>
+        <components:ScoreBar
+                showDiff="true"
+                showPoints="true"
+                label="{getResource('feedbackItemPanel_siteimprove_a11n')}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
+        <components:ScoreBar
+                showDiff="true"
+                showPoints="true"
+                label="{getResource('feedbackItemPanel_siteimprove_quality')}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
+        <components:ScoreBar
+                showDiff="true"
+                showPoints="true"
+                label="{getResource('feedbackItemPanel_siteimprove_seo')}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                      value="{getResource('feedbackItemPanel_siteimprove_issues')}"/>
+        <DisplayField value="{getResource('feedbackItemPanel_siteimprove_issues_help')}"/>
+        <Container height="10"/>
         <components:IssueList
                 feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
                 bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
-      </editor:items>
-      <editor:plugins>
+      </items>
+      <layout>
+        <layout_VBox align="stretch"/>
+      </layout>
+      <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
-      </editor:plugins>
-    </editor:CollapsiblePanel>
-    <Container ui="{ContainerSkin.DARK_200.getSkin()}">
+      </plugins>
+    </Panel>
+    <Container>
       <items>
         <Container layout="vbox">
+          <defaults>
+            <Labelable labelAlign="top"/>
+          </defaults>
           <items>
-            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                          value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
-            <DisplayField>
+            <DisplayField fieldLabel="{getResource('feedbackItemPanel_siteimprove_last_crawl')}">
               <plugins>
                 <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
               </plugins>
@@ -126,9 +137,7 @@
               </plugins>
             </DisplayField>
             -->
-            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                          value="{getResource('feedbackItemPanel_siteimprove_next_crawl')}"/>
-            <DisplayField>
+            <DisplayField fieldLabel="{getResource('feedbackItemPanel_siteimprove_next_crawl')}">
               <plugins>
                 <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
               </plugins>
@@ -136,26 +145,20 @@
           </items>
         </Container>
         <Container flex="1"/>
-        <Container minWidth="40" minHeight="40">
-          <items>
-            <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
-                    ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
-                    text="{getResource('recrawl_preview_page_btn_text')}"
-                    tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
-              <baseAction>
-                <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
-                                               preview="true"
-                                               feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
-              </baseAction>
-            </Button>
-          </items>
-          <layout>
-            <layout_Fit/>
-          </layout>
-        </Container>
+        <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
+                ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
+                margin="25 0 0 0"
+                text="{getResource('recrawl_preview_page_btn_text')}"
+                tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
+          <baseAction>
+            <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
+                                           preview="true"
+                                           feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
+          </baseAction>
+        </Button>
       </items>
       <layout>
-        <layout_HBox align="middle"/>
+        <layout_HBox align="begin"/>
       </layout>
       <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
@@ -165,10 +168,10 @@
   <local:defaults>
     <Component anchor="100%"/>
   </local:defaults>
-  <local:plugins>
-    <ui:VerticalSpacingPlugin modifier="{SpacingBEMEntities.VERTICAL_SPACING_MODIFIER_200}"/>
-  </local:plugins>
   <local:layout>
     <layout_Anchor/>
   </local:layout>
+  <local:plugins>
+    <ui:VerticalSpacingPlugin modifier="{SpacingBEMEntities.VERTICAL_SPACING_MODIFIER_200}"/>
+  </local:plugins>
 </local:SiteimprovePreviewTabBase>

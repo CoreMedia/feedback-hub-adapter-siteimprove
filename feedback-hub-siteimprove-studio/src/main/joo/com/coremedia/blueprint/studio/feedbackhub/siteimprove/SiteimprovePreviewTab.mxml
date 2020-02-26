@@ -7,7 +7,6 @@
         xmlns="exml:ext.config"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns:ui="exml:com.coremedia.ui.config"
-        xmlns:editor="exml:com.coremedia.cms.editor.sdk.config"
         xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
         xmlns:siteimprove="exml:com.coremedia.blueprint.studio.feedbackhub.siteimprove.config"
         xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
@@ -63,10 +62,10 @@
                 pack="center"/>
       </layout>
     </Container>
-    <Panel ui="{PanelSkin.CARD_200.getSkin()}"
-           ariaLabel="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"
-           title="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}">
+    <Panel ui="{PanelSkin.CARD_200.getSkin()}">
       <items>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                      value="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"/>
         <Container layout="hbox">
           <items>
             <Component flex="1"/>
@@ -120,26 +119,7 @@
           <items>
             <DisplayField fieldLabel="{getResource('feedbackItemPanel_siteimprove_last_crawl')}">
               <plugins>
-                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config)}"/>
-              </plugins>
-            </DisplayField>
-            <!--
-            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                          value="{getResource('feedbackItemPanel_siteimprove_second_last_crawl')}">
-              <plugins>
-                <ui:BindVisibilityPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
-              </plugins>
-            </DisplayField>
-            <DisplayField>
-              <plugins>
-                <ui:BindPropertyPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
-                <ui:BindVisibilityPlugin bindTo="{getSecondLastCrawlDateExpression(config)}"/>
-              </plugins>
-            </DisplayField>
-            -->
-            <DisplayField fieldLabel="{getResource('feedbackItemPanel_siteimprove_next_crawl')}">
-              <plugins>
-                <ui:BindPropertyPlugin bindTo="{getNextCrawlDateExpression(config)}"/>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, false)}"/>
               </plugins>
             </DisplayField>
           </items>
@@ -147,7 +127,7 @@
         <Container flex="1"/>
         <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
                 ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
-                margin="25 0 0 0"
+                margin="10 0 0 0"
                 text="{getResource('recrawl_preview_page_btn_text')}"
                 tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
           <baseAction>
@@ -158,7 +138,7 @@
         </Button>
       </items>
       <layout>
-        <layout_HBox align="begin"/>
+        <layout_HBox align="begin" padding="5"/>
       </layout>
       <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>

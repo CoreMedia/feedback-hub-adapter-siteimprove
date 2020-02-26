@@ -65,12 +65,13 @@ public class SiteimproveComparisonTabBase extends Panel {
     return recheckingExpression;
   }
 
-  internal function getLastCrawlDateExpression(config:SiteimproveComparisonTab, live:Boolean, sitePrefix:Boolean):ValueExpression {
+  internal function getLastCrawlDateExpression(config:SiteimproveComparisonTab, live:Boolean, sitePrefix:Boolean, diff:Boolean = true):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
       var prefix:String = live ? 'liveSummary' : 'previewSummary';
       var expression:String = prefix + '.pageDetailsDocument.summary.page.last_seen';
       var date:Date = ValueExpressionFactory.create(expression, config.feedbackItem).getValue();
-      var diffString:String = date ? getDateDiff(date) : getResource('feedbackItemPanel_siteimprove_unknown');
+      var diffString:String = date ? (diff ? getDateDiff(date) : DateUtil.format(date, resourceManager.getString('com.coremedia.cms.editor.Editor', 'dateFormat'))) :
+              getResource('feedbackItemPanel_siteimprove_unknown');
       if (sitePrefix) {
         var siteResourceName:String = live ? 'feedbackItemPanel_siteimprove_live_site' : 'feedbackItemPanel_siteimprove_preview_site';
         diffString = getResource(siteResourceName) + ": " + diffString;
@@ -121,10 +122,10 @@ public class SiteimproveComparisonTabBase extends Panel {
     }
 
     var days:Number = hours / 24;
-    if (Math.round(days) === 1) {
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_one_day_ago'), Math.round(days));
+    if (Math.floor(days) === 1) {
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_one_day_ago'), Math.floor(days));
     }
-    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
+    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.floor(days));
   }
 
   internal function getStatusMessage(config:SiteimproveComparisonTab):String {

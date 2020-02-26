@@ -62,14 +62,15 @@ public class SiteimprovePreviewTabBase extends Panel {
     return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', resourceName);
   }
 
-  internal function getLastCrawlDateExpression(config:SiteimprovePreviewTab):ValueExpression {
+  internal function getLastCrawlDateExpression(config:SiteimprovePreviewTab, diff:Boolean = true):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function():String {
       var date:Date = ValueExpressionFactory.create('previewSummary.pageDetailsDocument.summary.page.last_seen', config.feedbackItem).getValue();
       if(!date) {
         return getResource('feedbackItemPanel_siteimprove_unknown');
       }
 
-      return getDateDiff(date);
+      return diff ? getDateDiff(date) :
+              DateUtil.format(date, resourceManager.getString('com.coremedia.cms.editor.Editor', 'dateFormat'));
     });
   }
 
@@ -133,10 +134,10 @@ public class SiteimprovePreviewTabBase extends Panel {
     }
 
     var days:Number = hours / 24;
-    if (Math.round(days) === 1) {
-      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_one_day_ago'), Math.round(days));
+    if (Math.floor(days) === 1) {
+      return StringUtil.format(getResource('feedbackItemPanel_siteimprove_one_day_ago'), Math.floor(days));
     }
-    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.round(days));
+    return StringUtil.format(getResource('feedbackItemPanel_siteimprove_days_ago'), Math.floor(days));
   }
 
   internal function openPageInSiteimprove():void {

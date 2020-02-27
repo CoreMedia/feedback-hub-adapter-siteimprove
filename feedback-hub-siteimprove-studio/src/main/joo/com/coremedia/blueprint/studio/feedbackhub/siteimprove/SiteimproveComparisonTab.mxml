@@ -184,7 +184,7 @@
         </Button>
       </items>
       <layout>
-        <layout_HBox align="begin" padding="5"/>
+        <layout_HBox align="begin" padding="12"/>
       </layout>
       <plugins>
         <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>

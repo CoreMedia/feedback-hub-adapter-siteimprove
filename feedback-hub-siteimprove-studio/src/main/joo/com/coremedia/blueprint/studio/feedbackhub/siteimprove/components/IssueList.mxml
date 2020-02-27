@@ -23,7 +23,6 @@
     <Container>
       <items>
         <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                      margin="0 0 0 3"
                       value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
                       'feedbackItemPanel_siteimprove_issue')}"/>
         <Container flex="1"/>
@@ -35,7 +34,7 @@
         <layout_HBox align="stretch" pack="center"/>
       </layout>
     </Container>
-    <Container>
+    <Container  margin="0 0 0 -3">
       <plugins>
         <ui:BindComponentsPlugin valueExpression="{getIssuesExpression()}"
                                  getKey="{function(issue:Object):String {return issue.issue_name;}}"
@@ -47,9 +46,9 @@
         </ui:BindComponentsPlugin>
       </plugins>
     </Container>
-    <Container>
+    <Container  margin="0 0 0 -9">
       <items>
-        <Button ui="{ButtonSkin.SIMPLE}" margin="0 0 0 -6"
+        <Button ui="{ButtonSkin.SIMPLE}"
                 text="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
                       'feedbackItemPanel_siteimprove_show_more')}" handler="{showMore}">
           <plugins>

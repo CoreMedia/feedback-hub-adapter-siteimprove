@@ -61,7 +61,7 @@
         <ui:BindVisibilityPlugin bindTo="{getFeedbackLoadedExpression(config)}"/>
       </plugins>
       <tabBar>
-        <TabBar style="background-color:transparent;" margin="0 0 0 -10"/>
+        <TabBar style="background-color:transparent;" margin="0 0 0 -12"/>
       </tabBar>
     </TabPanel>
   </local:items>

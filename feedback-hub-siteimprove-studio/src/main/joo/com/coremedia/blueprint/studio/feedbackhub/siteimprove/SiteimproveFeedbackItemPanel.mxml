@@ -51,7 +51,8 @@
       <items>
         <local:SiteimprovePreviewTab title="{getResource('feedbackItemPanel_siteimprove_preview_tab_title')}"
                                      contentExpression="{config.contentExpression}"
-                                     feedbackItem="{config.feedbackItem}"/>
+                                     feedbackItem="{config.feedbackItem}"
+                                     preview="true"/>
         <local:SiteimproveComparisonTab title="{getResource('feedbackItemPanel_siteimprove_comparison_tab_title')}"
                                         contentExpression="{config.contentExpression}"
                                         feedbackItem="{config.feedbackItem}"/>

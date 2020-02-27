@@ -2,7 +2,7 @@
 <!---
  A CollapsiblePanel showing the preview site of siteimprove feedback item
 -->
-<local:SiteimprovePreviewTabBase
+<local:SiteimproveTabBase
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
@@ -20,11 +20,8 @@
     import com.coremedia.ui.data.ValueExpressionFactory;
     import com.coremedia.ui.mixins.OverflowBehaviour;
     import com.coremedia.ui.skins.ButtonSkin;
-    import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
     import com.coremedia.ui.skins.PanelSkin;
-
-    public static const RECRAWL_BUTTON_ITEM_ID:String = "recrawlButton";
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimprovePreviewTab";
 
@@ -71,12 +68,12 @@
             <Component flex="1"/>
             <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
                            tooltip="{getResource('open_siteimprove_btn_text')}"
-                           handler="{openPageInSiteimprove}"/>
+                           handler="{openPreviewPageInSiteimprove}"/>
           </items>
         </Container>
         <components:ScoreCircle
                 bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
-                crawlDateExpression="{getLastCrawlDateExpression(config)}"
+                crawlDateExpression="{getLastCrawlDateExpression(config, false, false)}"
                 showDiff="true"/>
         <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
                       value="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"/>
@@ -117,9 +114,16 @@
             <Labelable labelAlign="top"/>
           </defaults>
           <items>
-            <DisplayField fieldLabel="{getResource('feedbackItemPanel_siteimprove_last_crawl')}">
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
+            <DisplayField>
               <plugins>
-                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, false)}"/>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, false, true, false)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, true, true, false)}"/>
               </plugins>
             </DisplayField>
           </items>
@@ -127,7 +131,7 @@
         <Container flex="1"/>
         <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
                 ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
-                margin="10 0 0 0"
+                margin="20 0 0 0"
                 text="{getResource('recrawl_preview_page_btn_text')}"
                 tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
           <baseAction>
@@ -154,4 +158,4 @@
   <local:plugins>
     <ui:VerticalSpacingPlugin modifier="{SpacingBEMEntities.VERTICAL_SPACING_MODIFIER_200}"/>
   </local:plugins>
-</local:SiteimprovePreviewTabBase>
+</local:SiteimproveTabBase>

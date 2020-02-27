@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!---
- A CollapsiblePanel showing the preview site of siteimprove feedback item
+ A CollapsiblePanel showing the live site of siteimprove feedback item
 -->
-<local:SiteimproveComparisonTabBase
+<local:SiteimproveTabBase
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns="exml:ext.config"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
@@ -27,8 +27,6 @@
 
     private static const PREVIEW_COLOR:String = "#006cae";
     private static const LIVE_COLOR:String = "#A2509C";
-
-    public static const RECRAWL_BUTTON_ITEM_ID:String = "recrawlButton";
 
     private var config:SiteimproveComparisonTab;
 
@@ -180,8 +178,7 @@
                 text="{getResource('recrawl_live_page_btn_text')}"
                 tooltip="{getResource('recrawl_live_page_btn_tooltip')}">
           <baseAction>
-            <siteimprove:RecrawlPageAction itemId="{RECRAWL_BUTTON_ITEM_ID}"
-                                           contentValueExpression="{config.contentExpression}"
+            <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
                                            feedbackExpression="{ValueExpressionFactory.create('liveSummary', config.feedbackItem)}"/>
           </baseAction>
         </Button>
@@ -203,4 +200,4 @@
   <local:plugins>
     <ui:VerticalSpacingPlugin modifier="{SpacingBEMEntities.VERTICAL_SPACING_MODIFIER_200}"/>
   </local:plugins>
-</local:SiteimproveComparisonTabBase>
+</local:SiteimproveTabBase>

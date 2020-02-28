@@ -13,12 +13,14 @@ import java.util.Objects;
 @DefaultAnnotation(NonNull.class)
 public class SiteimproveFeedbackItem implements FeedbackItem {
 
-  static final String TYPE = "siteimprove";
-  private ContentQualitySummaryDocument summary;
+  public static final String TYPE = "siteimprove";
+  private ContentQualitySummaryDocument previewSummary;
+  private ContentQualitySummaryDocument liveSummary;
 
-  SiteimproveFeedbackItem(ContentQualitySummaryDocument contentQualitySummary) {
-
-    this.summary = contentQualitySummary;
+  SiteimproveFeedbackItem(ContentQualitySummaryDocument previewContentQualitySummary,
+                          ContentQualitySummaryDocument liveContentQualitySummary) {
+    this.previewSummary = previewContentQualitySummary;
+    this.liveSummary= liveContentQualitySummary;
   }
 
   @Override
@@ -27,8 +29,12 @@ public class SiteimproveFeedbackItem implements FeedbackItem {
   }
 
 
-  public ContentQualitySummaryDocument getSummary() {
-    return summary;
+  public ContentQualitySummaryDocument getPreviewSummary() {
+    return previewSummary;
+  }
+
+  public ContentQualitySummaryDocument getLiveSummary() {
+    return liveSummary;
   }
 
   @Override

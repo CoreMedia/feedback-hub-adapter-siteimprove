@@ -3,11 +3,14 @@
         xmlns:fx="http://ns.adobe.com/mxml/2009"
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns="exml:ext.config"
-        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*">
+        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
+        xmlns:ui="exml:com.coremedia.ui.config">
   <fx:Metadata>
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
   <fx:Script><![CDATA[
+    import com.coremedia.ui.skins.DisplayFieldSkin;
+
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.ScoreCircle";
 
     private var config:ScoreCircle;
@@ -16,9 +19,32 @@
     ]]></fx:Script>
 
   <local:items>
+    <Container>
+      <items>
+        <Component flex="1"/>
+        <!--Grey. Workaround: Use ui-->
+        <DisplayField ui="{null}"
+                      style="color:#b3b1b1;">
+          <plugins>
+            <ui:BindPropertyPlugin bindTo="{config.crawlDateExpression}"/>
+          </plugins>
+        </DisplayField>
+      </items>
+      <layout>
+        <layout_HBox align="stretch" />
+      </layout>
+    </Container>
     <DisplayField itemId="{SCORE_ITEM_ID}" style="display:block;height: 200px;"/>
+    <Container>
+      <items>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" itemId="label" value="{config.label}" hidden="{!config.label}"/>
+      </items>
+      <layout>
+        <layout_Center/>
+      </layout>
+    </Container>
   </local:items>
   <local:layout>
-    <layout_VBox align="stretch" pack="center"/>
+    <layout_VBox align="stretch"/>
   </local:layout>
 </local:ScoreCircleBase>

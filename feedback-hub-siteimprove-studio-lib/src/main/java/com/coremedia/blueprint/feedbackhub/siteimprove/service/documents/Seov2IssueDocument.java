@@ -22,6 +22,12 @@ public class Seov2IssueDocument {
   @JsonProperty("seo_points_to_gain")
   private double seoPointsToGain;
 
+  @JsonProperty("_links")
+  private LinkDocument detailsLink;
+
+  @JsonProperty("_siteimprove")
+  private LinkDocument pageReportLink;
+
   public String getComplexity() {
     return complexity;
   }
@@ -68,5 +74,21 @@ public class Seov2IssueDocument {
 
   public void setSeoPointsToGain(double seoPointsToGain) {
     this.seoPointsToGain = seoPointsToGain;
+  }
+
+  public LinkDocument getDetailsLink() {
+    return detailsLink;
+  }
+
+  public void setDetailsLink(LinkDocument detailsLink) {
+    this.detailsLink = detailsLink;
+  }
+
+  public LinkDocument getPageReportLink() {
+    return pageReportLink;
+  }
+
+  public void setPageReportLink(LinkDocument pageReportLink) {
+    this.pageReportLink = pageReportLink;
   }
 }

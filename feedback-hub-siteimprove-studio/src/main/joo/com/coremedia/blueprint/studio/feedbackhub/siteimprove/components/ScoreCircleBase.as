@@ -1,6 +1,11 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove.components {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.ScoreUtil;
+import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
+import com.coremedia.ui.data.PropertyPathExpression;
 import com.coremedia.ui.data.ValueExpression;
+import com.coremedia.ui.data.ValueExpressionFactory;
+
+import ext.Ext;
 
 import ext.container.Container;
 
@@ -13,7 +18,16 @@ public class ScoreCircleBase extends Container {
   public var bindTo:ValueExpression;
 
   [Bindable]
-  public var jsonPath:String;
+  public var crawlDateExpression:ValueExpression;
+
+  [Bindable]
+  public var color:String;
+
+  [Bindable]
+  public var label:String;
+
+  [Bindable]
+  public var showDiff:Boolean;
 
   public function ScoreCircleBase(config:ScoreCircle = null) {
     super(config);
@@ -40,21 +54,36 @@ public class ScoreCircleBase extends Container {
     var div = window.document.createElement('div');
     div.setAttribute('style', 'width: 100%;text-align: center;padding-left:85px;');
 
-    var span1 = window.document.createElement('span');
-    span1.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute;margin-left: -66px;top:100px;font-size:44px;font-weight:bold;");
-    span1.textContent = options.percent;
+    var spanScore = window.document.createElement('span');
+    spanScore.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute;margin-left: -66px;top:100px;font-size:44px;font-weight:bold;");
+    spanScore.textContent = options.percent;
 
-    var span2 = window.document.createElement('span');
-    span2.setAttribute("style", " color:#b1b1b1;display:inline;font-family:sans-serif;position:absolute; top: 106px;margin-left:20px;font-size:24px;");
-    span2.textContent = '/100';
+    var span100 = window.document.createElement('span');
+    span100.setAttribute("style", " color:#b1b1b1;display:inline;font-family:sans-serif;position:absolute; top: 106px;margin-left:20px;font-size:24px;");
+    span100.textContent = '/100';
 
     var ctx = canvas.getContext('2d');
     canvas.width = canvas.height = options.size;
 
-    div.appendChild(span1);
-    div.appendChild(span2);
+    div.appendChild(spanScore);
+    div.appendChild(span100);
+
     div.appendChild(canvas);
     el.appendChild(div);
+
+    if (showDiff) {
+      //render the diff only if there is the last value
+      if (ScoreUtil.getLastExpression(bindTo).getValue()) {
+        var spanDiff = window.document.createElement('span');
+        spanDiff.setAttribute("style", " color:black;display:inline;font-family:sans-serif;position:absolute; top: 136px;margin-left: -130px;font-size:22px;");
+        div.appendChild(spanDiff);
+        var scoreDiffConfig:ScoreDiff = ScoreDiff({});
+        scoreDiffConfig.bindToValue1 = bindTo;
+        scoreDiffConfig.bindToValue2 = ScoreUtil.getLastExpression(bindTo);
+        scoreDiffConfig.renderTo = spanDiff;
+        Ext.create(ScoreDiff, scoreDiffConfig);
+      }
+    }
 
     ctx.translate(options.size / 2, options.size / 2); // change center
     ctx.rotate((-1 / 2 + options.rotate / 180) * Math.PI); // rotate -90 deg
@@ -71,8 +100,7 @@ public class ScoreCircleBase extends Container {
     };
 
     drawCircle('#efefef', options.lineWidth, 100 / 100);
-    drawCircle(ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
+    drawCircle(color || ScoreUtil.getColor(score), options.lineWidth, options.percent / 100);
   }
-
 }
 }

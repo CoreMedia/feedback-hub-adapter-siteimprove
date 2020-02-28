@@ -1,4 +1,9 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
+import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
+import com.coremedia.ui.data.PropertyPathExpression;
+import com.coremedia.ui.data.ValueExpression;
+import com.coremedia.ui.data.ValueExpressionFactory;
+
 public class ScoreUtil {
 
   private static const COLORS:Object = {
@@ -32,5 +37,14 @@ public class ScoreUtil {
   public static function formatScore(score:Number):String {
     return parseFloat('' + score).toFixed(1);
   }
+
+  public static function getLastExpression(bindTo:ValueExpression):ValueExpression {
+    var ppe:PropertyPathExpression = bindTo as PropertyPathExpression;
+    var feedbackItem:FeedbackItem = ppe.getBean() as FeedbackItem;
+    //previewSummary.dciOverallScoreDocument.seo.total --> last.previewSummary.dciOverallScoreDocument.seo.total
+    var lastPropertyPathArcs:Array = ['last'].concat(ppe.getPropertyPathArcs());
+    return ValueExpressionFactory.create(lastPropertyPathArcs.join('.'), feedbackItem);
+  }
+
 }
 }

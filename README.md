@@ -37,7 +37,7 @@ For CI runs:
 [submodule "modules/extensions/coremedia-studio-hub"]
 	path = modules/extensions/feedback-hub-adapter-siteimprove
 	url = https://github.com/CoreMedia/feedback-hub-adapter-siteimprove.git
-	branch = 1907.2
+	branch = 1907.3
 ```
 
 For the IDEA import:

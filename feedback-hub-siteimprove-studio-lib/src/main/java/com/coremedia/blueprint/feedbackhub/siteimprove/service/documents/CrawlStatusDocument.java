@@ -1,24 +1,26 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.service.documents;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
+
+/**
+ * Status information of the site crawl.
+ */
 public class CrawlStatusDocument {
   @JsonProperty("last_crawl")
-  private String lastCrawled;
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  private Date lastCrawl;
+  @JsonProperty("next_crawl")
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  private Date nextCrawl;
   @JsonProperty("permission")
   private String crawlPermission;
   @JsonProperty("is_crawl_enabled")
   private Boolean isCrawlEnabled;
   @JsonProperty("is_crawl_running")
   private Boolean isCrawlRunning;
-
-  public String getLastCrawled() {
-    return lastCrawled;
-  }
-
-  public void setLastCrawled(String lastCrawled) {
-    this.lastCrawled = lastCrawled;
-  }
 
   public String getCrawlPermission() {
     return crawlPermission;
@@ -42,5 +44,21 @@ public class CrawlStatusDocument {
 
   public void setCrawlRunning(Boolean crawlRunning) {
     isCrawlRunning = crawlRunning;
+  }
+
+  public Date getLastCrawl() {
+    return lastCrawl;
+  }
+
+  public void setLastCrawl(Date lastCrawl) {
+    this.lastCrawl = lastCrawl;
+  }
+
+  public Date getNextCrawl() {
+    return nextCrawl;
+  }
+
+  public void setNextCrawl(Date nextCrawl) {
+    this.nextCrawl = nextCrawl;
   }
 }

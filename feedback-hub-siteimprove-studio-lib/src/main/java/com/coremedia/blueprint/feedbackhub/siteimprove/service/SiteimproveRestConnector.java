@@ -1,7 +1,8 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.service;
 
-import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveRemoteException;
+import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
+import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
@@ -61,9 +62,9 @@ class SiteimproveRestConnector {
 
   @Nullable
   private <T> T perform(SiteimproveSettings config, String resourcePath, Class<T> responseType, HttpMethod method, MultiValueMap<String, String> queryParams, String body) {
+    String url = getUrl(resourcePath, queryParams);
     try {
-      String url = getUrl(resourcePath, queryParams);
-      LOG.debug("Siteimprove request: " + url);
+      LOG.debug("Siteimprove request: {}", url);
 
       HttpEntity<String> requestEntity = null;
       HttpHeaders headers = new HttpHeaders();
@@ -83,31 +84,30 @@ class SiteimproveRestConnector {
       ResponseEntity<T> responseEntity = restTemplate.exchange(url, method, requestEntity, responseType);
       HttpStatus statusCode = responseEntity.getStatusCode();
       if (!statusCode.is2xxSuccessful()) {
-        LOG.error("Failed to execute siteimprove REST call: " + statusCode.getReasonPhrase());
+        LOG.error("Failed to execute siteimprove REST call {}: {}", url, statusCode.getReasonPhrase());
       }
       return responseEntity.getBody();
     } catch (HttpClientErrorException e) {
-      LOG.error("Failed to execute siteimprove REST call: " + e.getResponseBodyAsString());
-      throw new SiteimproveRemoteException(e);
+      LOG.error("Failed to execute siteimprove REST call {}: {}", url, e.getResponseBodyAsString());
+      throw new FeedbackHubException("Rest Connector throws an exception",
+              e, SiteimproveFeedbackHubErrorCode.REST_ERROR, null);
     }
   }
 
   private String getUrl(String resourcePath, MultiValueMap<String, String> queryParams) {
+    UriComponentsBuilder uriComponentsBuilder;
     //resourcePath can be absolute when it is from extracted from a json of a previous request.
     if (resourcePath.contains(host)) {
-      return resourcePath;
+      uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(resourcePath);
+    } else {
+      uriComponentsBuilder = UriComponentsBuilder.newInstance()
+              .scheme(protocol)
+              .host(host)
+              .path(resourcePath);
     }
-    UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance()
-            .scheme(protocol)
-            .host(host);
 
     if (queryParams != null) {
       uriComponentsBuilder.queryParams(queryParams);
-    }
-
-    // Add resource path
-    if (resourcePath != null) {
-      uriComponentsBuilder.path(resourcePath);
     }
 
     UriComponents uriComponents = uriComponentsBuilder.build();

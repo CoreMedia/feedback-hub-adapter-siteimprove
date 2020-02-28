@@ -13,9 +13,12 @@ public class ContentQualitySummaryDocument {
   private PageDocument misspellingPage;
   private AccessibilityIssuesDocument accessibilityIssuesDocument;
   private Seov2IssuesDocument seov2IssuesDocument;
+  private CrawlStatusDocument crawlStatus;
+  private String siteId;
 
-  public ContentQualitySummaryDocument(@NonNull PageDocument page) {
+  public ContentQualitySummaryDocument(@Nullable PageDocument page, @NonNull String siteId) {
     this.page = page;
+    this.siteId = siteId;
   }
 
   @NonNull
@@ -72,5 +75,21 @@ public class ContentQualitySummaryDocument {
 
   public void setAccessibilityIssuesDocument(AccessibilityIssuesDocument accessibilityIssuesDocument) {
     this.accessibilityIssuesDocument = accessibilityIssuesDocument;
+  }
+
+  public CrawlStatusDocument getCrawlStatus() {
+    return crawlStatus;
+  }
+
+  public void setCrawlStatus(CrawlStatusDocument crawlStatus) {
+    this.crawlStatus = crawlStatus;
+  }
+
+  public String getSiteId() {
+    return siteId;
+  }
+
+  public void setSiteId(String siteId) {
+    this.siteId = siteId;
   }
 }

@@ -19,11 +19,12 @@
     ]]></fx:Script>
 
   <local:items>
-    <Button ui="{ButtonSkin.SIMPLE.getSkin()}" text="{resolveLinkLabel(config.issue.issue_name)}" handler="{openIssue}"/>
+    <Button ui="{ButtonSkin.LINK.getSkin()}" text="{resolveLinkLabel(config.issue.issue_name)}" handler="{openIssue}"/>
     <Container flex="1" />
     <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="{config.issue.seo_points_to_gain}" />
     <Container width="3" />
-    <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_siteimprove_points')}" />
+    <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+    'feedbackItemPanel_siteimprove_points')}" />
   </local:items>
   <local:layout>
     <layout_HBox align="stretch"/>

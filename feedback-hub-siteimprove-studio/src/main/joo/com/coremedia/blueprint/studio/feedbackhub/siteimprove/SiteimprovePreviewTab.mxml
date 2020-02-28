@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!---
+ A CollapsiblePanel showing the preview site of siteimprove feedback item
+-->
+<local:SiteimproveTabBase
+        xmlns:fx="http://ns.adobe.com/mxml/2009"
+        xmlns="exml:ext.config"
+        xmlns:exml="http://www.jangaroo.net/exml/0.8"
+        xmlns:ui="exml:com.coremedia.ui.config"
+        xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.*"
+        xmlns:siteimprove="exml:com.coremedia.blueprint.studio.feedbackhub.siteimprove.config"
+        xmlns:components="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
+        ui="{PanelSkin.CARD_200.getSkin()}">
+  <fx:Metadata>
+    [ResourceBundle('com.coremedia.cms.studio.feedbackhub.FeedbackHub')]
+    [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
+  </fx:Metadata>
+  <fx:Script><![CDATA[
+    import com.coremedia.ui.bem.SpacingBEMEntities;
+    import com.coremedia.ui.data.ValueExpressionFactory;
+    import com.coremedia.ui.mixins.OverflowBehaviour;
+    import com.coremedia.ui.skins.ButtonSkin;
+    import com.coremedia.ui.skins.DisplayFieldSkin;
+    import com.coremedia.ui.skins.PanelSkin;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.siteimprovePreviewTab";
+
+    private var config:SiteimprovePreviewTab;
+
+    public native function SiteimprovePreviewTab(config:SiteimprovePreviewTab = null);
+    ]]></fx:Script>
+  <local:items>
+    <Container minHeight="300">
+      <items>
+        <Container>
+          <items>
+            <ui:IconDisplayField
+                    scale="large"
+                    iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'warning')}" />
+          </items>
+          <layout>
+            <layout_Center/>
+          </layout>
+        </Container>
+        <DisplayField
+                value="{getResource('feedbackItemPanel_error_title')}"
+                fieldStyle="text-align: center;"
+                ui="{DisplayFieldSkin.BOLD.getSkin()}"/>
+        <ui:ExtendedDisplayField overflowBehaviour="{OverflowBehaviour.BREAK_WORD}"
+                                 fieldStyle="text-align: center;"
+                                 value="{getErrorMessage(config)}"/>
+      </items>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getShowErrorExpression(config)}"/>
+      </plugins>
+      <layout>
+        <layout_VBox
+                align="stretch"
+                pack="center"/>
+      </layout>
+    </Container>
+    <Panel ui="{PanelSkin.CARD_200.getSkin()}">
+      <items>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                      value="{getResource('feedbackGroupPanel_siteimprove_digitalCertaintyIndex')}"/>
+        <Container layout="hbox">
+          <items>
+            <Component flex="1"/>
+            <ui:IconButton iconCls="{resourceManager.getString('com.coremedia.icons.CoreIcons', 'open_in_browser')}"
+                           tooltip="{getResource('open_siteimprove_btn_text')}"
+                           handler="{openPreviewPageInSiteimprove}"/>
+          </items>
+        </Container>
+        <components:ScoreCircle
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem)}"
+                crawlDateExpression="{getLastCrawlDateExpression(config, false, false)}"
+                showDiff="true"/>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                      value="{getResource('feedbackGroupPanel_siteimprove_scoreDetails')}"/>
+        <components:ScoreBar
+                showDiff="true"
+                showPoints="true"
+                label="{getResource('feedbackItemPanel_siteimprove_a11n')}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"/>
+        <components:ScoreBar
+                showDiff="true"
+                showPoints="true"
+                label="{getResource('feedbackItemPanel_siteimprove_quality')}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.qa.total', config.feedbackItem)}"/>
+        <components:ScoreBar
+                showDiff="true"
+                showPoints="true"
+                label="{getResource('feedbackItemPanel_siteimprove_seo')}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.seo.total', config.feedbackItem)}"/>
+        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                      value="{getResource('feedbackItemPanel_siteimprove_issues')}"/>
+        <DisplayField value="{getResource('feedbackItemPanel_siteimprove_issues_help')}"/>
+        <Container height="10"/>
+        <components:IssueList
+                feedbackData="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"
+                bindTo="{ValueExpressionFactory.create('previewSummary.seov2IssuesDocument.items', config.feedbackItem)}"/>
+      </items>
+      <layout>
+        <layout_VBox align="stretch"/>
+      </layout>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
+      </plugins>
+    </Panel>
+    <Container>
+      <items>
+        <Container layout="vbox">
+          <defaults>
+            <Labelable labelAlign="top"/>
+          </defaults>
+          <items>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          value="{getResource('feedbackItemPanel_siteimprove_last_crawl')}"/>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, false, true, false)}"/>
+              </plugins>
+            </DisplayField>
+            <DisplayField>
+              <plugins>
+                <ui:BindPropertyPlugin bindTo="{getLastCrawlDateExpression(config, true, true, false)}"/>
+              </plugins>
+            </DisplayField>
+          </items>
+        </Container>
+        <Container flex="1"/>
+        <Button itemId="{RECRAWL_BUTTON_ITEM_ID}"
+                ui="{ButtonSkin.MATERIAL_SECONDARY.getSkin()}"
+                margin="20 0 0 0"
+                text="{getResource('recrawl_preview_page_btn_text')}"
+                tooltip="{getResource('recrawl_preview_page_btn_tooltip')}">
+          <baseAction>
+            <siteimprove:RecrawlPageAction contentValueExpression="{config.contentExpression}"
+                                           preview="true"
+                                           feedbackExpression="{ValueExpressionFactory.create('previewSummary', config.feedbackItem)}"/>
+          </baseAction>
+        </Button>
+      </items>
+      <layout>
+        <layout_HBox align="begin" padding="12"/>
+      </layout>
+      <plugins>
+        <ui:BindVisibilityPlugin bindTo="{getFeedbackNoErrorExpression(config)}"/>
+      </plugins>
+    </Container>
+  </local:items>
+  <local:defaults>
+    <Component anchor="100%"/>
+  </local:defaults>
+  <local:layout>
+    <layout_Anchor/>
+  </local:layout>
+  <local:plugins>
+    <ui:VerticalSpacingPlugin modifier="{SpacingBEMEntities.VERTICAL_SPACING_MODIFIER_200}"/>
+  </local:plugins>
+</local:SiteimproveTabBase>

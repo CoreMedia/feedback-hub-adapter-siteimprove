@@ -22,7 +22,9 @@
     <Container>
       <items>
         <Component flex="1"/>
-        <DisplayField>
+        <!--Grey. Workaround: Use ui-->
+        <DisplayField ui="{null}"
+                      style="color:#b3b1b1;">
           <plugins>
             <ui:BindPropertyPlugin bindTo="{config.crawlDateExpression}"/>
           </plugins>

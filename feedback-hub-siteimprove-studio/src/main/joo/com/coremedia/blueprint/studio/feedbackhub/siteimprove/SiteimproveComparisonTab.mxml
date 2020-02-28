@@ -97,6 +97,7 @@
             <layout_HBox align="stretch"/>
           </layout>
         </Container>
+        <Container height="6"/>
         <Container itemId="statusContainer">
           <items>
             <ui:IconDisplayField scale="small"
@@ -107,7 +108,7 @@
             <layout_HBox align="stretch" pack="center"/>
           </layout>
         </Container>
-        <Container height="20"/>
+        <Container height="12"/>
         <Container>
           <items>
             <Container>

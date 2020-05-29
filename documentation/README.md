@@ -37,6 +37,8 @@ Edit the settings document using the struct editor. Create the following setting
       <StringProperty Name="siteimproveLiveSiteId"></StringProperty>
       <StringProperty Name="previewCaeBaseUrl">https://PREIVEW_CAE_HOST/blueprint/servlet/</StringProperty>
       <StringProperty Name="liveCaeBaseUrl">https://LIVE_CAE_HOST/blueprint/servlet/</StringProperty>
+      <BooleanProperty Name="filterSeoIssues">false</BooleanProperty>
+      <BooleanProperty Name="filterAccessibilityIssues">false</BooleanProperty>
     </Struct>
   </StructProperty>
 </Struct>
@@ -61,6 +63,8 @@ Edit the settings document using the struct editor. Create the following setting
 | siteimproveLiveSiteId | yes | The Siteimprove site id of the crawled Coremedia _live_ site, see section "How to find the Siteimprove site id?". |
 | previewCaeBaseUrl | yes | The base url of the preview cae |
 | liveCaeBaseUrl | yes | The base url of the live cae |
+| filterSeoIssues | no | Defaults to false. If enabled, only SEO issues are shown which are fixable from the CoreMedia Studio. |
+| filterAccessibilityIssues | no | Defaults to false. If enabled, accessability issues are shown. |
 
 #### Example
 

@@ -5,8 +5,6 @@ import ext.container.Container;
 
 [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
 public class IssueEntryBase extends Container {
-  [Bindable]
-  public var feedbackData:ValueExpression;
 
   [Bindable]
   public var issue:Object;

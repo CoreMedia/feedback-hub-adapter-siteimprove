@@ -1,5 +1,7 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.actions.RecrawlPageAction;
+import com.coremedia.blueprint.studio.feedbackhub.siteimprove.model.SiteimproveFeedbackItem;
+import com.coremedia.blueprint.studio.feedbackhub.siteimprove.model.SiteimproveFeedbackItem;
 import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
@@ -8,7 +10,6 @@ import com.coremedia.ui.util.createComponentSelector;
 import ext.DateUtil;
 import ext.StringUtil;
 import ext.button.Button;
-
 import ext.panel.Panel;
 
 public class SiteimproveTabBase extends Panel {
@@ -25,6 +26,7 @@ public class SiteimproveTabBase extends Panel {
 
   private var feedbackErrorExpression:ValueExpression;
   private var recheckingExpression:ValueExpression;
+  private var issueListExpression:ValueExpression;
 
   public function SiteimproveTabBase(config:SiteimproveTabBase = null) {
     super(config);
@@ -59,7 +61,7 @@ public class SiteimproveTabBase extends Panel {
   }
 
   internal function getLastCrawlDateExpression(config:SiteimproveTabBase, live:Boolean, sitePrefix:Boolean, diff:Boolean = true):ValueExpression {
-    return ValueExpressionFactory.createFromFunction(function():String {
+    return ValueExpressionFactory.createFromFunction(function ():String {
       var prefix:String = live ? 'liveSummary' : 'previewSummary';
       var expression:String = prefix + '.pageDetailsDocument.summary.page.last_seen';
       var date:Date = ValueExpressionFactory.create(expression, config.feedbackItem).getValue();
@@ -92,7 +94,7 @@ public class SiteimproveTabBase extends Panel {
   }
 
   internal function getFeedbackNoErrorExpression(config:SiteimproveTabBase):ValueExpression {
-    return ValueExpressionFactory.createFromFunction(function():Boolean {
+    return ValueExpressionFactory.createFromFunction(function ():Boolean {
       return !getFeedbackErrorExpression(config).getValue();
     });
   }
@@ -103,6 +105,28 @@ public class SiteimproveTabBase extends Panel {
             "feedbackItemPanel_error_SiteimproveFeedbackHubErrorCode_" :
             "feedbackItemPanel_error_SiteimproveFeedbackHubErrorCode_live_";
     return getResource(prefix + errorCode);
+  }
+
+  internal function getIssueListExpression(config:SiteimproveTabBase):ValueExpression {
+    if (!issueListExpression) {
+      issueListExpression = ValueExpressionFactory.createFromFunction(function ():Array {
+        var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(config.feedbackItem);
+
+        var result:Array = [];
+        var seoIssues:Array = item.previewSummary.seov2IssuesDocument.items;
+        if(seoIssues) {
+          result = result.concat(seoIssues);
+        }
+
+        var a11nIssues:Array = item.previewSummary.accessibilityIssuesDocument.items;
+        if(a11nIssues) {
+          result = result.concat(a11nIssues);
+        }
+
+        return result;
+      });
+    }
+    return issueListExpression;
   }
 
   private function getDateDiff(date:Date):String {

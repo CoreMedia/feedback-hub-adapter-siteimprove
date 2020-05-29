@@ -11,9 +11,6 @@ public class IssueListBase extends Panel {
   private var loadCount:int = 0;
 
   [Bindable]
-  public var feedbackData:ValueExpression;
-
-  [Bindable]
   public var bindTo:ValueExpression;
 
   private var issuesExpression:ValueExpression;

@@ -130,12 +130,16 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     }
 
     Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
-    List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
-    seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
+    if(settings.getFilterSeoIssues() != null && settings.getFilterSeoIssues()) {
+      List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
+      seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
+    }
     contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
 
-    AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
-    contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
+    if(settings.getFilterAccessibilityIssues() == null || !settings.getFilterAccessibilityIssues()) {
+      AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
+      contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
+    }
 
     CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
     contentQualitySummaryDocument.setCrawlStatus(crawlStatus);

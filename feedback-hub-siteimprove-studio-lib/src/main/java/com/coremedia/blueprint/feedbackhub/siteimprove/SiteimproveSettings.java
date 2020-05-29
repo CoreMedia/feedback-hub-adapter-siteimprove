@@ -29,4 +29,9 @@ public interface SiteimproveSettings {
   @NonNull
   String getLiveCaeBaseUrl();
 
+  @Nullable
+  Boolean getFilterSeoIssues();
+
+  @Nullable
+  Boolean getFilterAccessibilityIssues();
 }

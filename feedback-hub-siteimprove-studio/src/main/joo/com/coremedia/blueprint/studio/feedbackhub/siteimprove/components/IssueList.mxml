@@ -41,7 +41,7 @@
                                  configBeanParameterName="issue"
                                  reuseComponents="{false}">
           <ui:template>
-            <local:IssueEntry feedbackData="{config.feedbackData}"/>
+            <local:IssueEntry />
           </ui:template>
         </ui:BindComponentsPlugin>
       </plugins>

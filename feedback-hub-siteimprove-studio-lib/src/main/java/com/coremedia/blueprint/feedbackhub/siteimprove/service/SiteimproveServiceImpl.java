@@ -216,9 +216,9 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   @Nullable
   @Override
-  public BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParamContentID) {
+  public BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParams) {
     String resourcePath = SITES + siteId + "/quality_assurance/links/pages_with_broken_links";
-    return connector.performGet(config, resourcePath, BrokenLinkPagesDocument.class, null);
+    return connector.performGet(config, resourcePath, BrokenLinkPagesDocument.class, queryParams);
   }
 
   @Nullable

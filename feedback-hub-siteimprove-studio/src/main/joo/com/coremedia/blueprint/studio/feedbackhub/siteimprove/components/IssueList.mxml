@@ -4,12 +4,14 @@
         xmlns:exml="http://www.jangaroo.net/exml/0.8"
         xmlns="exml:ext.config"
         xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.*"
-        xmlns:ui="exml:com.coremedia.ui.config">
+        xmlns:ui="exml:com.coremedia.ui.config"
+        ui="{ContainerSkin.GRID_100.getSkin()}">
   <fx:Metadata>
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
   <fx:Script><![CDATA[
     import com.coremedia.ui.skins.ButtonSkin;
+    import com.coremedia.ui.skins.ContainerSkin;
     import com.coremedia.ui.skins.DisplayFieldSkin;
 
     public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.IssueList";
@@ -20,33 +22,47 @@
     ]]></fx:Script>
 
   <local:items>
-    <Container>
+    <Container style="background: #f1f1f1; padding: 1px;margin-top: 6px;">
       <items>
-        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+        <Container style="padding: 3px;">
+          <items>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          flex="1"
+                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
                       'feedbackItemPanel_siteimprove_issue')}"/>
-        <Container flex="1"/>
-        <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                      value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          width="100"
+                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
+                      'feedbackItemPanel_siteimprove_category')}"/>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          width="120"
+                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
                       'feedbackItemPanel_siteimprove_points_to_gain')}"/>
+          </items>
+          <layout>
+            <layout_HBox align="stretch" pack="center"/>
+          </layout>
+        </Container>
+        <Container style="background: #FFF; padding: 3px;">
+          <plugins>
+            <ui:BindComponentsPlugin valueExpression="{getIssuesExpression()}"
+                                     getKey="{getKey}"
+                                     configBeanParameterName="issue"
+                                     clearBeforeUpdate="true"
+                                     reuseComponents="{false}">
+              <ui:template>
+                <local:IssueEntry/>
+              </ui:template>
+            </ui:BindComponentsPlugin>
+          </plugins>
+        </Container>
       </items>
       <layout>
-        <layout_HBox align="stretch" pack="center"/>
+        <layout_VBox align="stretch" />
       </layout>
     </Container>
-    <Container  margin="0 0 0 -3">
-      <plugins>
-        <ui:BindComponentsPlugin valueExpression="{getIssuesExpression()}"
-                                 getKey="{function(issue:Object):String {return issue.issue_name;}}"
-                                 configBeanParameterName="issue"
-                                 reuseComponents="{false}">
-          <ui:template>
-            <local:IssueEntry />
-          </ui:template>
-        </ui:BindComponentsPlugin>
-      </plugins>
-    </Container>
-    <Container  margin="0 0 0 -9">
+
+    <Container margin="0 0 0 -9">
       <items>
         <Button ui="{ButtonSkin.SIMPLE}"
                 text="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
@@ -68,6 +84,6 @@
     <layout_Anchor/>
   </local:layout>
   <local:plugins>
-    <ui:BindVisibilityPlugin bindTo="{config.bindTo}" />
+    <ui:BindVisibilityPlugin bindTo="{config.bindTo}"/>
   </local:plugins>
 </local:IssueListBase>

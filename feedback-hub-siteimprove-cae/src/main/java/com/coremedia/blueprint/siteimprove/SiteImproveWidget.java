@@ -1,18 +1,36 @@
 package com.coremedia.blueprint.siteimprove;
 
+import java.util.Map;
+
 /**
  * SiteImproveConfiguration configuration interface.
  */
-public interface SiteImproveWidget {
+public class SiteImproveWidget {
 
-  boolean isEnabled();
+  private Map<String, Object> data;
 
-  String getCmsToken();
+  public SiteImproveWidget(Map<String,Object> data) {
+    this.data = data;
+  }
 
-  String getUsername();
+  public boolean isEnabled() {
+    return (boolean) data.getOrDefault("enabled", false);
+  }
 
-  String getApiKey();
+  public String getCmsToken() {
+    return (String) data.get("cmsToken");
+  }
 
-  String getAnalyticsUrl();
 
+  public String getSiteId() {
+    return (String) data.get("siteId");
+  }
+
+  public String getApiKey() {
+    return (String) data.get("apiKey");
+  }
+
+  public String getEmail() {
+    return (String) data.get("email");
+  }
 }

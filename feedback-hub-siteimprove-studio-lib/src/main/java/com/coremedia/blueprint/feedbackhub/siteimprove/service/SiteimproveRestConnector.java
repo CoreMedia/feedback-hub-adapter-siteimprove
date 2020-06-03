@@ -64,7 +64,7 @@ class SiteimproveRestConnector {
   private <T> T perform(SiteimproveSettings config, String resourcePath, Class<T> responseType, HttpMethod method, MultiValueMap<String, String> queryParams, String body) {
     String url = getUrl(resourcePath, queryParams);
     try {
-      LOG.debug("Siteimprove request: {}", url);
+      LOG.info("Siteimprove request: {}", url);
 
       HttpEntity<String> requestEntity = null;
       HttpHeaders headers = new HttpHeaders();

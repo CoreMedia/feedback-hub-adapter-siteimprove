@@ -4,16 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class BrokenLinkPagesDocument {
+/**
+ *
+ */
+public class A11yPageIssuesDocument {
+
+  @JsonProperty("items")
+  private List<A11yPageIssueDocument> items;
 
   @JsonProperty("siteimprove")
   private SiteimproveWebappDocument siteimprove;
 
-  @JsonProperty("items")
-  private List<BrokenLinkPageDocument> brokenLinkPageDocuments;
+  public List<A11yPageIssueDocument> getItems() {
+    return items;
+  }
 
-  public List<BrokenLinkPageDocument> getBrokenPages() {
-    return this.brokenLinkPageDocuments;
+  public void setItems(List<A11yPageIssueDocument> items) {
+    this.items = items;
   }
 
   public SiteimproveWebappDocument getSiteimprove() {

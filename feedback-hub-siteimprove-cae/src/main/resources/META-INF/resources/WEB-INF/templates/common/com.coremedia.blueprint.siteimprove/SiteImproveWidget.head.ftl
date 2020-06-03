@@ -23,16 +23,6 @@
   _si.push(['input',  url, '${self.cmsToken}', function() { console.log('Inputted empty string as domain to Siteimprove'); }]);
 </script>
 
-<#else><#-- on the live side only show the tracking script -->
-
-<script type="text/javascript">
-  /*<![CDATA[*/
-  (function() {
-    var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
-    sz.src = '${self.analyticsUrl}';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
-  })();
-  /*]]>*/
-</script>
+<#else>
 
 </#if>

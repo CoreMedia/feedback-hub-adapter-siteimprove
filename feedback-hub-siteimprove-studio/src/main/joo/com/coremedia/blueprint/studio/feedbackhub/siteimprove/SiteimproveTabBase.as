@@ -1,9 +1,10 @@
 package com.coremedia.blueprint.studio.feedbackhub.siteimprove {
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.actions.RecrawlPageAction;
-import com.coremedia.blueprint.studio.feedbackhub.siteimprove.model.SiteimproveFeedbackItem;
+import com.coremedia.blueprint.studio.feedbackhub.siteimprove.components.IssueFilterComboBoxBase;
 import com.coremedia.blueprint.studio.feedbackhub.siteimprove.model.SiteimproveFeedbackItem;
 import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
 import com.coremedia.ui.data.ValueExpression;
+import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.util.createComponentSelector;
 
@@ -27,6 +28,10 @@ public class SiteimproveTabBase extends Panel {
   private var feedbackErrorExpression:ValueExpression;
   private var recheckingExpression:ValueExpression;
   private var issueListExpression:ValueExpression;
+  private var filterStatusExpression:ValueExpression;
+
+  private var qaCountExpression:ValueExpression;
+  private var a11yCountExpression:ValueExpression;
 
   public function SiteimproveTabBase(config:SiteimproveTabBase = null) {
     super(config);
@@ -36,7 +41,8 @@ public class SiteimproveTabBase extends Panel {
     var prefix:String = preview ? "previewSummary" : "liveSummary";
     var checkingNowExpression:ValueExpression = ValueExpressionFactory.create(prefix + ".pageDetailsDocument.summary.page.checking_now", feedbackItem);
     if (checkingNowExpression.getValue()) {
-      checkPageStatus();
+      //TODO not working: this will result in an endless loop if the crawler is active
+//      checkPageStatus();
     }
   }
 
@@ -107,20 +113,46 @@ public class SiteimproveTabBase extends Panel {
     return getResource(prefix + errorCode);
   }
 
+  internal function getFilterStatusExpression():ValueExpression {
+    if (!filterStatusExpression) {
+      //TODO default to all once we have more issue types
+      filterStatusExpression = ValueExpressionFactory.createFromValue(IssueFilterComboBoxBase.VALUE_SEO);
+    }
+    return filterStatusExpression;
+  }
+
   internal function getIssueListExpression(config:SiteimproveTabBase):ValueExpression {
     if (!issueListExpression) {
       issueListExpression = ValueExpressionFactory.createFromFunction(function ():Array {
         var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(config.feedbackItem);
+        if (!item || !item.previewSummary) {
+          return [];
+        }
+
+        var filterStatus:Number = getFilterStatusExpression().getValue();
 
         var result:Array = [];
-        var seoIssues:Array = item.previewSummary.seov2IssuesDocument.items;
-        if(seoIssues) {
+        var seoIssues:Array = [];
+        var a11yIssues:Array = [];
+        var qaIssues:Array = [];
+        if (item.previewSummary.seov2IssuesDocument) {
+          seoIssues = item.previewSummary.seov2IssuesDocument.items;
+        }
+
+//        if(item.previewSummary.accessibilityIssuesDocument) {
+//          a11yIssues = item.previewSummary.accessibilityIssuesDocument.items;
+//        }
+
+        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL || filterStatus === IssueFilterComboBoxBase.VALUE_SEO) {
           result = result.concat(seoIssues);
         }
 
-        var a11nIssues:Array = item.previewSummary.accessibilityIssuesDocument.items;
-        if(a11nIssues) {
-          result = result.concat(a11nIssues);
+        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL || filterStatus === IssueFilterComboBoxBase.VALUE_A11Y) {
+          result = result.concat(a11yIssues);
+        }
+
+        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL || filterStatus === IssueFilterComboBoxBase.VALUE_QA) {
+          result = result.concat(qaIssues);
         }
 
         return result;
@@ -173,6 +205,104 @@ public class SiteimproveTabBase extends Panel {
     return StringUtil.format(msg2, (previewScore - liveScore).toFixed(2));
   }
 
+  internal function getQAIssueCount(feedbackItem:FeedbackItem):ValueExpression {
+    if (!qaCountExpression) {
+      qaCountExpression = ValueExpressionFactory.createFromFunction(function ():Number {
+        var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);
+        if (!item || !item.previewSummary) {
+          return 0;
+        }
+
+        var count:Number = 0;
+        if (item.previewSummary.brokenLinkPagesDocument && item.previewSummary.brokenLinkPagesDocument.items.length > 0) {
+          count = count + parseInt(item.previewSummary.brokenLinkPagesDocument.items[0].broken_links);
+        }
+
+        if (item.previewSummary.misspellingPages && item.previewSummary.misspellingPages.items.length > 0) {
+          count = count + parseInt(item.previewSummary.misspellingPages.items[0].misspellings);
+        }
+
+        return count;
+      });
+    }
+
+    return qaCountExpression;
+  }
+
+  internal function getQAButtonText(feedbackItem:FeedbackItem):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():String {
+      var count:Number = getQAIssueCount(feedbackItem).getValue();
+      var msg:String = getResource('feedbackItemPanel_siteimprove_issues_qa_count');
+      return StringUtil.format(msg, count);
+    });
+  }
+
+  internal function openQALink():void {
+    var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);
+    if (item.previewSummary.brokenLinkPagesDocument && item.previewSummary.brokenLinkPagesDocument.items.length > 0) {
+      var linksUrl:String = item.previewSummary.brokenLinkPagesDocument.siteimprove.webapp.href;
+      window.open(linksUrl, '_blank');
+    }
+    else if (item.previewSummary.misspellingPages && item.previewSummary.misspellingPages.items.length > 0) {
+      var spellingUrl:String = item.previewSummary.misspellingPages.siteimprove.webapp.href;
+      window.open(spellingUrl, '_blank');
+    }
+  }
+
+  internal function getA11yIssueCount(feedbackItem:FeedbackItem):ValueExpression {
+    if (!a11yCountExpression) {
+      a11yCountExpression = ValueExpressionFactory.createFromFunction(function ():Number {
+        var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);
+        if (!item || !item.previewSummary) {
+          return 0;
+        }
+
+        var count:Number = 0;
+        if (item.previewSummary.accessibilityIssuesDocument) {
+          var issues:Array = item.previewSummary.accessibilityIssuesDocument.items;
+          if (issues.length > 0) {
+            var issue:Object = issues[0];
+            count = count + issue.a_issues;
+            count = count + issue.aa_issues;
+            count = count + issue.aaa_issues;
+          }
+        }
+
+        return count;
+      });
+    }
+
+    return a11yCountExpression;
+  }
+
+  internal function getA11yButtonText(feedbackItem:FeedbackItem):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():String {
+      var count:Number = getA11yIssueCount(feedbackItem).getValue();
+      var msg:String = getResource('feedbackItemPanel_siteimprove_issues_a11y_count');
+      return StringUtil.format(msg, count);
+    });
+  }
+
+  internal function openA11yLink():void {
+    var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);
+    var url:String = item.previewSummary.accessibilityIssuesDocument.siteimprove.webapp.href;
+    window.open(url, '_blank');
+  }
+
+  internal function getSeoText(feedbackItem:FeedbackItem):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function():String {
+      var msg:String = getResource('feedbackItemPanel_siteimprove_issues_seo_count');
+      var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);
+
+      if(item.previewSummary) {
+        var count:Number = item.previewSummary.seov2IssuesDocument.items.length;
+        return StringUtil.format(msg, count);
+      }
+
+      return "-";
+    });
+  }
+
   protected function getStatusIconClass(config:SiteimproveTabBase):String {
     var previewScore:Number = ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
     var liveScore:Number = ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.total', config.feedbackItem).getValue();
@@ -197,6 +327,5 @@ public class SiteimproveTabBase extends Panel {
     var url:String = ValueExpressionFactory.create('liveSummary.pageDetailsDocument._siteimprove.seo.page_report.href', feedbackItem).getValue();
     window.open(url, '_blank');
   }
-
 }
 }

@@ -10,6 +10,8 @@ public class IssueListBase extends Panel {
 
   private var loadCount:int = 0;
 
+  private var keyCounter:int = 0;
+
   [Bindable]
   public var bindTo:ValueExpression;
 
@@ -20,12 +22,27 @@ public class IssueListBase extends Panel {
     showMore();
   }
 
+
+  override protected function afterRender():void {
+    super.afterRender();
+    bindTo.addChangeListener(issuesChanged);
+  }
+
+  private function issuesChanged():void {
+    loadCount = 0;
+    showMore();
+  }
+
+  internal function getKey():String {
+    keyCounter++;
+    return "key-" + keyCounter;
+  }
+
   internal function showMore():void {
     loadCount++;
     var allIssues:Array = bindTo.getValue() || [];
     var endIndex:int = loadCount * VIEW_INCREMENT;
     issuesExpression.setValue(allIssues.slice(0, endIndex));
-
   }
 
   internal function getIssuesExpression():ValueExpression {

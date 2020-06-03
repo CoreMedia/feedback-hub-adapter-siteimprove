@@ -1,8 +1,7 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove;
 
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AccessibilityIssuesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPageDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentQualitySummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
@@ -11,7 +10,6 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageChe
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssueDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
 import com.coremedia.cap.content.Content;
 import com.coremedia.feedbackhub.ErrorFeedbackItem;
@@ -26,14 +24,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
 
 import static com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode.NOT_PUBLISHED;
 
@@ -107,6 +101,7 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
 
     MultiValueMap<String, String> queryParamContentID = new LinkedMultiValueMap<>();
     queryParamContentID.add("ids", page.getId());
+    queryParamContentID.add("page_id", page.getId());
 
     ContentQualitySummaryDocument contentQualitySummaryDocument = new ContentQualitySummaryDocument(page, siteimproveSiteId);
     //Creating content quality summary
@@ -116,30 +111,17 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     PageDetailsDocument pageDetailsDocument = siteimproveService.getPageDetails(settings, siteimproveSiteId, page.getId());
     contentQualitySummaryDocument.setPageDetailsDocument(pageDetailsDocument);
 
-
     BrokenLinkPagesDocument brokenLinkPagesDocument = siteimproveService.getBrokenLinkPages(settings, siteimproveSiteId, queryParamContentID);
-    if (brokenLinkPagesDocument != null && !brokenLinkPagesDocument.getBrokenPages().isEmpty()) {
-      BrokenLinkPageDocument brokenLinkPageDocument = brokenLinkPagesDocument.getBrokenPages().get(0);
-      contentQualitySummaryDocument.setBrokenLinkPageDocument(brokenLinkPageDocument);
-    }
+    contentQualitySummaryDocument.setBrokenLinkPagesDocument(brokenLinkPagesDocument);
 
     PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, siteimproveSiteId, queryParamContentID);
-    if (misspellingPages != null && !misspellingPages.getPages().isEmpty()) {
-      PageDocument misspellingPage = misspellingPages.getPages().get(0);
-      contentQualitySummaryDocument.setMisspellingPage(misspellingPage);
-    }
+    contentQualitySummaryDocument.setMisspellingPages(misspellingPages);
 
-    Seov2IssuesDocument seoIssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
-    if(settings.getFilterSeoIssues() != null && settings.getFilterSeoIssues()) {
-      List<Seov2IssueDocument> filteredSeov2IssueDocuments = filterSeoIssuesForEditor(seoIssuesDocument.getItems());
-      seoIssuesDocument = new Seov2IssuesDocument(filteredSeov2IssueDocuments);
-    }
-    contentQualitySummaryDocument.setSeov2IssuesDocument(seoIssuesDocument);
+    Seov2IssuesDocument seoV2IssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
+    contentQualitySummaryDocument.setSeov2IssuesDocument(seoV2IssuesDocument);
 
-    if(settings.getFilterAccessibilityIssues() == null || !settings.getFilterAccessibilityIssues()) {
-      AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
-      contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
-    }
+    A11yPageIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityPageIssues(settings, siteimproveSiteId, page.getId());
+    contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
 
     CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);
     contentQualitySummaryDocument.setCrawlStatus(crawlStatus);
@@ -166,24 +148,4 @@ public class SiteimproveContentFeedbackProvider implements ContentFeedbackProvid
     }
     return page;
   }
-
-  /**
-   * We don't want to display all SEO issues to the editor.
-   * When an error is caused by markup he can't do anything about it, so we filter those issues.
-   *
-   * @param issues the SEO issues
-   * @return the list of filtered SEO issues
-   */
-  private List<Seov2IssueDocument> filterSeoIssuesForEditor(List<Seov2IssueDocument> issues) {
-    List<Seov2IssueDocument> result = new ArrayList<>();
-
-    List<String> whitelist = Arrays.stream(SeoIssueTypesEditorWhitelist.class.getEnumConstants()).map(Enum::name).collect(Collectors.toList());
-    for (Seov2IssueDocument issue : issues) {
-      if (whitelist.contains(issue.getIssueName())) {
-        result.add(issue);
-      }
-    }
-    return result;
-  }
-
 }

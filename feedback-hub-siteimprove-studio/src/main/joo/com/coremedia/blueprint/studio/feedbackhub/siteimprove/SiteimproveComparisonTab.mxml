@@ -124,7 +124,7 @@
               </layout>
             </Container>
             <components:ScoreBarComparator
-                    label="{getResource('feedbackItemPanel_siteimprove_a11n')}"
+                    label="{getResource('feedbackItemPanel_siteimprove_a11y')}"
                     bindToValue1="{ValueExpressionFactory.create('previewSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"
                     bindToValue2="{ValueExpressionFactory.create('liveSummary.dciOverallScoreDocument.accessibility.total', config.feedbackItem)}"
                     color1="{PREVIEW_COLOR}"

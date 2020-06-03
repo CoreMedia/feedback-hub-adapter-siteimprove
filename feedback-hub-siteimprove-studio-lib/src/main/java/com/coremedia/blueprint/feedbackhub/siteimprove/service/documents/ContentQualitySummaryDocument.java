@@ -8,10 +8,10 @@ public class ContentQualitySummaryDocument {
 
   private PageDetailsDocument pageDetailsDocument;
 
-  private BrokenLinkPageDocument brokenLinkPageDocument;
+  private BrokenLinkPagesDocument brokenLinkPagesDocument;
   private DciOverallScoreDocument dciOverallScoreDocument;
-  private PageDocument misspellingPage;
-  private AccessibilityIssuesDocument accessibilityIssuesDocument;
+  private PagesDocument misspellingPages;
+  private A11yPageIssuesDocument accessibilityIssuesDocument;
   private Seov2IssuesDocument seov2IssuesDocument;
   private CrawlStatusDocument crawlStatus;
   private String siteId;
@@ -43,21 +43,21 @@ public class ContentQualitySummaryDocument {
   }
 
   @Nullable
-  public BrokenLinkPageDocument getBrokenLinkPageDocument() {
-    return brokenLinkPageDocument;
+  public BrokenLinkPagesDocument getBrokenLinkPagesDocument() {
+    return brokenLinkPagesDocument;
   }
 
-  public void setBrokenLinkPageDocument(@Nullable BrokenLinkPageDocument brokenLinkPageDocument) {
-    this.brokenLinkPageDocument = brokenLinkPageDocument;
+  public void setBrokenLinkPagesDocument(@Nullable BrokenLinkPagesDocument brokenLinkPagesDocument) {
+    this.brokenLinkPagesDocument = brokenLinkPagesDocument;
   }
 
   @Nullable
-  public PageDocument getMisspellingPage() {
-    return misspellingPage;
+  public PagesDocument getMisspellingPages() {
+    return misspellingPages;
   }
 
-  public void setMisspellingPage(@Nullable PageDocument misspellingPage) {
-    this.misspellingPage = misspellingPage;
+  public void setMisspellingPages(@Nullable PagesDocument misspellingPages) {
+    this.misspellingPages = misspellingPages;
   }
 
   @Nullable
@@ -69,11 +69,11 @@ public class ContentQualitySummaryDocument {
     this.seov2IssuesDocument = seov2IssuesDocument;
   }
 
-  public AccessibilityIssuesDocument getAccessibilityIssuesDocument() {
+  public A11yPageIssuesDocument getAccessibilityIssuesDocument() {
     return accessibilityIssuesDocument;
   }
 
-  public void setAccessibilityIssuesDocument(AccessibilityIssuesDocument accessibilityIssuesDocument) {
+  public void setAccessibilityIssuesDocument(A11yPageIssuesDocument accessibilityIssuesDocument) {
     this.accessibilityIssuesDocument = accessibilityIssuesDocument;
   }
 

@@ -19,12 +19,26 @@
     ]]></fx:Script>
 
   <local:items>
-    <Button ui="{ButtonSkin.LINK.getSkin()}" text="{resolveLinkLabel(config.issue.issue_name)}" handler="{openIssue}"/>
-    <Container flex="1" />
-    <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}" value="{config.issue.seo_points_to_gain}" />
-    <Container width="3" />
-    <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
-    'feedbackItemPanel_siteimprove_points')}" />
+    <Container flex="1">
+      <items>
+        <Button style="margin-left: -9px;" ui="{ButtonSkin.SIMPLE.getSkin()}" text="{resolveLinkLabel(config.issue)}" handler="{openIssue}"/>
+      </items>
+      <layout>
+        <layout_HBox align="stretch" pack="start" />
+      </layout>
+    </Container>
+    <DisplayField width="100" value="{getIssueCategory(config.issue)}" />
+    <Container width="120">
+      <items>
+        <DisplayField  ui="{DisplayFieldSkin.BOLD.getSkin()}" value="{config.issue.seo_points_to_gain}" />
+        <Container width="3" />
+        <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_points')}" />
+        <Container width="3" />
+      </items>
+      <layout>
+        <layout_HBox align="stretch" pack="end" />
+      </layout>
+    </Container>
   </local:items>
   <local:layout>
     <layout_HBox align="stretch"/>

@@ -2,6 +2,7 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.service;
 
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AccessibilityIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AnalyticsSummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
@@ -199,6 +200,13 @@ public class SiteimproveServiceImpl implements SiteimproveService {
       issues.add(nextIssues);
     }
     return issues;
+  }
+
+  @Nullable
+  @Override
+  public A11yPageIssuesDocument getAccessibilityPageIssues(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
+    String url = SITES + siteId + "/accessibility/pages?ids=" + pageId;
+    return connector.performGet(config, url, A11yPageIssuesDocument.class, null);
   }
 
   @Nullable

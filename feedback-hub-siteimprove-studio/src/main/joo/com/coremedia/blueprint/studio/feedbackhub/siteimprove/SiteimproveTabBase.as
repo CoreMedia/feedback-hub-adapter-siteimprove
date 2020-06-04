@@ -285,7 +285,7 @@ public class SiteimproveTabBase extends Panel {
 
   internal function openA11yLink():void {
     var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);
-    var url:String = item.previewSummary.accessibilityIssuesDocument.siteimprove.webapp.href;
+    var url:String = item.previewSummary.accessibilityIssuesDocument.items[0]._siteimprove.page_report.href;
     window.open(url, '_blank');
   }
 

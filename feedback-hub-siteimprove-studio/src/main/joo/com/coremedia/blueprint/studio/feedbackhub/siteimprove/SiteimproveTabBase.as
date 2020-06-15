@@ -6,6 +6,7 @@ import com.coremedia.cms.studio.feedbackhub.model.FeedbackItem;
 import com.coremedia.ui.data.ValueExpression;
 import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.data.ValueExpressionFactory;
+import com.coremedia.ui.data.ValueExpressionFactory;
 import com.coremedia.ui.util.createComponentSelector;
 
 import ext.DateUtil;
@@ -229,6 +230,10 @@ public class SiteimproveTabBase extends Panel {
     return qaCountExpression;
   }
 
+  internal function getSeoIssueCount(config:SiteimproveTabBase):ValueExpression {
+   return ValueExpressionFactory.createFromValue(getIssueListExpression(config).getValue().length);
+  }
+
   internal function getQAButtonText(feedbackItem:FeedbackItem):ValueExpression {
     return ValueExpressionFactory.createFromFunction(function ():String {
       var count:Number = getQAIssueCount(feedbackItem).getValue();
@@ -236,6 +241,15 @@ public class SiteimproveTabBase extends Panel {
       return StringUtil.format(msg, count);
     });
   }
+
+  internal function getSeoButtonText(config:SiteimproveTabBase):ValueExpression {
+    return ValueExpressionFactory.createFromFunction(function ():String {
+      var count:Number = getSeoIssueCount(config).getValue();
+      var msg:String = getResource('feedbackItemPanel_siteimprove_issues_seo_count');
+      return StringUtil.format(msg, count);
+    });
+  }
+
 
   internal function openQALink():void {
     var item:SiteimproveFeedbackItem = SiteimproveFeedbackItem(feedbackItem);

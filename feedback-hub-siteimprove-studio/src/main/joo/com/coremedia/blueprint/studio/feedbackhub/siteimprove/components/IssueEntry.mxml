@@ -27,7 +27,7 @@
         <layout_HBox align="stretch" pack="start" />
       </layout>
     </Container>
-    <DisplayField width="100" value="{getIssueCategory(config.issue)}" />
+<!--    <DisplayField width="100" value="{getIssueCategory(config.issue)}" />-->
     <Container width="120">
       <items>
         <DisplayField  ui="{DisplayFieldSkin.BOLD.getSkin()}" value="{config.issue.seo_points_to_gain}" />

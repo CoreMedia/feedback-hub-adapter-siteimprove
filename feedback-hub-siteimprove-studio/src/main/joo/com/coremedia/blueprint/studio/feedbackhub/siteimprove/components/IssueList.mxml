@@ -30,10 +30,10 @@
                           flex="1"
                           value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
                       'feedbackItemPanel_siteimprove_issue')}"/>
-            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
-                          width="100"
-                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',
-                      'feedbackItemPanel_siteimprove_category')}"/>
+<!--            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"-->
+<!--                          width="100"-->
+<!--                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',-->
+<!--                      'feedbackItemPanel_siteimprove_category')}"/>-->
             <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
                           width="120"
                           value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove',

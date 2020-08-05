@@ -30,7 +30,7 @@
 
     <dependency>
       <groupId>com.coremedia.cms</groupId>
-      <artifactId>cae-viewservices-api</artifactId>
+      <artifactId>cae-viewservices</artifactId>
     </dependency>
 
     <dependency>

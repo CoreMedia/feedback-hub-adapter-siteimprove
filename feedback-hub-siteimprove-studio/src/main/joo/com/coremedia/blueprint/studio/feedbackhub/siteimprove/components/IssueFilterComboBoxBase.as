@@ -7,10 +7,10 @@ import mx.resources.ResourceManager;
 
 [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
 public class IssueFilterComboBoxBase extends LocalComboBox {
-  public static const VALUE_ALL:int = 0;
-  public static const VALUE_A11Y:int = 1;
-  public static const VALUE_QA:int = 2;
-  public static const VALUE_SEO:int = 3;
+  public static const VALUE_ALL:String = 'all';
+  public static const VALUE_CONTENT:String = 'content';
+  public static const VALUE_TECHNICAL:String = 'technical';
+
 
   [Bindable]
   public var bindTo:ValueExpression;
@@ -25,24 +25,20 @@ public class IssueFilterComboBoxBase extends LocalComboBox {
     if (!valuesExpression) {
       var values:Array = [];
 
-//      values.push({
-//        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_all'),
-//        'value': VALUE_ALL
-//      });
 
-//      values.push({
-//        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_a11n'),
-//        'value': VALUE_A11Y
-//      });
-//
-//      values.push({
-//        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_qa'),
-//        'value': VALUE_QA
-//      });
-//
       values.push({
-        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_seo'),
-        'value': VALUE_SEO
+        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_seo_technical'),
+        'value': VALUE_TECHNICAL
+      });
+
+      values.push({
+        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_seo_content'),
+        'value': VALUE_CONTENT
+      });
+
+      values.push({
+        'description': ResourceManager.getInstance().getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_issues_all'),
+        'value': VALUE_ALL
       });
 
       valuesExpression = ValueExpressionFactory.createFromValue(values);

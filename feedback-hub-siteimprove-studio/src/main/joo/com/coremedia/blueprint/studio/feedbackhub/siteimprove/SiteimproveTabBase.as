@@ -117,7 +117,7 @@ public class SiteimproveTabBase extends Panel {
   internal function getFilterStatusExpression():ValueExpression {
     if (!filterStatusExpression) {
       //TODO default to all once we have more issue types
-      filterStatusExpression = ValueExpressionFactory.createFromValue(IssueFilterComboBoxBase.VALUE_SEO);
+      filterStatusExpression = ValueExpressionFactory.createFromValue(IssueFilterComboBoxBase.VALUE_ALL);
     }
     return filterStatusExpression;
   }
@@ -130,7 +130,7 @@ public class SiteimproveTabBase extends Panel {
           return [];
         }
 
-        var filterStatus:Number = getFilterStatusExpression().getValue();
+        var filterStatus:String = getFilterStatusExpression().getValue();
 
         var result:Array = [];
         var seoIssues:Array = [];
@@ -144,16 +144,25 @@ public class SiteimproveTabBase extends Panel {
 //          a11yIssues = item.previewSummary.accessibilityIssuesDocument.items;
 //        }
 
-        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL || filterStatus === IssueFilterComboBoxBase.VALUE_SEO) {
+        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL ) {
           result = result.concat(seoIssues);
         }
 
-        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL || filterStatus === IssueFilterComboBoxBase.VALUE_A11Y) {
-          result = result.concat(a11yIssues);
+
+        if (filterStatus === IssueFilterComboBoxBase.VALUE_CONTENT) {
+          result = result.concat(seoIssues.filter(function (item){
+            if (item.issue_type === IssueFilterComboBoxBase.VALUE_CONTENT){
+              return item;
+            }
+          }));
         }
 
-        if (filterStatus === IssueFilterComboBoxBase.VALUE_ALL || filterStatus === IssueFilterComboBoxBase.VALUE_QA) {
-          result = result.concat(qaIssues);
+        if (filterStatus === IssueFilterComboBoxBase.VALUE_TECHNICAL) {
+          result = result.concat(seoIssues.filter(function (item){
+            if (item.issue_type === IssueFilterComboBoxBase.VALUE_TECHNICAL){
+              return item;
+            }
+          }));
         }
 
         return result;

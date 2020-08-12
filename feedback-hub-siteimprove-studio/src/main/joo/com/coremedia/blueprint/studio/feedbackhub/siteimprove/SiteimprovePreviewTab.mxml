@@ -146,16 +146,16 @@
           </layout>
         </Container>
 
-        <!--        <Container>-->
-        <!--          <items>-->
-        <!--            <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_filter')}"/>-->
-        <!--            <Container flex="1"/>-->
-        <!--            <components:IssueFilterComboBox bindTo="{getFilterStatusExpression()}"/>-->
-        <!--          </items>-->
-        <!--          <layout>-->
-        <!--            <layout_HBox align="stretch"/>-->
-        <!--          </layout>-->
-        <!--        </Container>-->
+                <Container>
+                  <items>
+                    <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'feedbackItemPanel_siteimprove_filter')}"/>
+                    <Container flex="1"/>
+                    <components:IssueFilterComboBox bindTo="{getFilterStatusExpression()}"/>
+                  </items>
+                  <layout>
+                    <layout_HBox align="stretch"/>
+                  </layout>
+                </Container>
         <components:IssueList bindTo="{getIssueListExpression(config)}"/>
       </items>
       <layout>

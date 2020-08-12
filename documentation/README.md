@@ -4,7 +4,7 @@ This documentation describes how to enable the CoreMedia Feedback Hub integratio
 
 ## Prerequisites
 
-In order to use Siteimprove with CoreMedia, you should already have setup your sites in Siteimprove.
+In order to use Siteimprove with CoreMedia, you should already have set up your sites in Siteimprove.
 Ensure that not only the live CAE is crawled by Siteimprove, but also the preview CAE.
 
 The following screenshot shows the setup of two test sites: _Labs Preview_ and _Labs Live_.
@@ -16,7 +16,7 @@ The following screenshot shows the setup of two test sites: _Labs Preview_ and _
 # Configuration for the CoreMedia Feedbackhub 
 
 The CoreMedia Feedback Hub integration for Siteimprove can be enabled by creating a new global _CMSettings_ document 
-in a global or site-specific folders.
+in either a global or site-specific folder.
 
 - Global: _/Settings/Options/Settings/Feedback Hub/_
 - Site specific: _&lt;SITE&gt;/Options/Settings/Feedback Hub/_
@@ -80,7 +80,7 @@ https://my2.siteimprove.com/Settings/<SITEMRPOVE_SITE_ID>/Sites/EditSite
 ## Configuring Content Issues
 
 The list of issues shown in the feedback panel is filtered.
-Since the editor can't handle all type of issues reported by Siteimprove (e.g. errors on the markup), 
+Since the editor can't handle all types of issues reported by Siteimprove (e.g. errors on the markup), 
 the extension filters the issues and returns only those the editor can actually do something about.
 
-The whitelist of issues in configured in the _enum_ class _SeoIssueTypesEditorWhitelist_ and can be customized there.
+The whitelist of issues is configured in the _enum_ class _SeoIssueTypesEditorWhitelist_ and can be customized there.

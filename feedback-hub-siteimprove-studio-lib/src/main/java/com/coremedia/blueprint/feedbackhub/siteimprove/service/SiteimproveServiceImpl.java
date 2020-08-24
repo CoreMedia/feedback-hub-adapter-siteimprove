@@ -33,6 +33,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.Optional;
+
 public class SiteimproveServiceImpl implements SiteimproveService {
 
   private static final String SITES = "/sites/";
@@ -274,7 +277,8 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
     MetatagNameDocument metatagNameDocument = metatagNameListDocument.getItems().get(0);
     MultiValueMap<String, String> metatagNameContentQueryParam = new LinkedMultiValueMap<>();
-    metatagNameContentQueryParam.add("query", String.valueOf(IdHelper.parseContentId(content.getId())));
+    String coreMediaContentId = String.valueOf(IdHelper.parseContentId(content.getId()));
+    metatagNameContentQueryParam.add("query", coreMediaContentId);
     MetatagNameContentListDocument metatagNameContentListDocument = connector.performGet(config, metatagNameDocument.getContentsUrl(),
             MetatagNameContentListDocument.class, metatagNameContentQueryParam);
 
@@ -283,7 +287,7 @@ public class SiteimproveServiceImpl implements SiteimproveService {
               SiteimproveFeedbackHubErrorCode.NO_CONTENT_METATAG_WITH_CONTENT_ID_FOUND);
     }
 
-    MetatagNameContentDocument metatagNameContentDocument = metatagNameContentListDocument.getItems().get(0);
+    MetatagNameContentDocument metatagNameContentDocument = getExactMatch(metatagNameContentListDocument.getItems(), coreMediaContentId);
     PagesDocument pagesDocument = connector.performGet(config, metatagNameContentDocument.getPagesUrl(), PagesDocument.class, null);
 
     if (pagesDocument == null || pagesDocument.getPages().isEmpty()) {
@@ -292,6 +296,17 @@ public class SiteimproveServiceImpl implements SiteimproveService {
     }
 
     return pagesDocument.getPages().get(0);
+  }
+
+  private MetatagNameContentDocument getExactMatch(List<MetatagNameContentDocument> items, String coreMediaContentId) {
+    if (items == null || items.size() == 0) {
+      throw new FeedbackHubException("No Content found",
+              SiteimproveFeedbackHubErrorCode.NO_CONTENT_FOUND);
+    }
+    Optional<MetatagNameContentDocument> firstHit = items.stream().filter(item -> item.getContent().equals(coreMediaContentId)).findFirst();
+    if (firstHit.isEmpty()) throw new FeedbackHubException("No exact content match found for content id:" + coreMediaContentId, SiteimproveFeedbackHubErrorCode.NO_CONTENT_FOUND);
+
+    return firstHit.orElse(null);
   }
 
   @Nullable

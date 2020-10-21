@@ -9,7 +9,7 @@ import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.cap.multisite.impl.SitesServiceImpl;
 import com.coremedia.feedbackhub.Binding;
-import com.coremedia.feedbackhub.FeedbackService;
+import com.coremedia.feedbackhub.BindingsService;
 import com.coremedia.rest.cap.jobs.GenericJobErrorCode;
 import com.coremedia.rest.cap.jobs.Job;
 import com.coremedia.rest.cap.jobs.JobContext;
@@ -32,19 +32,19 @@ import java.util.concurrent.TimeUnit;
 public class RecrawlPageJob implements Job {
   private static final Logger LOG = LoggerFactory.getLogger(RecrawlPageJob.class);
 
+  private final SiteimproveService siteimproveService;
+  private final BindingsService bindingsService;
+  private final SitesService sitesService;
+
   private Boolean preview = false;
   private Content content;
   private String pageId;
   private Boolean checkStatusOnly = false;
-  private SiteimproveService siteimproveService;
-  private FeedbackService feedbackService;
-  private SitesService sitesService;
-
   private ScheduledFuture<?> scheduledFuture;
 
-  public RecrawlPageJob(SiteimproveService siteimproveService, FeedbackService feedbackService, SitesService sitesService) {
+  public RecrawlPageJob(SiteimproveService siteimproveService, BindingsService bindingsService, SitesService sitesService) {
     this.siteimproveService = siteimproveService;
-    this.feedbackService = feedbackService;
+    this.bindingsService = bindingsService;
     this.sitesService = sitesService;
   }
 
@@ -107,18 +107,18 @@ public class RecrawlPageJob implements Job {
       scheduledFuture.cancel(false);
     }
   }
-  //Use the injected feedbackService to access the Siteimprove settings
+  //Use the injected bindingsService to access the Siteimprove settings
   //TODO: make it better.
   private SiteimproveSettings getConfig(Content content) {
     Site site = ((SitesServiceImpl) sitesService).getSiteFor(content);
-    Map<Site, Collection<Binding>> siteLocalBindings = feedbackService.getSiteLocalBindings();
+    Map<Site, Collection<Binding>> siteLocalBindings = bindingsService.getSiteLocalBindings();
     SiteimproveSettings config = getConfig(siteLocalBindings.get(site));
 
     if (config != null) {
       return config;
     }
 
-    return getConfig(feedbackService.getGlobalBindings());
+    return getConfig(bindingsService.getGlobalBindings());
   }
 
   private SiteimproveSettings getConfig(Collection<Binding> bindings) {

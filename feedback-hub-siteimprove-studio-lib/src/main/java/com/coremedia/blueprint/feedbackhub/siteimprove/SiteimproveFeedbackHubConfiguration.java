@@ -4,33 +4,30 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.job.RecrawlPageJobFactory
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveServiceConfiguration;
 import com.coremedia.cap.multisite.SitesService;
-import com.coremedia.feedbackhub.FeedbackHubConfiguration;
-import com.coremedia.feedbackhub.FeedbackService;
+import com.coremedia.cms.common.plugins.beansforplugins.plugin.CommonBeansForPluginsConfiguration;
+import com.coremedia.feedbackhub.BindingsService;
+import com.coremedia.feedbackhub.beansforplugins.FeedbackHubBeansForPluginsConfiguration;
 import com.coremedia.feedbackhub.provider.ContentFeedbackProviderFactory;
-import com.coremedia.springframework.xml.ResourceAwareXmlBeanDefinitionReader;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 
 @Configuration
-@Import({SiteimproveServiceConfiguration.class, FeedbackHubConfiguration.class})
-@ImportResource(
-        value = {
-                "classpath:/com/coremedia/cap/multisite/multisite-services.xml"
-        },
-        reader = ResourceAwareXmlBeanDefinitionReader.class
-)
+@Import({SiteimproveServiceConfiguration.class,
+        FeedbackHubBeansForPluginsConfiguration.class,
+        CommonBeansForPluginsConfiguration.class})
 public class SiteimproveFeedbackHubConfiguration {
   @Bean
-  public ContentFeedbackProviderFactory siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService) {
+  public ContentFeedbackProviderFactory<?> siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService) {
     return new SiteimproveContentFeedbackProviderFactory(siteimproveService);
   }
 
   @Bean
-  public RecrawlPageJobFactory recrawlPageJobFactory(@NonNull SiteimproveService siteimproveService, @NonNull FeedbackService feedbackService, @NonNull SitesService sitesService) {
-    return new RecrawlPageJobFactory(siteimproveService, feedbackService, sitesService);
+  public RecrawlPageJobFactory recrawlPageJobFactory(@NonNull SiteimproveService siteimproveService,
+                                                     @NonNull BindingsService bindingsService,
+                                                     @NonNull SitesService sitesService) {
+    return new RecrawlPageJobFactory(siteimproveService, bindingsService, sitesService);
   }
 
 /* Out of scope
@@ -39,11 +36,11 @@ public class SiteimproveFeedbackHubConfiguration {
   SiteimproveValidator siteimproveValidator(@NonNull CapConnection connection,
                                             @NonNull SiteimproveService siteimproveService,
                                             @NonNull SitesService sitesService,
-                                            @NonNull FeedbackService feedbackService) {
+                                            @NonNull BindingsService bindingsService) {
     SiteimproveValidator validator = new SiteimproveValidator();
     validator.setConnection(connection);
     validator.setSiteimproveService(siteimproveService);
-    validator.setFeedbackService(feedbackService);
+    validator.setBindingsService(bindingsService);
     validator.setValidatingSubtypes(true);
     validator.setSitesService(sitesService);
     validator.setContentType("CMTeasable");

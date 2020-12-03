@@ -13,7 +13,7 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.feedbackhub.Binding;
-import com.coremedia.feedbackhub.FeedbackService;
+import com.coremedia.feedbackhub.BindingsService;
 import com.coremedia.rest.cap.validation.ContentTypeValidatorBase;
 import com.coremedia.rest.validation.Issues;
 import com.coremedia.rest.validation.Severity;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class SiteimproveValidator extends ContentTypeValidatorBase {
   private static final Logger LOG = LoggerFactory.getLogger(SiteimproveValidator.class);
 
-  private FeedbackService feedbackService;
+  private BindingsService bindingsService;
   private SitesService sitesService;
   private SiteimproveService siteimproveService;
   private String propertyName;
@@ -147,12 +147,12 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
 
     //We wait additional 2 seconds here to let Siteimprove give time to update additional data on their site.
     //Otherwise it may happen that requesting details are wrong since the data has not been updates completely yet.
-    try {
+//    try {
 //      Thread.sleep(2000);
 //      result = siteimproveService.getContentCheckIssues(settings, contentId);
-    } catch (Exception e) {
-      //ignore
-    }
+//    } catch (Exception e) {
+//      //ignore
+//    }
 
     if (result != null && result.getQualityAssurance() != null) {
       results.addAll(result.getQualityAssurance());
@@ -182,7 +182,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
       return null;
     }
 
-    Map<Site, Collection<Binding>> siteLocalBindings = feedbackService.getSiteLocalBindings();
+    Map<Site, Collection<Binding>> siteLocalBindings = bindingsService.getSiteLocalBindings();
     Set<Map.Entry<Site, Collection<Binding>>> entries = siteLocalBindings.entrySet();
     for (Map.Entry<Site, Collection<Binding>> entry : entries) {
       Collection<Binding> value = entry.getValue();
@@ -197,7 +197,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
     }
 
     //so we did not find a site specific configuration, let's try the global ones anyway
-    Collection<Binding> globalBindings = feedbackService.getGlobalBindings();
+    Collection<Binding> globalBindings = bindingsService.getGlobalBindings();
     for (Binding globalBinding : globalBindings) {
       if (globalBinding.getFactoryId().equals(SiteimproveFeedbackItem.TYPE)) {
         SiteimproveSettings settings = globalBinding.getSettings(SiteimproveSettings.class);
@@ -225,8 +225,8 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
     this.propertyName = propertyName;
   }
 
-  public void setFeedbackService(FeedbackService feedbackService) {
-    this.feedbackService = feedbackService;
+  public void setBindingsService(BindingsService bindingsService) {
+    this.bindingsService = bindingsService;
   }
 
   public void setSitesService(SitesService sitesService) {
@@ -236,7 +236,7 @@ public class SiteimproveValidator extends ContentTypeValidatorBase {
   /**
    * Just a helper to store the highlight's issue
    */
-  class IssueHighlight {
+  static class IssueHighlight {
     ContentIssue issue;
     Highlight hightlight;
 

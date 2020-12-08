@@ -20,6 +20,14 @@ It is possible to connect external systems to the Feedback Hub in order to colle
 This projects integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
 It also enables the Siteimprove widget for the preview CAE.
 
+## Versioning
+
+To find out which CoreMedia versions are supported by this project, 
+please take look at the releases section or on the existing branches. 
+To find the matching version of your CoreMedia system, please checkout the branch 
+with the corresponding name. For example, 
+if your CoreMedia version is 2104.1, checkout the branch 2104.1.
+
 ## Project Setup
 
 ### Plugin Configuration
@@ -29,3 +37,23 @@ For details about how to configure this plugin, please see section **[Configurat
 ### Issue Tracker
 
 https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/issues
+
+## CoreMedia Labs
+
+Welcome to [CoreMedia Labs](https://blog.coremedia.com/labs/)! This repository
+is part of a platform for developers who want to have a look under the hood or
+get some hands-on understanding of the vast and compelling capabilities of
+CoreMedia. Whatever your experience level with CoreMedia is, we've got something
+for you.
+
+Each project in our Labs platform is an extra feature to be used with CoreMedia,
+including extensions, tools and 3rd party integrations. We provide some test
+data and explanatory videos for non-customers and for insiders there is
+open-source code and instructions on integrating the feature into your
+CoreMedia workspace. 
+
+The code we provide is meant to be example code, illustrating a set of features
+that could be used to enhance your CoreMedia experience. We'd love to hear your
+feedback on use-cases and further developments! If you're having problems with
+our code, please refer to our issues section. If you already have a solution to 
+an issue, we love to review and integrate your pull requests. 

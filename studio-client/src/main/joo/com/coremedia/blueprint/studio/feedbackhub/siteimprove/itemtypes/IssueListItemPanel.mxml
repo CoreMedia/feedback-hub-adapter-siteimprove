@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:IssueListItemPanelBase xmlns:fx="http://ns.adobe.com/mxml/2009"
+                              xmlns="exml:ext.config"
+                              xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.itemtypes.*"
+                              xmlns:ui="exml:com.coremedia.ui.config"
+                              ui="{ContainerSkin.GRID_100.getSkin()}">
+  <fx:Metadata>
+    [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
+  </fx:Metadata>
+  <fx:Script><![CDATA[
+    import com.coremedia.ui.skins.ButtonSkin;
+    import com.coremedia.ui.skins.ContainerSkin;
+    import com.coremedia.ui.skins.DisplayFieldSkin;
+
+    public static const xtype:String = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.IssueList";
+
+    private var config:IssueListItemPanel;
+
+    public native function IssueListItemPanel(config:IssueListItemPanel = null);
+    ]]></fx:Script>
+
+  <local:items>
+
+    <Container>
+      <items>
+        <DisplayField value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_filter')}"/>
+        <Container flex="1"/>
+        <local:IssueFilterComboBox bindTo="{getFilterStatusExpression()}"/>
+      </items>
+      <layout>
+        <layout_HBox align="stretch"/>
+      </layout>
+    </Container>
+    <Container style="background: #f1f1f1; padding: 1px;margin-top: 6px;">
+      <items>
+        <Container style="padding: 3px;">
+          <items>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          flex="1"
+                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_issue')}"/>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          width="100"
+                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove','siteimprove_category')}"/>
+            <DisplayField ui="{DisplayFieldSkin.BOLD.getSkin()}"
+                          width="120"
+                          value="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_points_to_gain')}"/>
+          </items>
+          <layout>
+            <layout_HBox align="stretch" pack="center"/>
+          </layout>
+        </Container>
+        <Container style="background: #FFF; padding: 3px;">
+          <plugins>
+            <ui:BindComponentsPlugin valueExpression="{getIssuesExpression()}"
+                                     getKey="{getKey}"
+                                     configBeanParameterName="issue"
+                                     clearBeforeUpdate="true"
+                                     reuseComponents="{false}">
+              <ui:template>
+                <local:IssueEntry/>
+              </ui:template>
+            </ui:BindComponentsPlugin>
+          </plugins>
+        </Container>
+      </items>
+      <layout>
+        <layout_VBox align="stretch"/>
+      </layout>
+    </Container>
+
+    <Container margin="0 0 0 -9">
+      <items>
+        <Button ui="{ButtonSkin.SIMPLE}"
+                text="{resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_show_more')}" handler="{showMore}">
+          <plugins>
+            <ui:BindVisibilityPlugin bindTo="{getMoreIssuesExpression(config)}"/>
+          </plugins>
+        </Button>
+      </items>
+      <layout>
+        <layout_HBox align="stretch" pack="start"/>
+      </layout>
+    </Container>
+  </local:items>
+  <local:layout>
+    <layout_VBox align="stretch"/>
+  </local:layout>
+</local:IssueListItemPanelBase>

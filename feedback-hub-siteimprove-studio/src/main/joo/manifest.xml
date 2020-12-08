@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<componentPackage>
-  <component class="com.coremedia.blueprint.studio.feedbackhub.siteimprove.SiteimproveFeedbackItemPanel"/>
-  <component class="com.coremedia.blueprint.studio.feedbackhub.siteimprove.SiteimproveFeedbackItemPanelBase"/>
-  <component class="com.coremedia.blueprint.studio.feedbackhub.siteimprove.actions.RecrawlPageAction"/>
-</componentPackage>

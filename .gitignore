@@ -8,4 +8,5 @@ target/
 
 
 *.class
+.remote-packages
 

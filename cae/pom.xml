@@ -1,48 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.coremedia.blueprint</groupId>
-    <artifactId>cae.extensions</artifactId>
-    <version>1-SNAPSHOT</version>
-    <relativePath>../../../../apps/cae/modules/extensions/pom.xml</relativePath>
-  </parent>
-  <artifactId>feedback-hub-siteimprove-cae</artifactId>
+
+  <groupId>com.coremedia.blueprint.feedbackhub</groupId>
+  <artifactId>cae.feedback-hub-adapter-siteimprove</artifactId>
+  <version>1-SNAPSHOT</version>
 
   <properties>
-    <coremedia.project.extension.for>cae</coremedia.project.extension.for>
+    <maven.compiler.release>11</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <cm.studio-server.core.version>1-SNAPSHOT</cm.studio-server.core.version>
+    <cm.common.core.version>1-SNAPSHOT</cm.common.core.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.coremedia.cms</groupId>
+        <artifactId>cae-core-bom</artifactId>
+        <version>${cm.common.core.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.coremedia.cms</groupId>
+        <artifactId>cae-thirdparty-bom</artifactId>
+        <version>${cm.common.core.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.coremedia.cms</groupId>
+        <artifactId>common-core-bom</artifactId>
+        <version>${cm.common.core.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-unified-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
+      <groupId>com.coremedia.blueprint</groupId>
       <artifactId>contentbeans</artifactId>
-      <version>${project.version}</version>
+      <version>${cm.common.core.version}</version>
     </dependency>
     <dependency>
       <groupId>com.coremedia.blueprint.base</groupId>
       <artifactId>bpbase-cae-api</artifactId>
+      <version>${cm.common.core.version}</version>
+      <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cae-viewservices</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <version>28.2-jre</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>
 
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.2</version>
+        <executions>
+          <execution>
+            <id>cae.feedback-hub-adapter-siteimprove-cae:maven-dependency-plugin:analyze-duplicate</id>
+            <goals>
+              <goal>analyze-duplicate</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>cae.feedback-hub-adapter-siteimprove-cae:maven-dependency-plugin:analyze-only</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <configuration>
+              <failOnWarning>true</failOnWarning>
+              <ignoreNonCompile>false</ignoreNonCompile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <descriptors>
+            <descriptor>src/assembly/descriptor.xml</descriptor>
+          </descriptors>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-plugin</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

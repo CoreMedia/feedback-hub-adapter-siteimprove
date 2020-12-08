@@ -1,46 +1,31 @@
-![CoreMedia Labs Logo](https://documentation.coremedia.com/badges/banner_coremedia_labs_wide.png "CoreMedia Labs Logo Title Text")
+![CoreMedia Labs Logo](https://documentation.coremedia.com/badges/banner_coremedia_labs_wide.png "CoreMedia Labs Logo")
+
+![CoreMedia Content Cloud Version](https://img.shields.io/static/v1?message=2104&label=CoreMedia%20Content%20Cloud&style=for-the-badge&labelColor=666666&color=672779 
+"This badge shows the CoreMedia version this project is compatible with. 
+Please read the versioning section of the project to see what other CoreMedia versions are supported and how to find them."
+)
+![Status](https://img.shields.io/static/v1?message=active&label=Status&style=for-the-badge&labelColor=666666&color=2FAC66 
+"The status badge describes if the project is maintained. Possible values are active and inactive. 
+If a project is inactive it means that the development has been discontinued and won't support future CoreMedia versions."
+)
 
 
-# Siteimprove Integration for the CoreMedia Feedback Hub
+# Siteimprove Adapter for Feedback Hub 
+
+## Overview 
+
 The _CoreMedia Feedback Hub_ offers the possibility to provide feedback for CoreMedia content. 
 It is possible to connect external systems to the Feedback Hub in order to collect feedback. 
 
 This projects integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
 It also enables the Siteimprove widget for the preview CAE.
 
-### Documentation
+## Project Setup
 
-https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/tree/master/documentation
+### Plugin Configuration
 
+For details about how to configure this plugin, please see section **[Configuration](documentation/README.md)**.
+ 
 ### Issue Tracker
 
 https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/issues
-
-### Installation
- 
-- From the project's root folder, clone this repository as a submodule of the extensions folder. Make sure to use the branch name that matches your workspace version. 
-```
-git submodule add  -b 1907.1 https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/feedback-hub-adapter-siteimprove
-```
-
-- Use the extension tool in the root folder of the project to link the modules to your workspace.
- ```
-mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=feedback-hub-adapter-siteimprove
-```
-
-- Rebuild the workspace
-
-For CI runs:
-- Ensure that the matching branch name is set in the _.gitmodules_ file, e.g.:
-
-```
-[submodule "modules/extensions/coremedia-studio-hub"]
-	path = modules/extensions/feedback-hub-adapter-siteimprove
-	url = https://github.com/CoreMedia/feedback-hub-adapter-siteimprove.git
-	branch = 1907.3
-```
-
-For the IDEA import:
-- Ignore folder _.remote-package_
-- Disable "Settings > Compiler > Clear output directory on rebuild"
- 

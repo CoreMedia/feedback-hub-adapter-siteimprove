@@ -53,6 +53,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>common-beansforplugins</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.coremedia.feedbackhub</groupId>
       <artifactId>feedback-hub-api</artifactId>
       <scope>provided</scope>
@@ -112,16 +116,6 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpcore</artifactId>
-      <version>4.4.13</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.5.12</version>
     </dependency>
   </dependencies>
 

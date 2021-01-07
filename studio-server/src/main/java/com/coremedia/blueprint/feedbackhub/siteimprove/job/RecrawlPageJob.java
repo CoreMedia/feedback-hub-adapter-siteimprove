@@ -1,6 +1,5 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.job;
 
-import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveContentFeedbackProvider;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
@@ -9,7 +8,7 @@ import com.coremedia.cap.content.Content;
 import com.coremedia.cap.multisite.Site;
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.cap.multisite.impl.SitesServiceImpl;
-import com.coremedia.feedbackhub.FeedbackService;
+import com.coremedia.cap.struct.Struct;
 import com.coremedia.rest.cap.jobs.GenericJobErrorCode;
 import com.coremedia.rest.cap.jobs.Job;
 import com.coremedia.rest.cap.jobs.JobContext;
@@ -34,14 +33,12 @@ public class RecrawlPageJob implements Job {
   private String pageId;
   private Boolean checkStatusOnly = false;
   private SiteimproveService siteimproveService;
-  private FeedbackService feedbackService;
   private SitesService sitesService;
 
   private ScheduledFuture<?> scheduledFuture;
 
-  public RecrawlPageJob(SiteimproveService siteimproveService, FeedbackService feedbackService, SitesService sitesService) {
+  public RecrawlPageJob(SiteimproveService siteimproveService, SitesService sitesService) {
     this.siteimproveService = siteimproveService;
-    this.feedbackService = feedbackService;
     this.sitesService = sitesService;
   }
 
@@ -108,10 +105,8 @@ public class RecrawlPageJob implements Job {
   //Use the injected feedbackService to access the Siteimprove settings
   private SiteimproveSettings getConfig(Content content) {
     Site site = ((SitesServiceImpl) sitesService).getSiteFor(content);
-    SiteimproveSettings settings = feedbackService.getSettings(SiteimproveContentFeedbackProvider.TYPE, SiteimproveSettings.class, site);
-    if(settings == null) {
-      settings = feedbackService.getSettings(SiteimproveContentFeedbackProvider.TYPE, SiteimproveSettings.class);
-    }
-    return settings;
+    Struct settings = null;
+    //TODO
+    throw new UnsupportedOperationException("Wait for finished BindingService!");
   }
 }

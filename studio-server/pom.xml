@@ -54,7 +54,8 @@
     </dependency>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
-      <artifactId>common-beansforplugins</artifactId>
+      <artifactId>common.beans-for-plugins</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.coremedia.feedbackhub</groupId>

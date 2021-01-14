@@ -4,7 +4,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.job.RecrawlPageJobFactory
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveServiceConfiguration;
 import com.coremedia.cap.multisite.SitesService;
-import com.coremedia.cms.common.plugins.beansforplugins.CommonBeansForPluginsConfiguration;
+import com.coremedia.cms.common.plugins.beans_for_plugins.CommonBeansForPluginsConfiguration;
 import com.coremedia.feedbackhub.provider.FeedbackProviderFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.context.annotation.Bean;

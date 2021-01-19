@@ -87,7 +87,7 @@ public class SiteimproveFooterBase extends FeedbackItemPanel {
             }
     );
 
-    if(!loadMask) {
+    if(!loadMask || loadMask.destroyed) {
       var loadMaskConfig:LoadMask = LoadMask({});
       loadMaskConfig.ui = LoadMaskSkin.TRANSPARENT.getSkin();
       loadMaskConfig.msg = '';

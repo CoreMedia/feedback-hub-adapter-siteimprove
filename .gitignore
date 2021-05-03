@@ -1,0 +1,11 @@
+# IntelliJ Idea:
+*.iml
+*.ipr
+*.iws
+.idea/
+
+target/
+
+
+*.class
+

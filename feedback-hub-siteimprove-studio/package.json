@@ -1,0 +1,8 @@
+{
+  "studioPlugins": [
+    {
+      "mainClass": "com.coremedia.blueprint.studio.feedbackhub.siteimprove.SiteimproveFeedbackHubStudioPlugin",
+      "name": "FeedbackHub for Siteimprove"
+    }
+  ]
+}

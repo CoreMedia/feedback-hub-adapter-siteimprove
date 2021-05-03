@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local:IssueFilterComboBoxBase xmlns:fx="http://ns.adobe.com/mxml/2009"
+                               xmlns:exml="http://www.jangaroo.net/exml/0.8" xmlns="exml:ext.config"
+                               xmlns:ui="exml:com.coremedia.ui.config"
+                               xmlns:local="com.coremedia.blueprint.studio.feedbackhub.siteimprove.itemtypes.*"
+                               labelAlign="top"
+                               labelSeparator=""
+                               valueField="value"
+                               displayField="description"
+                               encodeItems="true"
+                               minWidth="150"
+                               anyMatch="true"
+                               editable="false"
+                               allowBlank="false">
+  <fx:Metadata>[ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]</fx:Metadata>
+  <fx:Script><![CDATA[
+    public static const xtype:String = "com.coremedia.blueprint.studio.siteimprove.config.issueFilterComboBox";
+    private var config:IssueFilterComboBox;
+
+    public native function IssueFilterComboBox(config:IssueFilterComboBox = null);
+    ]]></fx:Script>
+  <local:plugins exml:mode="append">
+    <ui:BindListPlugin bindTo="{getFilterOptionsExpression()}" sortField="code">
+      <ui:fields>
+        <ui:DataField name="value" encode="false"/>
+        <ui:DataField name="description" encode="false"/>
+      </ui:fields>
+    </ui:BindListPlugin>
+    <ui:BindPropertyPlugin bindTo="{config.bindTo}" bidirectional="true" ifUndefined="{IssueFilterComboBoxBase.VALUE_ALL}" componentEvent="change"/>
+  </local:plugins>
+</local:IssueFilterComboBoxBase>
+

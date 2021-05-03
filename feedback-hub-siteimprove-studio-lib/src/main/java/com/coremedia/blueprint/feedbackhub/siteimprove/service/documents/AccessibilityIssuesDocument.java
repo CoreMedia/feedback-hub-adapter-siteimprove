@@ -64,5 +64,4 @@ public class AccessibilityIssuesDocument {
     items.addAll(nextIssues.getItems());
     this.totalItems = items.size();
   }
-
 }

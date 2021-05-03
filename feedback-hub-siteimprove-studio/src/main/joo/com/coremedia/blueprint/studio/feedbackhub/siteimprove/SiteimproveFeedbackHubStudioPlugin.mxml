@@ -9,6 +9,9 @@
     [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
   </fx:Metadata>
   <fx:Script><![CDATA[
+    import com.coremedia.blueprint.studio.feedbackhub.siteimprove.itemtypes.ComparingGaugeItemPanel;
+    import com.coremedia.blueprint.studio.feedbackhub.siteimprove.itemtypes.IssueListItemPanel;
+    import com.coremedia.blueprint.studio.feedbackhub.siteimprove.itemtypes.SiteimproveFooter;
     import com.coremedia.cms.studio.feedbackhub.feedbackService;
 
     import mx.resources.ResourceManager;
@@ -18,14 +21,13 @@
     public native function SiteimproveFeedbackHubStudioPlugin(config:SiteimproveFeedbackHubStudioPlugin = null);
 
     private function __initialize__(config:SiteimproveFeedbackHubStudioPlugin):void {
-      feedbackService.registerFeedbackItemPanel("siteimprove", SiteimproveFeedbackItemPanel({}));
+      feedbackService.registerFeedbackItemPanel("siteimproveFooter", SiteimproveFooter({}));
+      feedbackService.registerFeedbackItemPanel("siteimproveIssueList", IssueListItemPanel({}));
+      feedbackService.registerFeedbackItemPanel("siteimproveComparingGauge", ComparingGaugeItemPanel({}));
     }
     ]]></fx:Script>
 
   <editor:configuration>
-    <editor:CopyResourceBundleProperties
-            destination="{ResourceManager.getInstance().getResourceBundle(null, 'com.coremedia.cms.editor.sdk.validation.Validators')}"
-            source="{ResourceManager.getInstance().getResourceBundle(null, 'com.coremedia.blueprint.studio.feedbackhub.siteimprove.SiteimproveIssues')}"/>
     <editor:CopyResourceBundleProperties
             destination="{ResourceManager.getInstance().getResourceBundle(null, 'com.coremedia.cms.studio.feedbackhub.FeedbackHub')}"
             source="{ResourceManager.getInstance().getResourceBundle(null, 'com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')}"/>

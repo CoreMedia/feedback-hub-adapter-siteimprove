@@ -10,6 +10,9 @@ public class PagesDocument {
 
   private LinkDocument links;
 
+  @JsonProperty("siteimprove")
+  private SiteimproveWebappDocument siteimprove;
+
   public List<PageDocument> getPages() {
     return pages;
   }
@@ -32,5 +35,13 @@ public class PagesDocument {
 
   public String next() {
     return links.getNextUrl().getHref();
+  }
+
+  public SiteimproveWebappDocument getSiteimprove() {
+    return siteimprove;
+  }
+
+  public void setSiteimprove(SiteimproveWebappDocument siteimprove) {
+    this.siteimprove = siteimprove;
   }
 }

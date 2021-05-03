@@ -25,6 +25,9 @@ public class PageDocument {
 
   private FeedbackHubErrorCode errorCode;
 
+  @JsonProperty("siteimprove")
+  private SiteimproveWebappDocument siteimprove;
+
   public PageDocument() {
   }
 
@@ -74,5 +77,13 @@ public class PageDocument {
 
   public void setErrorCode(FeedbackHubErrorCode errorCode) {
     this.errorCode = errorCode;
+  }
+
+  public SiteimproveWebappDocument getSiteimprove() {
+    return siteimprove;
+  }
+
+  public void setSiteimprove(SiteimproveWebappDocument siteimprove) {
+    this.siteimprove = siteimprove;
   }
 }

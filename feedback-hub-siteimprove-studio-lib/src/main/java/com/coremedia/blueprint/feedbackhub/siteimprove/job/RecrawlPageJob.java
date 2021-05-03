@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove.job;
 
+import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveContentFeedbackProvider;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
@@ -87,11 +88,11 @@ public class RecrawlPageJob implements Job {
         if (!pageCheckStatus.getCheckingNow()) {
           cancel();
         }
-      }, 1, 1, TimeUnit.SECONDS);
+      }, 3, 3, TimeUnit.SECONDS);
 
       //wait until the the future is canceled.
       try {
-        scheduledFuture.get();
+        scheduledFuture.get(5, TimeUnit.MINUTES);
       } catch (CancellationException ignore) {
         //expected
       }
@@ -107,8 +108,7 @@ public class RecrawlPageJob implements Job {
       scheduledFuture.cancel(false);
     }
   }
-  //Use the injected feedbackService to access the Siteimprove settings
-  //TODO: make it better.
+
   private SiteimproveSettings getConfig(Content content) {
     Site site = ((SitesServiceImpl) sitesService).getSiteFor(content);
     Map<Site, Collection<Binding>> siteLocalBindings = feedbackService.getSiteLocalBindings();

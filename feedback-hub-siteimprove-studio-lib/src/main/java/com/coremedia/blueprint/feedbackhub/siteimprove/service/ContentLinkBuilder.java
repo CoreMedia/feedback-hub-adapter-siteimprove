@@ -41,7 +41,7 @@ public class ContentLinkBuilder {
             .queryParam("id", IdHelper.parseContentId(id)).build();
 
     String link = getLink(uriComponents.toUriString());
-    if (link != null) {
+    if (link != null && !link.startsWith("http")) {
       link = uriComponents.getScheme() + ":" + link;
     }
 

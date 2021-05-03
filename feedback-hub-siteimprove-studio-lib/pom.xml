@@ -16,14 +16,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.coremedia.cms</groupId>
-      <artifactId>coremedia-xml</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.coremedia.cms</groupId>
-      <artifactId>coremedia-rest-plugins</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.coremedia.ui</groupId>
       <artifactId>cap-rest-service</artifactId>
     </dependency>
@@ -32,12 +24,12 @@
       <artifactId>coremedia-spring</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.coremedia.cms</groupId>
-      <artifactId>cap-multisite</artifactId>
+      <groupId>com.coremedia.ui</groupId>
+      <artifactId>cap-rest-service</artifactId>
     </dependency>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
-      <artifactId>cap-rest-plugins</artifactId>
+      <artifactId>cap-multisite</artifactId>
     </dependency>
     <dependency>
       <groupId>com.coremedia.cms</groupId>
@@ -46,10 +38,6 @@
     <dependency>
       <groupId>com.coremedia.feedbackhub</groupId>
       <artifactId>feedback-hub-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.coremedia.feedbackhub</groupId>
-      <artifactId>feedback-hub-lib</artifactId>
     </dependency>
 
     <dependency>

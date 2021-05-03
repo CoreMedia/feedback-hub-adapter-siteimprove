@@ -2,10 +2,10 @@ package com.coremedia.blueprint.feedbackhub.siteimprove;
 
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.feedbackhub.adapter.FeedbackHubException;
-import com.coremedia.feedbackhub.provider.ContentFeedbackProvider;
-import com.coremedia.feedbackhub.provider.ContentFeedbackProviderFactory;
+import com.coremedia.feedbackhub.provider.FeedbackProvider;
+import com.coremedia.feedbackhub.provider.FeedbackProviderFactory;
 
-public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbackProviderFactory<SiteimproveSettings> {
+public class SiteimproveContentFeedbackProviderFactory implements FeedbackProviderFactory<SiteimproveSettings> {
   private SiteimproveService siteimproveService;
 
   public SiteimproveContentFeedbackProviderFactory(SiteimproveService siteimproveService) {
@@ -14,11 +14,11 @@ public class SiteimproveContentFeedbackProviderFactory implements ContentFeedbac
 
   @Override
   public String getId() {
-    return SiteimproveFeedbackItem.TYPE;
+    return SiteimproveContentFeedbackProvider.TYPE;
   }
 
   @Override
-  public ContentFeedbackProvider create(SiteimproveSettings settings) {
+  public FeedbackProvider create(SiteimproveSettings settings) {
     String email = settings.getEmail();
     if (email == null) {
       throw new FeedbackHubException("settings must provide an email", SiteimproveFeedbackHubErrorCode.EMAIL_NOT_SET);

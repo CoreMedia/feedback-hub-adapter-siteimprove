@@ -2,6 +2,7 @@ package com.coremedia.blueprint.feedbackhub.siteimprove.service;
 
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveFeedbackHubErrorCode;
 import com.coremedia.blueprint.feedbackhub.siteimprove.SiteimproveSettings;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AccessibilityIssuesDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.AnalyticsSummaryDocument;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
@@ -31,6 +32,9 @@ import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 public class SiteimproveServiceImpl implements SiteimproveService {
 
@@ -203,6 +207,13 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   @Nullable
   @Override
+  public A11yPageIssuesDocument getAccessibilityPageIssues(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
+    String url = SITES + siteId + "/accessibility/pages?ids=" + pageId;
+    return connector.performGet(config, url, A11yPageIssuesDocument.class, null);
+  }
+
+  @Nullable
+  @Override
   public PageDetailsDocument getPageDetails(@NonNull SiteimproveSettings config, @NonNull String siteId, @NonNull String pageId) {
     String pageDetailsUrl = SITES + siteId + "/content/pages/" + pageId;
     return connector.performGet(config, pageDetailsUrl, PageDetailsDocument.class, null);
@@ -216,9 +227,9 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   @Nullable
   @Override
-  public BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParamContentID) {
+  public BrokenLinkPagesDocument getBrokenLinkPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParams) {
     String resourcePath = SITES + siteId + "/quality_assurance/links/pages_with_broken_links";
-    return connector.performGet(config, resourcePath, BrokenLinkPagesDocument.class, null);
+    return connector.performGet(config, resourcePath, BrokenLinkPagesDocument.class, queryParams);
   }
 
   @Nullable
@@ -248,7 +259,7 @@ public class SiteimproveServiceImpl implements SiteimproveService {
    * The documentation for the endpoint will be updated once deployed:
    * https://api.siteimprove.com/v2/documentation#!/Quality_Assurance/get_sites_site_id_quality_assurance_inventory_meta_tags_meta_name_id_contents
    */
-  @Nullable
+  @NonNull
   @Override
   public PageDocument findPage(@NonNull SiteimproveSettings config,
                                @NonNull String siteId,
@@ -266,7 +277,8 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
     MetatagNameDocument metatagNameDocument = metatagNameListDocument.getItems().get(0);
     MultiValueMap<String, String> metatagNameContentQueryParam = new LinkedMultiValueMap<>();
-    metatagNameContentQueryParam.add("query", String.valueOf(IdHelper.parseContentId(content.getId())));
+    String coreMediaContentId = String.valueOf(IdHelper.parseContentId(content.getId()));
+    metatagNameContentQueryParam.add("query", coreMediaContentId);
     MetatagNameContentListDocument metatagNameContentListDocument = connector.performGet(config, metatagNameDocument.getContentsUrl(),
             MetatagNameContentListDocument.class, metatagNameContentQueryParam);
 
@@ -275,7 +287,7 @@ public class SiteimproveServiceImpl implements SiteimproveService {
               SiteimproveFeedbackHubErrorCode.NO_CONTENT_METATAG_WITH_CONTENT_ID_FOUND);
     }
 
-    MetatagNameContentDocument metatagNameContentDocument = metatagNameContentListDocument.getItems().get(0);
+    MetatagNameContentDocument metatagNameContentDocument = getExactMatch(metatagNameContentListDocument.getItems(), coreMediaContentId);
     PagesDocument pagesDocument = connector.performGet(config, metatagNameContentDocument.getPagesUrl(), PagesDocument.class, null);
 
     if (pagesDocument == null || pagesDocument.getPages().isEmpty()) {
@@ -284,6 +296,17 @@ public class SiteimproveServiceImpl implements SiteimproveService {
     }
 
     return pagesDocument.getPages().get(0);
+  }
+
+  private MetatagNameContentDocument getExactMatch(List<MetatagNameContentDocument> items, String coreMediaContentId) {
+    if (items == null || items.size() == 0) {
+      throw new FeedbackHubException("No Content found",
+              SiteimproveFeedbackHubErrorCode.NO_CONTENT_FOUND);
+    }
+    Optional<MetatagNameContentDocument> firstHit = items.stream().filter(item -> item.getContent().equals(coreMediaContentId)).findFirst();
+    if (firstHit.isEmpty()) throw new FeedbackHubException("No exact content match found for content id:" + coreMediaContentId, SiteimproveFeedbackHubErrorCode.NO_CONTENT_FOUND);
+
+    return firstHit.orElse(null);
   }
 
   @Nullable

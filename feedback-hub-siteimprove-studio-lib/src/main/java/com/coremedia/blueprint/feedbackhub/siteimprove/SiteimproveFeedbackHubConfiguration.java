@@ -6,7 +6,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveServic
 import com.coremedia.cap.multisite.SitesService;
 import com.coremedia.feedbackhub.FeedbackHubConfiguration;
 import com.coremedia.feedbackhub.FeedbackService;
-import com.coremedia.feedbackhub.provider.ContentFeedbackProviderFactory;
+import com.coremedia.feedbackhub.provider.FeedbackProviderFactory;
 import com.coremedia.springframework.xml.ResourceAwareXmlBeanDefinitionReader;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ import org.springframework.context.annotation.ImportResource;
 )
 public class SiteimproveFeedbackHubConfiguration {
   @Bean
-  public ContentFeedbackProviderFactory siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService) {
+  public FeedbackProviderFactory siteimproveContentFeedbackProviderFactory(@NonNull SiteimproveService siteimproveService) {
     return new SiteimproveContentFeedbackProviderFactory(siteimproveService);
   }
 
@@ -32,23 +32,4 @@ public class SiteimproveFeedbackHubConfiguration {
   public RecrawlPageJobFactory recrawlPageJobFactory(@NonNull SiteimproveService siteimproveService, @NonNull FeedbackService feedbackService, @NonNull SitesService sitesService) {
     return new RecrawlPageJobFactory(siteimproveService, feedbackService, sitesService);
   }
-
-/* Out of scope
-
-  @Bean
-  SiteimproveValidator siteimproveValidator(@NonNull CapConnection connection,
-                                            @NonNull SiteimproveService siteimproveService,
-                                            @NonNull SitesService sitesService,
-                                            @NonNull FeedbackService feedbackService) {
-    SiteimproveValidator validator = new SiteimproveValidator();
-    validator.setConnection(connection);
-    validator.setSiteimproveService(siteimproveService);
-    validator.setFeedbackService(feedbackService);
-    validator.setValidatingSubtypes(true);
-    validator.setSitesService(sitesService);
-    validator.setContentType("CMTeasable");
-    validator.setMarkupProperty("detailText");
-    return validator;
-  }
-*/
 }

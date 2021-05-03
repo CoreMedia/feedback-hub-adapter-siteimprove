@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 
 /**
@@ -64,12 +65,12 @@ class SiteimproveRestConnector {
   private <T> T perform(SiteimproveSettings config, String resourcePath, Class<T> responseType, HttpMethod method, MultiValueMap<String, String> queryParams, String body) {
     String url = getUrl(resourcePath, queryParams);
     try {
-      LOG.debug("Siteimprove request: {}", url);
+      LOG.info("Siteimprove request: {}", url);
 
       HttpEntity<String> requestEntity = null;
       HttpHeaders headers = new HttpHeaders();
       headers.add("Authorization", "Basic " + resolveToken(config));
-      headers.add("X-Siteimprove-Api-Caller",  "CoreMedia");
+      headers.add("X-Siteimprove-Api-Caller", "CoreMedia");
 
       if (body == null) {
         headers.add("Accept", "application/json");
@@ -84,13 +85,14 @@ class SiteimproveRestConnector {
       ResponseEntity<T> responseEntity = restTemplate.exchange(url, method, requestEntity, responseType);
       HttpStatus statusCode = responseEntity.getStatusCode();
       if (!statusCode.is2xxSuccessful()) {
-        LOG.error("Failed to execute siteimprove REST call {}: {}", url, statusCode.getReasonPhrase());
+        LOG.error("Failed to execute Siteimprove REST call {}: {}", url, statusCode.getReasonPhrase());
       }
       return responseEntity.getBody();
     } catch (HttpClientErrorException e) {
-      LOG.error("Failed to execute siteimprove REST call {}: {}", url, e.getResponseBodyAsString());
-      throw new FeedbackHubException("Rest Connector throws an exception",
-              e, SiteimproveFeedbackHubErrorCode.REST_ERROR, null);
+      String responseBodyAsString = e.getResponseBodyAsString();
+      String msg = "Failed to execute Siteimprove REST call " + url + ": " + responseBodyAsString;
+      LOG.error(msg);
+      throw new FeedbackHubException(msg, e, SiteimproveFeedbackHubErrorCode.REST_ERROR, Arrays.asList(e.getStatusCode().toString()));
     }
   }
 
@@ -99,7 +101,8 @@ class SiteimproveRestConnector {
     //resourcePath can be absolute when it is from extracted from a json of a previous request.
     if (resourcePath.contains(host)) {
       uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(resourcePath);
-    } else {
+    }
+    else {
       uriComponentsBuilder = UriComponentsBuilder.newInstance()
               .scheme(protocol)
               .host(host)

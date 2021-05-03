@@ -1,12 +1,8 @@
-package com.coremedia.blueprint.studio.feedbackhub.siteimprove.components {
-import com.coremedia.ui.data.ValueExpression;
-
+package com.coremedia.blueprint.studio.feedbackhub.siteimprove.itemtypes {
 import ext.container.Container;
 
 [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
 public class IssueEntryBase extends Container {
-  [Bindable]
-  public var feedbackData:ValueExpression;
 
   [Bindable]
   public var issue:Object;
@@ -15,12 +11,20 @@ public class IssueEntryBase extends Container {
     super(config);
   }
 
-  protected function resolveLinkLabel(key:String):String {
-    var label:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'issue_' + key);
-    if (!label) {
-      label = formatKey(key);
+  protected function resolveLinkLabel(issue:Object):String {
+    var label:String = "---";
+    if(issue.issue_name) {
+      label = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'issue_' + issue.issue_name);
+      if (!label) {
+        label = formatKey(issue.issue_name);
+      }
     }
+
     return label;
+  }
+
+  internal function getIssueCategory(issue:Object):String {
+    return resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove','siteimprove_issue_category_seov2');
   }
 
   private function formatKey(key:String):String {

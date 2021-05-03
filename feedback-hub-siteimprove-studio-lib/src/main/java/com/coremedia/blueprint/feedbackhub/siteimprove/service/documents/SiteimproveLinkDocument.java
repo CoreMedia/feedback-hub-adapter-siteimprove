@@ -17,4 +17,35 @@ public class SiteimproveLinkDocument {
   private LinkDocument seo;
 
 
+  public LinkDocument getAccessibility() {
+    return accessibility;
+  }
+
+  public void setAccessibility(LinkDocument accessibility) {
+    this.accessibility = accessibility;
+  }
+
+  public LinkDocument getPolicy() {
+    return policy;
+  }
+
+  public void setPolicy(LinkDocument policy) {
+    this.policy = policy;
+  }
+
+  public LinkDocument getQualityAssurance() {
+    return qualityAssurance;
+  }
+
+  public void setQualityAssurance(LinkDocument qualityAssurance) {
+    this.qualityAssurance = qualityAssurance;
+  }
+
+  public LinkDocument getSeo() {
+    return seo;
+  }
+
+  public void setSeo(LinkDocument seo) {
+    this.seo = seo;
+  }
 }

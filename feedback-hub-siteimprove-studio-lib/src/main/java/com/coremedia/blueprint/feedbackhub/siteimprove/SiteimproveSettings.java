@@ -28,5 +28,4 @@ public interface SiteimproveSettings {
 
   @NonNull
   String getLiveCaeBaseUrl();
-
 }

@@ -23,34 +23,15 @@ import java.util.List;
  */
 public class ContentLinkBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(ContentLinkBuilder.class);
-  private static final String PREVIEW_URL_SERVICE_URL = "internal/preview/previewurl";
-  private static final String LIVE_URL_SERVICE_URL = "internal/service/url";
+  private static final String PREVIEW_URL_SERVICE_URL = "blueprint/servlet/internal/service/url";
+  private static final String LIVE_URL_SERVICE_URL = "blueprint/servlet/internal/service/url";
 
   public ContentLinkBuilder() {
   }
 
   @Nullable
   String buildPreviewLink(String baseUrl, String id) {
-    String url = baseUrl;
-    if (!url.endsWith("/")) {
-      url = url + "/";
-    }
-    String serviceUrl = url + PREVIEW_URL_SERVICE_URL;
-
-    UriComponents uriComponents = UriComponentsBuilder.fromUriString(serviceUrl)
-            .queryParam("id", IdHelper.parseContentId(id)).build();
-
-    String link = getLink(uriComponents.toUriString());
-    if (link != null && !link.startsWith("http")) {
-      link = uriComponents.getScheme() + ":" + link;
-    }
-
-    return link;
-  }
-
-  @Nullable
-  String buildLiveLink(String baseUrl, String id) {
-    List<String> urls = buildLiveLink(baseUrl, Collections.singletonList(id));
+    List<String> urls = buildLink(baseUrl, Collections.singletonList(id), PREVIEW_URL_SERVICE_URL);
     if(!urls.isEmpty()) {
       return urls.get(0);
     }
@@ -58,12 +39,22 @@ public class ContentLinkBuilder {
     return null;
   }
 
-  private List<String> buildLiveLink(String baseUrl, Iterable<String> ids) {
+  @Nullable
+  String buildLiveLink(String baseUrl, String id) {
+    List<String> urls = buildLink(baseUrl, Collections.singletonList(id), LIVE_URL_SERVICE_URL);
+    if(!urls.isEmpty()) {
+      return urls.get(0);
+    }
+
+    return null;
+  }
+
+  private List<String> buildLink(String baseUrl, Iterable<String> ids, String serviceUrlSuffix) {
     String fullUrl = baseUrl;
     if (!fullUrl.endsWith("/")) {
       fullUrl = fullUrl + "/";
     }
-    String serviceUrl = fullUrl + LIVE_URL_SERVICE_URL;
+    String serviceUrl = fullUrl + serviceUrlSuffix;
     UriComponents uriComponents = UriComponentsBuilder.fromUriString(serviceUrl).build();
 
     Collection<UrlServiceRequestParams> params = new ArrayList<>();
@@ -75,11 +66,15 @@ public class ContentLinkBuilder {
     Gson gson = new Gson();
     String body = gson.toJson(params);
     String result = postLinks(serviceUrl, body);
+    List<String> links = new ArrayList<>();
+    if (result == null) {
+      LOG.warn("Could not retrieve URL for content "+body);
+      return links;
+    }
 
     List<UrlServiceResponseParams> urls = gson.fromJson(result, new TypeToken<List<UrlServiceResponseParams>>() {
     }.getType());
 
-    List<String> links = new ArrayList<>();
     for (UrlServiceResponseParams url : urls) {
       if(url.getUrl() == null) {
         continue;
@@ -89,21 +84,6 @@ public class ContentLinkBuilder {
     }
 
     return links;
-  }
-
-  private String getLink(String serviceUrl) {
-    try {
-      URL url = new URL(serviceUrl);
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestMethod("GET");
-      connection.setDoInput(true);
-      connection.setUseCaches(false);
-      return IOUtils.toString(connection.getInputStream(), "utf-8");
-    } catch (Exception e) {
-      LOG.error("Failed to get links to CAE: {}", e.getMessage(), e);
-    }
-
-    return null;
   }
 
   private String postLinks(String serviceUrl, String body) {

@@ -34,6 +34,8 @@ public class SiteimproveFooterBase extends FeedbackItemPanel {
       if (time > 0) {
         var date:Date = new Date(time);
         label = label + ": " + FeedbackHelper.getDateDiff(date);
+      } else{
+        label = label + ": " +resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_not_crawled');
       }
 
       return label;
@@ -47,6 +49,8 @@ public class SiteimproveFooterBase extends FeedbackItemPanel {
       if (time > 0) {
         var date:Date = new Date(time);
         label = label + ": " + FeedbackHelper.getDateDiff(date);
+      } else{
+        label = label + ": " +resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_not_crawled');
       }
 
       return label;

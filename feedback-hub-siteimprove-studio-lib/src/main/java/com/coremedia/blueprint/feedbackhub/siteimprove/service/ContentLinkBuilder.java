@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class ContentLinkBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(ContentLinkBuilder.class);
-  private static final String PREVIEW_URL_SERVICE_URL = "blueprint/servlet/internal/service/url";
-  private static final String LIVE_URL_SERVICE_URL = "blueprint/servlet/internal/service/url";
+  private static final String PREVIEW_URL_SERVICE_URL = "internal/service/url";
+  private static final String LIVE_URL_SERVICE_URL = "internal/service/url";
 
   public ContentLinkBuilder() {
   }

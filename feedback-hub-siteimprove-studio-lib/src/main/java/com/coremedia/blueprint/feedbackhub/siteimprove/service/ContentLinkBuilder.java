@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class ContentLinkBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(ContentLinkBuilder.class);
-  private static final String PREVIEW_URL_SERVICE_URL = "internal/preview/previewurl";
-  private static final String LIVE_URL_SERVICE_URL = "internal/service/url";
+  private static final String PREVIEW_URL_SERVICE_URL = "blueprint/servlet/internal/service/url";
+  private static final String LIVE_URL_SERVICE_URL = "blueprint/servlet/internal/service/url";
 
   public ContentLinkBuilder() {
   }
@@ -75,11 +75,15 @@ public class ContentLinkBuilder {
     Gson gson = new Gson();
     String body = gson.toJson(params);
     String result = postLinks(serviceUrl, body);
+    List<String> links = new ArrayList<>();
+    if (result == null) {
+      LOG.warn("Could not retrieve URL for content "+body);
+      return links;
+    }
 
     List<UrlServiceResponseParams> urls = gson.fromJson(result, new TypeToken<List<UrlServiceResponseParams>>() {
     }.getType());
 
-    List<String> links = new ArrayList<>();
     for (UrlServiceResponseParams url : urls) {
       if(url.getUrl() == null) {
         continue;

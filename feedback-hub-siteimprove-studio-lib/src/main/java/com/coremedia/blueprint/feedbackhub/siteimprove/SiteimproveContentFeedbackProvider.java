@@ -74,7 +74,7 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       generatePreviewTab(items, previewContentQualitySummary);
 
       //when not published there is no summary for live document
-      if (!content.getRepository().getPublicationService().isPublished(content)) {
+      if (content.getRepository().getPublicationService().isPublished(content)) {
         livePage = findPage(settings, content, false);
         ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, livePage, false);
         lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();

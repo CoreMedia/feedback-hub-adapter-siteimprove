@@ -70,20 +70,20 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       PageDocument previewPage = findPage(settings, content, true);
       PageDocument livePage = null;
       ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(settings, previewPage, true);
-      lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
-      generatePreviewTab(items, previewContentQualitySummary);
-
-      //when not published there is no summary for live document
-      if (content.getRepository().getPublicationService().isPublished(content)) {
-        livePage = findPage(settings, content, false);
-        ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, livePage, false);
-        lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
-        generateLiveTab(items, previewContentQualitySummary, liveContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
+      if (previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getId()!=  null) {
+        lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
       }
-      else {
-        items.add(FeedbackItemFactory.createEmptyItem(SiteimproveFeedbackTabs.COMPARISON));
-      }
+        generatePreviewTab(items, previewContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
 
+        //when not published there is no summary for live document
+        if (content.getRepository().getPublicationService().isPublished(content)) {
+          livePage = findPage(settings, content, false);
+          ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, livePage, false);
+          lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+          generateLiveTab(items, previewContentQualitySummary, liveContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
+        } else {
+          items.add(FeedbackItemFactory.createEmptyItem(SiteimproveFeedbackTabs.COMPARISON));
+        }
       //add footer
       items.add(new FooterFeedbackItem(lastPreviewUpdate, lastLiveUpdate, previewPage, livePage));
     } catch (Exception e) {
@@ -95,12 +95,12 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
 
   /**
    * Generates the preview tab.
-   *
-   * @param items                        the list of items available for Siteimprove
+   *  @param items                        the list of items available for Siteimprove
    * @param previewContentQualitySummary the summary document which contains all data to display feedback for
+   * @param lastPreviewUpdate
+   * @param lastLiveUpdate
    */
-  private void generatePreviewTab(List<FeedbackItem> items, ContentQualitySummaryDocument previewContentQualitySummary) {
-    long lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+  private void generatePreviewTab(List<FeedbackItem> items, ContentQualitySummaryDocument previewContentQualitySummary, long lastPreviewUpdate, long lastLiveUpdate) {
     GaugeFeedbackItem gaugeItem = GaugeFeedbackItem.builder()
             .withCollection(SiteimproveFeedbackTabs.PREVIEW)
             .withTitle("siteimprove_digitalCertaintyIndex")

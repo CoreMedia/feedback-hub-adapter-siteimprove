@@ -70,7 +70,7 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       PageDocument previewPage = findPage(settings, content, true);
       PageDocument livePage = null;
       ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(settings, previewPage, true);
-      if (previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getId()!=  null) {
+      if (previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen()!=  null) {
         lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
       }
         generatePreviewTab(items, previewContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);

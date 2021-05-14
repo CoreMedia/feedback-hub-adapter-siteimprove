@@ -41,7 +41,7 @@ public class ComparingGaugeItemPanelBase extends FeedbackItemPanel {
     var value1:Number = config.feedbackItem['gauge1'].value;
     var value2:Number = config.feedbackItem['gauge2'].value;
 
-    return value1 - value2;
+    return value2 - value1;
   }
 
   internal function getIconUI(config:ComparingGaugeItemPanel):String {

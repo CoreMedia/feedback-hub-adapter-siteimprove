@@ -23,7 +23,7 @@ public class ComparingGaugeItemPanelBase extends FeedbackItemPanel {
       msg = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_lose_score');
     }
 
-    msg = StringUtil.format(msg, diff.toFixed(2));
+    msg = StringUtil.format(msg, Math.abs(diff).toFixed(2));
     return msg;
   }
 

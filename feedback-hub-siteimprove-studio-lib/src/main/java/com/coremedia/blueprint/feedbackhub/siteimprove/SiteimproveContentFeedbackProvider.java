@@ -5,18 +5,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.ComparingGaugeF
 import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.FooterFeedbackItem;
 import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.IssueListFeedbackItem;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssueDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssuesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentQualitySummaryDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssueDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.*;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import com.coremedia.feedbackhub.adapter.FeedbackContext;
@@ -105,36 +94,41 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
             .withCollection(SiteimproveFeedbackTabs.PREVIEW)
             .withTitle("siteimprove_digitalCertaintyIndex")
             .withAge(lastPreviewUpdate)
-            .withLink(previewContentQualitySummary.getPageDetailsDocument().getSiteimprove().getSeo().getPageReport().getHref(), "siteimprove_preview_site_link")
+            //.withLink(previewContentQualitySummary.getPageDetailsDocument().getSiteimprove().getQualityAssurance().getPageReport().getHref(), "siteimprove_preview_site_link")
+            .withLink("https://my2.siteimprove.com/QualityAssurance/Inspector/"+previewContentQualitySummary.getSiteId()+"/"+previewContentQualitySummary.getPage().getId() +"/Page/Index", "siteimprove_preview_site_link")
             .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getTotalScore(), -1, true)
             .build();
     items.add(gaugeItem);
 
-    ScoreBarFeedbackItem a11yScore = ScoreBarFeedbackItem.builder()
-            .withCollection(SiteimproveFeedbackTabs.PREVIEW)
-            .withLabel("siteimprove_a11y")
-            .withDecimalPlaces(2)
-            .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getAccessibilityDocument().getTotal())
-            .build();
-    items.add(a11yScore);
+    if (previewContentQualitySummary.getDciOverallScoreDocument().getAccessibilityDocument().getTotal() > 0) {
+      ScoreBarFeedbackItem a11yScore = ScoreBarFeedbackItem.builder()
+              .withCollection(SiteimproveFeedbackTabs.PREVIEW)
+              .withLabel("siteimprove_a11y")
+              .withDecimalPlaces(2)
+              .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getAccessibilityDocument().getTotal())
+              .build();
+      items.add(a11yScore);
+    }
 
+    if (previewContentQualitySummary.getDciOverallScoreDocument().getQaDocument().getTotal() > 0 ) {
+      ScoreBarFeedbackItem qaScore = ScoreBarFeedbackItem.builder()
+              .withCollection(SiteimproveFeedbackTabs.PREVIEW)
+              .withLabel("siteimprove_quality")
+              .withDecimalPlaces(2)
+              .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getQaDocument().getTotal())
+              .build();
+      items.add(qaScore);
+    }
 
-    ScoreBarFeedbackItem qaScore = ScoreBarFeedbackItem.builder()
-            .withCollection(SiteimproveFeedbackTabs.PREVIEW)
-            .withLabel("siteimprove_quality")
-            .withDecimalPlaces(2)
-            .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getQaDocument().getTotal())
-            .build();
-    items.add(qaScore);
-
-
-    ScoreBarFeedbackItem seoScore = ScoreBarFeedbackItem.builder()
-            .withCollection(SiteimproveFeedbackTabs.PREVIEW)
-            .withLabel("siteimprove_seo")
-            .withDecimalPlaces(2)
-            .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getSeoDocument().getTotal())
-            .build();
-    items.add(seoScore);
+    if (previewContentQualitySummary.getDciOverallScoreDocument().getSeoDocument().getTotal() > 0) {
+      ScoreBarFeedbackItem seoScore = ScoreBarFeedbackItem.builder()
+              .withCollection(SiteimproveFeedbackTabs.PREVIEW)
+              .withLabel("siteimprove_seo")
+              .withDecimalPlaces(2)
+              .withValue(previewContentQualitySummary.getDciOverallScoreDocument().getSeoDocument().getTotal())
+              .build();
+      items.add(seoScore);
+    }
 
     if (previewContentQualitySummary.getAccessibilityIssuesDocument().getItems() != null && !previewContentQualitySummary.getAccessibilityIssuesDocument().getItems().isEmpty()) {
       A11yPageIssueDocument a11yPageIssueDocument = previewContentQualitySummary.getAccessibilityIssuesDocument().getItems().get(0);
@@ -148,7 +142,7 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       items.add(ExternalLinkFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withText("siteimprove_issue_link")
-              .withUrl(a11yPageIssueDocument.getUrl())
+              .withUrl(a11yPageIssueDocument.getSiteimprove().getPageReport().getHref())
               .build());
     }
 

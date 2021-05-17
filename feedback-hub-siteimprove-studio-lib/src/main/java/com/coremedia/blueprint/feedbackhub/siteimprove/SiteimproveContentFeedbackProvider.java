@@ -68,7 +68,9 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
         if (content.getRepository().getPublicationService().isPublished(content)) {
           livePage = findPage(settings, content, false);
           ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, livePage, false);
-          lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+          if (liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen() != null){
+            lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+          }
           generateLiveTab(items, previewContentQualitySummary, liveContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
         } else {
           items.add(FeedbackItemFactory.createEmptyItem(SiteimproveFeedbackTabs.COMPARISON));

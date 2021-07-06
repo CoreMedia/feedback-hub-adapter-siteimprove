@@ -12,7 +12,7 @@ public class IssueFilterComboBoxBase extends LocalComboBox {
   public static const VALUE_TECHNICAL:String = 'technical';
 
 
-  [Bindable]
+  [ExtConfig]
   public var bindTo:ValueExpression;
 
   private var valuesExpression:ValueExpression;

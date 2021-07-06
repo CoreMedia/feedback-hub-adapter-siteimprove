@@ -4,7 +4,7 @@ import ext.container.Container;
 [ResourceBundle('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove')]
 public class IssueEntryBase extends Container {
 
-  [Bindable]
+  [ExtConfig]
   public var issue:Object;
 
   public function IssueEntryBase(config:IssueEntry = null) {

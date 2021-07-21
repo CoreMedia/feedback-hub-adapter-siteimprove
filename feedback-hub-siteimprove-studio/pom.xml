@@ -37,6 +37,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>studio-client.feedback-hub-models</artifactId>
+      <type>swc</type>
+    </dependency>
+
+    <dependency>
       <groupId>net.jangaroo</groupId>
       <artifactId>ext-as</artifactId>
       <type>swc</type>

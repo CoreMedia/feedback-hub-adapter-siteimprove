@@ -19,7 +19,7 @@ public class ComparingGaugeItemPanelBase extends FeedbackItemPanel {
     }
 
     var msg:String = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_gain_score');
-    if (diff > 0) {
+    if (diff <= 0) {
       msg = resourceManager.getString('com.coremedia.blueprint.studio.feedbackhub.siteimprove.FeedbackHubSiteimprove', 'siteimprove_lose_score');
     }
 

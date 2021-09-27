@@ -234,10 +234,10 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
             .withDecimalPlaces(2)
             .withLabel("siteimprove_quality")
             .withUnitLabel("siteimprove_points")
-            .withScore1Value(qaPreview)
-            .withScore2Value(qaLive)
-            .withScore1Color("#006CB3")
-            .withScore2Color("#A94998")
+            .withScore2Value(qaPreview)
+            .withScore1Value(qaLive)
+            .withScore2Color("#006CB3")
+            .withScore1Color("#A94998")
             .build();
     items.add(qaCompare);
 
@@ -248,10 +248,10 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
             .withDecimalPlaces(2)
             .withLabel("siteimprove_seo")
             .withUnitLabel("siteimprove_points")
-            .withScore1Value(seoPreview)
-            .withScore2Value(seoLive)
-            .withScore1Color("#006CB3")
-            .withScore2Color("#A94998")
+            .withScore2Value(seoPreview)
+            .withScore1Value(seoLive)
+            .withScore2Color("#006CB3")
+            .withScore1Color("#A94998")
             .build();
     items.add(seoCompare);
 

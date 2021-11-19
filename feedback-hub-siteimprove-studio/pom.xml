@@ -13,6 +13,9 @@
 
   <properties>
     <coremedia.project.extension.for>studio-dynamic</coremedia.project.extension.for>
+    <cm.studio-client.core.version>2107.3</cm.studio-client.core.version>
+    <jangaroo.version>4.1.9</jangaroo.version>
+    <jangaroo.studio-client.core.version>${cm.studio-client.core.version}-${jangaroo.version}</jangaroo.studio-client.core.version>
   </properties>
 
   <description>Studio Plugin for the Siteimprove Feedback Hub</description>
@@ -23,31 +26,82 @@
       <groupId>com.coremedia.blueprint.base</groupId>
       <artifactId>bpbase-studio-components</artifactId>
       <type>swc</type>
+      <version>${cm.studio-client.core.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.coremedia.ui.toolkit</groupId>
       <artifactId>ui-components</artifactId>
       <type>swc</type>
+      <version>${cm.studio-client.core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.coremedia.ui.toolkit</groupId>
+      <artifactId>core-icons</artifactId>
+      <version>${cm.studio-client.core.version}</version>
+      <type>swc</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.coremedia.ui.sdk</groupId>
+      <artifactId>cap-rest-client</artifactId>
+      <version>${cm.studio-client.core.version}</version>
+      <type>swc</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.coremedia.ui.toolkit</groupId>
+      <artifactId>client-core</artifactId>
+      <version>${cm.studio-client.core.version}</version>
+      <type>swc</type>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.coremedia.ui.sdk</groupId>
       <artifactId>editor-components</artifactId>
       <type>swc</type>
+      <version>${cm.studio-client.core.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.coremedia.ui.sdk</groupId>
+      <artifactId>cap-rest-client-impl</artifactId>
+      <version>${cm.studio-client.core.version}</version>
+      <type>swc</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.coremedia.cms</groupId>
+      <artifactId>studio-client.feedback-hub-models</artifactId>
+      <version>${cm.studio-client.core.version}</version>
+      <type>swc</type>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.coremedia.ui.sdk</groupId>
       <artifactId>feedback-hub-editor-components</artifactId>
       <type>swc</type>
+      <version>${cm.studio-client.core.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>net.jangaroo</groupId>
       <artifactId>ext-as</artifactId>
+      <version>7.2.0-4.1.1</version>
       <type>swc</type>
+      <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
   <build>
@@ -63,6 +117,29 @@
               <uri>exml:com.coremedia.blueprint.studio.feedbackhub.siteimprove.config</uri>
             </namespace>
           </namespaces>
+          <extNamespace>com.coremedia.blueprint.studio.feedbackhub.siteimprove</extNamespace>
+          <npmPackageNameReplacers>
+            <npmPackageNameReplacer>
+              <search>^com[.]coremedia[.]labs[.]plugins__studio-client[.]feedback-hub-adapter-siteimprove$</search>
+              <replace>@coremedia-labs/studio-client.main.feedback-hub-adapter-siteimprove</replace>
+            </npmPackageNameReplacer>
+          </npmPackageNameReplacers>
+          <npmPackageFolderNameReplacers>
+            <npmPackageFolderNameReplacer>
+              <search>^@coremedia-labs/studio-client[.]main[.]feedback-hub-adapter-siteimprove$</search>
+              <replace>apps/main/feedback-hub-adapter-siteimprove</replace>
+            </npmPackageFolderNameReplacer>
+          </npmPackageFolderNameReplacers>
+          <npmDependencyOverrides>
+            <npmDependencyOverride>
+              <search>^(@jangaroo/.*):.*$</search>
+              <replace>$1:^1.0.0-alpha</replace>
+            </npmDependencyOverride>
+            <npmDependencyOverride>
+              <search>^(@coremedia/studio-client[.].*):.*$</search>
+              <replace>$1:^${jangaroo.studio-client.core.version}</replace>
+            </npmDependencyOverride>
+          </npmDependencyOverrides>
         </configuration>
       </plugin>
     </plugins>

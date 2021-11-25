@@ -10,7 +10,6 @@
 
   <modules>
     <module>feedback-hub-siteimprove-cae</module>
-    <module>feedback-hub-siteimprove-studio</module>
     <module>feedback-hub-siteimprove-studio-lib</module>
   </modules>
 

@@ -5,23 +5,23 @@
   "version": "1.0.0-SNAPSHOT",
   "private": true,
   "dependencies": {
-    "@coremedia/studio-client.cap-rest-client": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.cap-rest-client-impl": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.client-core": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.core-icons": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.ext.ui-components": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.feedback-hub-models": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.main.bpbase-studio-components": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.main.editor-components": "^2107.3.0-4.1.9",
-    "@coremedia/studio-client.main.feedback-hub-editor-components": "^2107.3.0-4.1.9",
-    "@jangaroo/ext-ts": "^1.0.0-alpha",
-    "@jangaroo/runtime": "^1.0.0-alpha"
+    "@coremedia/studio-client.cap-rest-client": "2110.1.0",
+    "@coremedia/studio-client.cap-rest-client-impl": "2110.1.0",
+    "@coremedia/studio-client.client-core": "2110.1.0",
+    "@coremedia/studio-client.core-icons": "2110.1.0",
+    "@coremedia/studio-client.ext.ui-components": "2110.1.0",
+    "@coremedia/studio-client.feedback-hub-models": "2110.1.0",
+    "@coremedia/studio-client.main.bpbase-studio-components": "2110.1.0",
+    "@coremedia/studio-client.main.editor-components": "2110.1.0",
+    "@coremedia/studio-client.main.feedback-hub-editor-components": "2110.1.0",
+    "@jangaroo/ext-ts": "^1.0.0-beta",
+    "@jangaroo/runtime": "^1.0.0-beta"
   },
   "devDependencies": {
-    "@jangaroo/build": "^1.0.0-alpha",
-    "@jangaroo/core": "^1.0.0-alpha",
-    "@jangaroo/publish": "^1.0.0-alpha",
-    "@jangaroo/run": "^1.0.0-alpha",
+    "@jangaroo/build": "^1.0.0-beta",
+    "@jangaroo/core": "^1.0.0-beta",
+    "@jangaroo/publish": "^1.0.0-beta",
+    "@jangaroo/run": "^1.0.0-beta",
     "eslint": "7.27.0",
     "rimraf": "^3.0.2"
   },
@@ -39,6 +39,9 @@
       "types": "./src/*.ts",
       "default": "./dist/src/*.js"
     }
+  },
+  "coremedia": {
+    "projectExtensionFor": "studio-client.main"
   },
   "publishConfig": {
     "directory": "dist",

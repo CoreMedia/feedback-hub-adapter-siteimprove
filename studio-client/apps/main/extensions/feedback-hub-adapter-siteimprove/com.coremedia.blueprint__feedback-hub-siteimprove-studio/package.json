@@ -1,6 +1,7 @@
 {
   "name": "com.coremedia.blueprint__feedback-hub-siteimprove-studio",
-  "author": "Blueprint",
+  "author": "CoreMedia GmbH",
+  "license": "CoreMedia Open Source License",
   "version": "1.0.0-SNAPSHOT",
   "private": true,
   "dependencies": {

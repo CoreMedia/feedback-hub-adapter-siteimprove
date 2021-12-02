@@ -1,7 +1,3 @@
-import Config from "@jangaroo/runtime/Config";
-import { asConfig } from "@jangaroo/runtime";
-import FeedbackHubSiteimprove_properties from "../FeedbackHubSiteimprove_properties";
-import SiteimproveFooter from "./SiteimproveFooter";
 import GenericRemoteJob from "@coremedia/studio-client.cap-rest-client-impl/common/impl/GenericRemoteJob";
 import JobExecutionError from "@coremedia/studio-client.cap-rest-client/common/JobExecutionError";
 import jobService from "@coremedia/studio-client.cap-rest-client/common/jobService";
@@ -12,35 +8,39 @@ import FeedbackItemPanel from "@coremedia/studio-client.main.feedback-hub-editor
 import FeedbackHelper from "@coremedia/studio-client.main.feedback-hub-editor-components/util/FeedbackHelper";
 import LoadMask from "@jangaroo/ext-ts/LoadMask";
 import Button from "@jangaroo/ext-ts/button/Button";
-import resourceManager from "@jangaroo/runtime/l10n/resourceManager";
+import { asConfig } from "@jangaroo/runtime";
+import Config from "@jangaroo/runtime/Config";
 import trace from "@jangaroo/runtime/trace";
+import FeedbackHubSiteimprove_properties from "../FeedbackHubSiteimprove_properties";
+import SiteimproveFooter from "./SiteimproveFooter";
+
 interface SiteimproveFooterBaseConfig extends Config<FeedbackItemPanel> {
 }
-
-
 
 class SiteimproveFooterBase extends FeedbackItemPanel {
   declare Config: SiteimproveFooterBaseConfig;
 
-  static readonly RECRAWL_BUTTON_ITEM_ID:string = "recrawlButton";
-  static readonly RELOAD_BUTTON_ITEM_ID:string = "reloadButton";
+  static readonly RECRAWL_BUTTON_ITEM_ID: string = "recrawlButton";
+
+  static readonly RELOAD_BUTTON_ITEM_ID: string = "reloadButton";
 
   //they match the collection id of the feedback items
-  static readonly PREVEW_ITEM_ID:string = "preview";
-  static readonly LIVE_ITEM_ID:string = "comparison";
+  static readonly PREVEW_ITEM_ID: string = "preview";
 
-  #loadMask:LoadMask = null;
+  static readonly LIVE_ITEM_ID: string = "comparison";
 
-  constructor(config:Config<SiteimproveFooter> = null) {
+  #loadMask: LoadMask = null;
+
+  constructor(config: Config<SiteimproveFooter> = null) {
     super(config);
   }
 
-  getLastPreviewCrawlDateExpression(config:Config<SiteimproveFooter>):ValueExpression {
-    return ValueExpressionFactory.createFromFunction(():string => {
-      var label = FeedbackHubSiteimprove_properties.siteimprove_preview_site;
-      var time:number = config.feedbackItem["lastPreviewUpdate"];
+  getLastPreviewCrawlDateExpression(config: Config<SiteimproveFooter>): ValueExpression {
+    return ValueExpressionFactory.createFromFunction((): string => {
+      let label = FeedbackHubSiteimprove_properties.siteimprove_preview_site;
+      const time: number = config.feedbackItem["lastPreviewUpdate"];
       if (time > 0) {
-        var date = new Date(time);
+        const date = new Date(time);
         label = label + ": " + FeedbackHelper.getDateDiff(date);
       }
 
@@ -48,12 +48,12 @@ class SiteimproveFooterBase extends FeedbackItemPanel {
     });
   }
 
-  getLastLiveCrawlDateExpression(config:Config<SiteimproveFooter>):ValueExpression {
-    return ValueExpressionFactory.createFromFunction(():string => {
-      var label = FeedbackHubSiteimprove_properties.siteimprove_live_site;
-      var time:number = config.feedbackItem["lastLiveUpdate"];
+  getLastLiveCrawlDateExpression(config: Config<SiteimproveFooter>): ValueExpression {
+    return ValueExpressionFactory.createFromFunction((): string => {
+      let label = FeedbackHubSiteimprove_properties.siteimprove_live_site;
+      const time: number = config.feedbackItem["lastLiveUpdate"];
       if (time > 0) {
-        var date = new Date(time);
+        const date = new Date(time);
         label = label + ": " + FeedbackHelper.getDateDiff(date);
       }
 
@@ -61,42 +61,42 @@ class SiteimproveFooterBase extends FeedbackItemPanel {
     });
   }
 
-  protected recrawlPage(b:Button):void {
-    var JOB_TYPE = "recrawlPage";
-    var pageId:string = this.feedbackItem["previewPageId"];
-    var preview:boolean = asConfig(this.getFeedbackGroupPanel().getSubTabPanel().getActiveTab()).itemId === SiteimproveFooterBase.PREVEW_ITEM_ID;
-    if(!preview) {
+  protected recrawlPage(b: Button): void {
+    const JOB_TYPE = "recrawlPage";
+    let pageId: string = this.feedbackItem["previewPageId"];
+    const preview: boolean = asConfig(this.getFeedbackGroupPanel().getSubTabPanel().getActiveTab()).itemId === SiteimproveFooterBase.PREVEW_ITEM_ID;
+    if (!preview) {
       pageId = this.feedbackItem["livePageId"];
     }
 
     b.setDisabled(true);
     jobService._.executeJob(
-            new GenericRemoteJob(JOB_TYPE, {
-              content: this.contentExpression.getValue(),
-              preview: preview,
-              pageId: pageId,
-              checkStatusOnly: false
-            }),
-            //on success
-            (result:any):void => {
+      new GenericRemoteJob(JOB_TYPE, {
+        content: this.contentExpression.getValue(),
+        preview: preview,
+        pageId: pageId,
+        checkStatusOnly: false,
+      }),
+      //on success
+      (result: any): void => {
 
-              if (this.#loadMask && !this.#loadMask.destroyed) {
-                this.#loadMask.destroy();
-              }
+        if (this.#loadMask && !this.#loadMask.destroyed) {
+          this.#loadMask.destroy();
+        }
 
-              b.setDisabled(false);
-              this.reload();
-            },
-            //on error
-            (error:JobExecutionError):void => {
-              trace("[ERROR]", "Error loading Feedback : " + error);
-              this.#loadMask.hide();
-              this.setDisabled(false);
-            }
+        b.setDisabled(false);
+        this.reload();
+      },
+      //on error
+      (error: JobExecutionError): void => {
+        trace("[ERROR]", "Error loading Feedback : " + error);
+        this.#loadMask.hide();
+        this.setDisabled(false);
+      },
     );
 
-    if(!this.#loadMask) {
-      var loadMaskConfig = Config(LoadMask);
+    if (!this.#loadMask) {
+      const loadMaskConfig = Config(LoadMask);
       loadMaskConfig.ui = LoadMaskSkin.TRANSPARENT.getSkin();
       loadMaskConfig.msg = "";
       loadMaskConfig.target = b;
@@ -106,12 +106,12 @@ class SiteimproveFooterBase extends FeedbackItemPanel {
     this.#loadMask.show();
   }
 
-
-  protected override onDestroy():void {
+  protected override onDestroy(): void {
     super.onDestroy();
-    if(this.#loadMask) {
+    if (this.#loadMask) {
       this.#loadMask.destroy();
     }
   }
 }
+
 export default SiteimproveFooterBase;

@@ -136,7 +136,7 @@ const FeedbackHubSiteimprove_properties: FeedbackHubSiteimprove_properties = {
   recrawl_preview_page_btn_tooltip: "Let Siteimprove recrawl the page",
   recrawl_live_page_btn_text: "Recheck",
   recrawl_live_page_btn_tooltip: "Recheck the Live Site page.",
-  siteimprove_show_more: "Show more"
+  siteimprove_show_more: "Show more",
 };
 
 export default FeedbackHubSiteimprove_properties;

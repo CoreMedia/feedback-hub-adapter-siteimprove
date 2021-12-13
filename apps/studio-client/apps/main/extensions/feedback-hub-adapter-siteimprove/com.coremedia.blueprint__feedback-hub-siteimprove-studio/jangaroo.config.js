@@ -1,9 +1,10 @@
-/** @type { import('@jangaroo/core').IJangarooConfig } */
-module.exports = {
+const { jangarooConfig } = require("@jangaroo/core");
+
+module.exports = jangarooConfig({
   type: "code",
-  extName: "com.coremedia.blueprint__feedback-hub-siteimprove-studio",
-  extNamespace: "com.coremedia.blueprint.studio.feedbackhub.siteimprove",
   sencha: {
+    name: "com.coremedia.blueprint__feedback-hub-siteimprove-studio",
+    namespace: "com.coremedia.blueprint.studio.feedbackhub.siteimprove",
     studioPlugins: [
       {
         mainClass: "com.coremedia.blueprint.studio.feedbackhub.siteimprove.SiteimproveFeedbackHubStudioPlugin",
@@ -11,4 +12,4 @@ module.exports = {
       },
     ],
   },
-};
+});

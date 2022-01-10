@@ -71,14 +71,18 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       PageDocument previewPage = findPage(settings, content, true);
       PageDocument livePage = null;
       ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(settings, previewPage, true);
-      lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
-      generatePreviewTab(items, previewContentQualitySummary);
+      if (previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen() != null){
+        lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+      }
+       generatePreviewTab(items, previewContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
 
       //when not published there is no summary for live document
       if (content.getRepository().getPublicationService().isPublished(content)) {
         livePage = findPage(settings, content, false);
         ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, livePage, false);
-        lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+        if (liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen() != null) {
+          lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+        }
         generateLiveTab(items, previewContentQualitySummary, liveContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
       }
       else {
@@ -100,8 +104,7 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
    * @param items                        the list of items available for Siteimprove
    * @param previewContentQualitySummary the summary document which contains all data to display feedback for
    */
-  private void generatePreviewTab(List<FeedbackItem> items, ContentQualitySummaryDocument previewContentQualitySummary) {
-    long lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+  private void generatePreviewTab(List<FeedbackItem> items, ContentQualitySummaryDocument previewContentQualitySummary, long lastPreviewUpdate, long lastLiveUpdate) {
     GaugeFeedbackItem gaugeItem = GaugeFeedbackItem.builder()
             .withCollection(SiteimproveFeedbackTabs.PREVIEW)
             .withTitle("siteimprove_digitalCertaintyIndex")

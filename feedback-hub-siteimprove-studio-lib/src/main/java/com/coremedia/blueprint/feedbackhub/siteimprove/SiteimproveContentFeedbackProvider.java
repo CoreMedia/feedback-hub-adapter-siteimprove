@@ -62,7 +62,6 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
   @Override
   public CompletionStage<Collection<FeedbackItem>> provideFeedback(FeedbackContext context) {
     Content content = (Content) context.getEntity();
-    content = content.getRepository().getContent(IdHelper.formatContentId(552)); //TODO remove me
 
     List<FeedbackItem> items = new ArrayList<>();
     long lastPreviewUpdate = -1;

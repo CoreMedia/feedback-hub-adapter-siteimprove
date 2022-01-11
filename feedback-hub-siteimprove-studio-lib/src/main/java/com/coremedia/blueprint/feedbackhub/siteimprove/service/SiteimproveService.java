@@ -24,6 +24,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Optional;
+
 public interface SiteimproveService {
 
   /**
@@ -82,7 +84,7 @@ public interface SiteimproveService {
   PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId);
 
   @Nullable
-  PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParamContentID);
+  PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable String pageId);
 
   @Nullable
   SeoIssuesDocument getSeoIssuePages(@NonNull SiteimproveSettings config, @NonNull String siteId);

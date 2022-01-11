@@ -11,7 +11,7 @@ public class ContentQualitySummaryDocument {
   private BrokenLinkPagesDocument brokenLinkPagesDocument;
   private DciOverallScoreDocument dciOverallScoreDocument;
   private PagesDocument misspellingPages;
-  private A11yPageIssuesDocument accessibilityIssuesDocument;
+  private AccessibilityIssuesDocument accessibilityIssuesDocument;
   private Seov2IssuesDocument seov2IssuesDocument;
   private CrawlStatusDocument crawlStatus;
   private String siteId;
@@ -69,11 +69,11 @@ public class ContentQualitySummaryDocument {
     this.seov2IssuesDocument = seov2IssuesDocument;
   }
 
-  public A11yPageIssuesDocument getAccessibilityIssuesDocument() {
+  public AccessibilityIssuesDocument getAccessibilityIssuesDocument() {
     return accessibilityIssuesDocument;
   }
 
-  public void setAccessibilityIssuesDocument(A11yPageIssuesDocument accessibilityIssuesDocument) {
+  public void setAccessibilityIssuesDocument(AccessibilityIssuesDocument accessibilityIssuesDocument) {
     this.accessibilityIssuesDocument = accessibilityIssuesDocument;
   }
 

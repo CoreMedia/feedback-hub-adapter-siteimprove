@@ -6,7 +6,6 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.FooterFeedbackI
 import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.IssueListFeedbackItem;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.*;
-import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import com.coremedia.feedbackhub.adapter.FeedbackContext;
 import com.coremedia.feedbackhub.adapter.FeedbackHubException;
@@ -136,33 +135,33 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
     items.add(seoScore);
 
     if (previewContentQualitySummary.getAccessibilityIssuesDocument().getItems() != null && !previewContentQualitySummary.getAccessibilityIssuesDocument().getItems().isEmpty()) {
-      A11yPageIssueDocument a11yPageIssueDocument = previewContentQualitySummary.getAccessibilityIssuesDocument().getItems().get(0);
+      AccessibilityIssuesDocument accessibilityIssuesDocument = previewContentQualitySummary.getAccessibilityIssuesDocument();
 
       items.add(LabelFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withBold()
-              .withLabel("siteimprove_issues_a11y_count", a11yPageIssueDocument.getAaaIssues()+a11yPageIssueDocument.getAaIssues()+a11yPageIssueDocument.getaIssues())
+              .withLabel("siteimprove_issues_a11y_count", accessibilityIssuesDocument.getTotalIssues())
               .build());
 
       items.add(ExternalLinkFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withText("siteimprove_issue_link")
-              .withUrl(a11yPageIssueDocument.getSiteimprove().getPageReport().getHref())
+              .withUrl(previewContentQualitySummary.getPageDetailsDocument().getSiteimprove().getAccessibility().getPageReport().getHref())
               .build());
     }
 
     if (previewContentQualitySummary.getMisspellingPages() != null && previewContentQualitySummary.getMisspellingPages().getPages() != null && !previewContentQualitySummary.getMisspellingPages().getPages().isEmpty()) {
+      PageDocument pageDocument = previewContentQualitySummary.getMisspellingPages().getPages().get(0);
       items.add(LabelFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withBold()
-              .withLabel("siteimprove_issues_qa_count", previewContentQualitySummary.getMisspellingPages().getPages().size())
+              .withLabel("siteimprove_issues_qa_count", pageDocument.getPotentialMisspellingCount())
               .build());
 
-      PageDocument pageDocument = previewContentQualitySummary.getMisspellingPages().getPages().get(0);
       items.add(ExternalLinkFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withText("siteimprove_issue_link")
-              .withUrl(pageDocument.getUrl())
+              .withUrl(pageDocument.getSiteimprove().getPageReport().getHref())
               .build());
     }
 
@@ -176,7 +175,7 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
     items.add(LabelFeedbackItem.builder()
             .withCollection(SiteimproveFeedbackTabs.PREVIEW)
             .withBold()
-            .withLabel("siteimprove_issues_seo_count", issues.getIssues().size())
+            .withLabel("siteimprove_issues_seo_count", previewContentQualitySummary.getPageDetailsDocument().getSummary().getSeov2().getIssuesCount())
             .build());
     items.add(issues);
   }
@@ -272,13 +271,13 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
     BrokenLinkPagesDocument brokenLinkPagesDocument = siteimproveService.getBrokenLinkPages(settings, siteimproveSiteId, queryParamContentID);
     contentQualitySummaryDocument.setBrokenLinkPagesDocument(brokenLinkPagesDocument);
 
-    PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, siteimproveSiteId, queryParamContentID);
+    PagesDocument misspellingPages = siteimproveService.getMisspellingPages(settings, siteimproveSiteId, page.getId());
     contentQualitySummaryDocument.setMisspellingPages(misspellingPages);
 
     Seov2IssuesDocument seoV2IssuesDocument = siteimproveService.getSeov2IssuePages(settings, siteimproveSiteId, page.getId());
     contentQualitySummaryDocument.setSeov2IssuesDocument(seoV2IssuesDocument);
 
-    A11yPageIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityPageIssues(settings, siteimproveSiteId, page.getId());
+    AccessibilityIssuesDocument accessibilityIssuePages = siteimproveService.getAccessibilityIssuePages(settings, siteimproveSiteId, page.getId());
     contentQualitySummaryDocument.setAccessibilityIssuesDocument(accessibilityIssuePages);
 
     CrawlStatusDocument crawlStatus = siteimproveService.getCrawlStatus(settings, siteimproveSiteId);

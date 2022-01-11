@@ -35,6 +35,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SiteimproveServiceImpl implements SiteimproveService {
 
@@ -155,9 +156,20 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   @Nullable
   @Override
-  public PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable MultiValueMap<String, String> queryParamContentID) {
+  public PagesDocument getMisspellingPages(@NonNull SiteimproveSettings config, @NonNull String siteId, @Nullable String pageId) {
+    MultiValueMap<String, String> queryParams = null;
+    if (pageId != null) {
+      queryParams = new LinkedMultiValueMap<>();
+      queryParams.add("page_size", "500");
+    }
+
     String resourcePath = SITES + siteId + "/quality_assurance/spelling/pages";
-    return connector.performGet(config, resourcePath, PagesDocument.class, queryParamContentID);
+    PagesDocument pagesDocument = connector.performGet(config, resourcePath, PagesDocument.class, queryParams);
+    PagesDocument newPagesDocument = new PagesDocument();
+    newPagesDocument.setPages(pagesDocument.getPages().stream().filter(page -> page.getId().equals(pageId)).collect(Collectors.toList()));
+    newPagesDocument.setSiteimprove(pagesDocument.getSiteimprove());
+    newPagesDocument.setLinks(pagesDocument.getLinks());
+    return newPagesDocument;
   }
 
   @Override
@@ -196,12 +208,6 @@ public class SiteimproveServiceImpl implements SiteimproveService {
     String seov2PageIssuesUrl = SITES + siteId + "/accessibility/pages/" + pageId + "/issues";
     AccessibilityIssuesDocument issues = connector.performGet(config, seov2PageIssuesUrl, AccessibilityIssuesDocument.class, null);
 
-    //paging
-    AccessibilityIssuesDocument nextIssues = issues;
-    while (nextIssues.hasNext()) {
-      nextIssues = connector.performGet(config, nextIssues.nextUrl(), AccessibilityIssuesDocument.class, null);
-      issues.add(nextIssues);
-    }
     return issues;
   }
 

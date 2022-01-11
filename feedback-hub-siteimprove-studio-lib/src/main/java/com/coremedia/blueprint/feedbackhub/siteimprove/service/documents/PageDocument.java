@@ -25,7 +25,7 @@ public class PageDocument {
 
   private FeedbackHubErrorCode errorCode;
 
-  @JsonProperty("siteimprove")
+  @JsonProperty("_siteimprove")
   private SiteimproveWebappDocument siteimprove;
 
   public PageDocument() {

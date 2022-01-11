@@ -141,13 +141,13 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       items.add(LabelFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withBold()
-              .withLabel("siteimprove_issues_a11y_count", previewContentQualitySummary.getAccessibilityIssuesDocument().getItems().size())
+              .withLabel("siteimprove_issues_a11y_count", a11yPageIssueDocument.getAaaIssues()+a11yPageIssueDocument.getAaIssues()+a11yPageIssueDocument.getaIssues())
               .build());
 
       items.add(ExternalLinkFeedbackItem.builder()
               .withCollection(SiteimproveFeedbackTabs.PREVIEW)
               .withText("siteimprove_issue_link")
-              .withUrl(a11yPageIssueDocument.getUrl())
+              .withUrl(a11yPageIssueDocument.getSiteimprove().getPageReport().getHref())
               .build());
     }
 

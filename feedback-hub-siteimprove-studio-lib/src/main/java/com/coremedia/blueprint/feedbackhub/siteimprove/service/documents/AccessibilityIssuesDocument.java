@@ -20,6 +20,11 @@ public class AccessibilityIssuesDocument {
   @JsonProperty("links")
   private LinkDocument links;
 
+  public int getTotalIssues() {
+    int result = items.stream().mapToInt(AccessibilityIssueDocument::getIssues).sum();
+    return result;
+  }
+
   public int getTotalItems() {
     return totalItems;
   }

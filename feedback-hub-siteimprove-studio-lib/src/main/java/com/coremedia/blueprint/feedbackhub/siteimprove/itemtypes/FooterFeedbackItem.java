@@ -13,11 +13,14 @@ public class FooterFeedbackItem implements FeedbackItem {
   private final long lastLiveUpdate;
   private String previewPageId;
   private String livePageId;
+  private boolean isChecking;
 
 
-  public FooterFeedbackItem(long lastPreviewUpdate, long lastLiveUpdate, PageDocument previewPage, PageDocument livePage) {
+  public FooterFeedbackItem(long lastPreviewUpdate, long lastLiveUpdate, PageDocument previewPage, PageDocument livePage, boolean isChecking) {
     this.lastPreviewUpdate = lastPreviewUpdate;
     this.lastLiveUpdate = lastLiveUpdate;
+    this.isChecking = isChecking;
+
 
     if(previewPage != null) {
       previewPageId = previewPage.getId();
@@ -42,6 +45,10 @@ public class FooterFeedbackItem implements FeedbackItem {
 
   public long getLastLiveUpdate() {
     return lastLiveUpdate;
+  }
+
+  public boolean isChecking() {
+    return isChecking;
   }
 
   @Override

@@ -35,6 +35,7 @@ interface FeedbackHubSiteimprove_properties {
   siteimprove_gain_score: string;
   siteimprove_lose_score: string;
   siteimprove_last_crawl: string;
+  siteimprove_checking: string;
   siteimprove_unknown: string;
   siteimprove_issues_help: string;
   siteimprove_issue: string;
@@ -104,6 +105,7 @@ const FeedbackHubSiteimprove_properties: FeedbackHubSiteimprove_properties = {
   siteimprove_gain_score: "You will <b>gain {0} points<\/b> with the current changes in the preview.",
   siteimprove_lose_score: "You will <b>lose {0} points<\/b> with the current changes in the preview.",
   siteimprove_last_crawl: "Last checked:",
+  siteimprove_checking: "Checking content...",
   siteimprove_unknown: "unknown",
   siteimprove_issues_help: "Fixing these issues will improve the score.",
   siteimprove_issue: "Issue",

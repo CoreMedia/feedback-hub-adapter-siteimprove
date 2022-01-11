@@ -5,18 +5,7 @@ import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.ComparingGaugeF
 import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.FooterFeedbackItem;
 import com.coremedia.blueprint.feedbackhub.siteimprove.itemtypes.IssueListFeedbackItem;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssueDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.A11yPageIssuesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.BrokenLinkPagesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.ContentQualitySummaryDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.CrawlStatusDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.DciOverallScoreDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageCheckResultDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDetailsDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PageDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.PagesDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssueDocument;
-import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.Seov2IssuesDocument;
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.documents.*;
 import com.coremedia.cap.common.IdHelper;
 import com.coremedia.cap.content.Content;
 import com.coremedia.feedbackhub.adapter.FeedbackContext;
@@ -66,13 +55,18 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
     List<FeedbackItem> items = new ArrayList<>();
     long lastPreviewUpdate = -1;
     long lastLiveUpdate = -1;
+    boolean isChecking = false;
 
     try {
       PageDocument previewPage = findPage(settings, content, true);
       PageDocument livePage = null;
       ContentQualitySummaryDocument previewContentQualitySummary = getContentQualitySummary(settings, previewPage, true);
-      if (previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen() != null){
-        lastPreviewUpdate = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+      PageCheckStatusDocument previewPageSummary = previewContentQualitySummary.getPageDetailsDocument().getSummary().getPage();
+      // set the status display in footer to "checking" as long as the dci total i 0 or the page check flag is still true
+      isChecking = previewPageSummary.getCheckingNow() || previewContentQualitySummary.getDciOverallScoreDocument().getTotalScore() <= 0.0;
+
+      if (previewPageSummary.getLastSeen() != null){
+        lastPreviewUpdate = previewPageSummary.getLastSeen().getTime();
       }
        generatePreviewTab(items, previewContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
 
@@ -80,8 +74,9 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       if (content.getRepository().getPublicationService().isPublished(content)) {
         livePage = findPage(settings, content, false);
         ContentQualitySummaryDocument liveContentQualitySummary = getContentQualitySummary(settings, livePage, false);
-        if (liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen() != null) {
-          lastLiveUpdate = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage().getLastSeen().getTime();
+        PageCheckStatusDocument livePageSummary = liveContentQualitySummary.getPageDetailsDocument().getSummary().getPage();
+        if (livePageSummary.getLastSeen() != null) {
+          lastLiveUpdate = livePageSummary.getLastSeen().getTime();
         }
         generateLiveTab(items, previewContentQualitySummary, liveContentQualitySummary, lastPreviewUpdate, lastLiveUpdate);
       }
@@ -90,7 +85,7 @@ public class SiteimproveContentFeedbackProvider implements FeedbackProvider {
       }
 
       //add footer
-      items.add(new FooterFeedbackItem(lastPreviewUpdate, lastLiveUpdate, previewPage, livePage));
+      items.add(new FooterFeedbackItem(lastPreviewUpdate, lastLiveUpdate, previewPage, livePage, isChecking));
     } catch (Exception e) {
       return CompletableFuture.failedFuture(e);
     }

@@ -28,6 +28,7 @@ ResourceBundleUtil.override(FeedbackHubSiteimprove_properties, {
   siteimprove_gain_score: "Sie <b>gewinnen {0} Punkte<\/b> mit den aktuellen Änderungen.",
   siteimprove_lose_score: "Sie <b>verlieren {0} Punkte<\/b> mit den aktuellen Änderungen.",
   siteimprove_last_crawl: "Letzte Prüfung:",
+  siteimprove_checking: "Inhalt wird geprüft...",
   siteimprove_unknown: "unbekannt",
   siteimprove_issues_help: "Beheben Sie diese Probleme um die Bewertung zu verbessern.",
   siteimprove_issue: "Problem",

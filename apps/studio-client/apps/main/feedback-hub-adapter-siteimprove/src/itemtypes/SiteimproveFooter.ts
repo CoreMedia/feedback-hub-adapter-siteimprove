@@ -1,4 +1,5 @@
 import SpacingBEMEntities from "@coremedia/studio-client.ext.ui-components/bem/SpacingBEMEntities";
+import SwitchingContainer from "@coremedia/studio-client.ext.ui-components/components/SwitchingContainer";
 import BindPropertyPlugin from "@coremedia/studio-client.ext.ui-components/plugins/BindPropertyPlugin";
 import VerticalSpacingPlugin from "@coremedia/studio-client.ext.ui-components/plugins/VerticalSpacingPlugin";
 import ButtonSkin from "@coremedia/studio-client.ext.ui-components/skins/ButtonSkin";
@@ -22,34 +23,62 @@ interface SiteimproveFooterConfig extends Config<SiteimproveFooterBase> {
 class SiteimproveFooter extends SiteimproveFooterBase {
   declare Config: SiteimproveFooterConfig;
 
+  static readonly SITEIMPROVE_STATUS: string = "siteimprove_status";
+
+  static readonly SITEIMPROVE_CHECKING: string = "siteimprove_checking";
+
   static override readonly xtype: string = "com.coremedia.blueprint.studio.feedbackhub.siteimprove.config.SiteimproveFooter";
 
   constructor(config: Config<SiteimproveFooter> = null) {
     super((()=> ConfigUtils.apply(Config(SiteimproveFooter, {
 
       items: [
-        Config(Container, {
+
+        Config(SwitchingContainer, {
+          activeItemValueExpression: this.getActiveStateExpression(config),
+
           items: [
-            Config(DisplayField, {
-              ui: DisplayFieldSkin.BOLD.getSkin(),
-              value: FeedbackHubSiteimprove_properties.siteimprove_last_crawl,
-            }),
-            Config(DisplayField, {
-              plugins: [
-                Config(BindPropertyPlugin, { bindTo: this.getLastPreviewCrawlDateExpression(config) }),
+            Config(Container, {
+              itemId: SiteimproveFooter.SITEIMPROVE_STATUS,
+              items: [
+                Config(DisplayField, {
+                  ui: DisplayFieldSkin.BOLD.getSkin(),
+                  value: FeedbackHubSiteimprove_properties.siteimprove_last_crawl,
+                }),
+                Config(DisplayField, {
+                  plugins: [
+                    Config(BindPropertyPlugin, { bindTo: this.getLastPreviewCrawlDateExpression(config) }),
+                  ],
+                }),
+                Config(DisplayField, {
+                  plugins: [
+                    Config(BindPropertyPlugin, { bindTo: this.getLastLiveCrawlDateExpression(config) }),
+                  ],
+                }),
               ],
+              layout: Config(VBoxLayout, {
+                align: "stretch",
+                pack: "start",
+              }),
             }),
-            Config(DisplayField, {
-              plugins: [
-                Config(BindPropertyPlugin, { bindTo: this.getLastLiveCrawlDateExpression(config) }),
+
+            Config(Container, {
+              itemId: SiteimproveFooter.SITEIMPROVE_CHECKING,
+              items: [
+                Config(DisplayField, {
+                  ui: DisplayFieldSkin.BOLD.getSkin(),
+                  value: FeedbackHubSiteimprove_properties.siteimprove_checking,
+
+                }),
               ],
+              layout: Config(VBoxLayout, {
+                align: "stretch",
+                pack: "start",
+              }),
             }),
           ],
-          layout: Config(VBoxLayout, {
-            align: "stretch",
-            pack: "start",
-          }),
         }),
+
         Config(Component, { flex: 1 }),
         Config(Container, {
           width: 180,

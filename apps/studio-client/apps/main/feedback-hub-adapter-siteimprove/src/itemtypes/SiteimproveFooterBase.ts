@@ -20,6 +20,8 @@ interface SiteimproveFooterBaseConfig extends Config<FeedbackItemPanel> {
 class SiteimproveFooterBase extends FeedbackItemPanel {
   declare Config: SiteimproveFooterBaseConfig;
 
+  #activeStateExpression: ValueExpression = null;
+
   static readonly RECRAWL_BUTTON_ITEM_ID: string = "recrawlButton";
 
   static readonly RELOAD_BUTTON_ITEM_ID: string = "reloadButton";
@@ -33,6 +35,16 @@ class SiteimproveFooterBase extends FeedbackItemPanel {
 
   constructor(config: Config<SiteimproveFooter> = null) {
     super(config);
+  }
+
+  protected getActiveStateExpression(config: Config<SiteimproveFooter>): ValueExpression {
+    if (!this.#activeStateExpression) {
+      this.#activeStateExpression = ValueExpressionFactory.createFromFunction((): string => {
+        const isChecking: boolean = config.feedbackItem["checking"];
+        return (isChecking) ? SiteimproveFooter.SITEIMPROVE_CHECKING : SiteimproveFooter.SITEIMPROVE_STATUS;
+      });
+    }
+    return this.#activeStateExpression;
   }
 
   getLastPreviewCrawlDateExpression(config: Config<SiteimproveFooter>): ValueExpression {

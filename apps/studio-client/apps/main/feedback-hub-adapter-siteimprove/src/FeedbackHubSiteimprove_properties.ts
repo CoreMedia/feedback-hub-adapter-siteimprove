@@ -117,7 +117,7 @@ const FeedbackHubSiteimprove_properties: FeedbackHubSiteimprove_properties = {
   siteimprove_issues_a11y_count: "Accessibility Issues ({0})",
   siteimprove_issue_category_accessibility: "Accessibility",
   siteimprove_issues_qa: "Quality Assurance",
-  siteimprove_issues_qa_count: "Quality Assurance Issues ({0})",
+  siteimprove_issues_qa_count: "Potential Misspellings ({0})",
   siteimprove_issue_category_content: "Quality Assurance",
   siteimprove_issues_seo: "SEO",
   siteimprove_issue_category_seov2: "SEO",

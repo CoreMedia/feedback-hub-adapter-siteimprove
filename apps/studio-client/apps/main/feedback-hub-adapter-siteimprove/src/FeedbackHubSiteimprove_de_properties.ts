@@ -40,7 +40,7 @@ ResourceBundleUtil.override(FeedbackHubSiteimprove_properties, {
   siteimprove_issues_a11y_count: "Probleme Barrierefreiheit ({0})",
   siteimprove_issue_category_accessibility: "Accessibility",
   siteimprove_issues_qa: "Qualitätssicherung",
-  siteimprove_issues_qa_count: "Probleme Qualitätssicherung ({0})",
+  siteimprove_issues_qa_count: "Mögliche Rechtschreibfehler ({0})",
   siteimprove_issue_category_content: "Qualitätssicherung",
   siteimprove_issues_seo: "SEO",
   siteimprove_issue_category_seov2: "SEO",

@@ -34,7 +34,7 @@ class ComparingGaugeItemPanelBase extends FeedbackItemPanel {
   protected getDiffIconCls(config: Config<ComparingGaugeItemPanel>): string {
     const diff = this.#getScoringDifference(config);
     let iconCls = CoreIcons_properties.check_circle;
-    if (diff >= 0) {
+    if (diff <= 0) {
       iconCls = CoreIcons_properties.error_circle;
     }
 

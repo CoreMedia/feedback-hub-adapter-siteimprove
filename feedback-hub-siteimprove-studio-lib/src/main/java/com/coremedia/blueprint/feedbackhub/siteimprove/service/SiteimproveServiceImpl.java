@@ -41,11 +41,11 @@ public class SiteimproveServiceImpl implements SiteimproveService {
 
   private static final String SITES = "/sites/";
   private SiteimproveRestConnector connector;
-  private ContentLinkBuilder contentLinkBuilder;
+  private ContentLinkBuilderFactory contentLinkBuilderFactory;
 
   SiteimproveServiceImpl(SiteimproveRestConnector siteimproveRestConnector) {
     this.connector = siteimproveRestConnector;
-    contentLinkBuilder = new ContentLinkBuilder();
+    this.contentLinkBuilderFactory = new ContentLinkBuilderFactory();
   }
 
   @Nullable
@@ -335,12 +335,8 @@ public class SiteimproveServiceImpl implements SiteimproveService {
   }
 
   private String findPageUrl(@NonNull SiteimproveSettings config, @NonNull Content content, Boolean preview) {
-    String baseUrl = preview ? config.getPreviewCaeBaseUrl() : config.getLiveCaeBaseUrl();
-    if (preview) {
-      return contentLinkBuilder.buildPreviewLink(baseUrl, content.getId());
-    } else {
-      return contentLinkBuilder.buildLiveLink(baseUrl, content.getId());
-    }
+    ContentLinkBuilder contentLinkBuilder = contentLinkBuilderFactory.create(config);
+    return contentLinkBuilder.buildLink(preview, content);
   }
 
 }

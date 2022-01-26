@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove;
 
+import com.coremedia.blueprint.feedbackhub.siteimprove.service.ContentLinkBuilderFactory;
 import com.coremedia.blueprint.feedbackhub.siteimprove.service.SiteimproveService;
 import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import com.coremedia.feedbackhub.provider.FeedbackProvider;
@@ -44,15 +45,28 @@ public class SiteimproveContentFeedbackProviderFactory implements FeedbackProvid
       throw new FeedbackHubException("settings must provide the id of the Siteimprove live site", SiteimproveFeedbackHubErrorCode.SITEIMPROVE_LIVE_SITE_ID_NOT_SET);
     }
 
-    String previewCaeBaseUrl = settings.getPreviewCaeBaseUrl();
-    if (previewCaeBaseUrl == null) {
-      throw new FeedbackHubException("settings must provide the base url of the preview cae", SiteimproveFeedbackHubErrorCode.PREVIEW_BASE_URL_NOT_SET);
+    if (settings.getContentLinkBuilderStrategy().equals(ContentLinkBuilderFactory.DIRECT_CONTENT_LINK_BUILDER_STRATEGY)){
+      String previewBaseUrl = settings.getPreviewBaseUrl();
+      if (previewBaseUrl == null) {
+        throw new FeedbackHubException("settings must provide the base url of the preview cae", SiteimproveFeedbackHubErrorCode.PREVIEW_BASE_URL_NOT_SET);
+      }
+
+      String liveBaseUrl = settings.getLiveBaseUrl();
+      if (liveBaseUrl == null) {
+        throw new FeedbackHubException("settings must provide the base url of the live cae", SiteimproveFeedbackHubErrorCode.LIVE_BASE_URL_NOT_SET);
+      }
+    }else{
+      String previewCaeBaseUrl = settings.getPreviewCaeBaseUrl();
+      if (previewCaeBaseUrl == null) {
+        throw new FeedbackHubException("settings must provide the base url of the preview cae", SiteimproveFeedbackHubErrorCode.PREVIEW_BASE_URL_NOT_SET);
+      }
+
+      String liveCaeBaseUrl = settings.getLiveCaeBaseUrl();
+      if (liveCaeBaseUrl == null) {
+        throw new FeedbackHubException("settings must provide the base url of the live cae", SiteimproveFeedbackHubErrorCode.LIVE_BASE_URL_NOT_SET);
+      }
     }
 
-    String liveCaeBaseUrl = settings.getLiveCaeBaseUrl();
-    if (liveCaeBaseUrl == null) {
-      throw new FeedbackHubException("settings must provide the base url of the live cae", SiteimproveFeedbackHubErrorCode.LIVE_BASE_URL_NOT_SET);
-    }
 
     return new SiteimproveContentFeedbackProvider(settings, siteimproveService);
   }

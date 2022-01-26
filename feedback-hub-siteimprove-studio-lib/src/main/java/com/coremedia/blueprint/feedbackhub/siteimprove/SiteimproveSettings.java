@@ -1,5 +1,6 @@
 package com.coremedia.blueprint.feedbackhub.siteimprove;
 
+import com.coremedia.cap.struct.Struct;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 
@@ -24,8 +25,19 @@ public interface SiteimproveSettings {
   String getSiteimprovePreviewSiteId();
 
   @NonNull
+  @Deprecated
   String getPreviewCaeBaseUrl();
 
   @NonNull
+  @Deprecated
   String getLiveCaeBaseUrl();
+
+  @NonNull
+  String getContentLinkBuilderStrategy();
+
+  @NonNull
+  String getPreviewBaseUrl();
+
+  @NonNull
+  String getLiveBaseUrl();
 }

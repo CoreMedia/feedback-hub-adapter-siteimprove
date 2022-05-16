@@ -45,7 +45,7 @@ public class SiteimproveContentFeedbackProviderFactory implements FeedbackProvid
       throw new FeedbackHubException("settings must provide the id of the Siteimprove live site", SiteimproveFeedbackHubErrorCode.SITEIMPROVE_LIVE_SITE_ID_NOT_SET);
     }
 
-    if (settings.getContentLinkBuilderStrategy().equals(ContentLinkBuilderFactory.DIRECT_CONTENT_LINK_BUILDER_STRATEGY)){
+    if (settings.getContentLinkBuilderStrategy() != null && settings.getContentLinkBuilderStrategy().equals(ContentLinkBuilderFactory.DIRECT_CONTENT_LINK_BUILDER_STRATEGY)){
       String previewBaseUrl = settings.getPreviewBaseUrl();
       if (previewBaseUrl == null) {
         throw new FeedbackHubException("settings must provide the base url of the preview cae", SiteimproveFeedbackHubErrorCode.PREVIEW_BASE_URL_NOT_SET);

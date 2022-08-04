@@ -24,10 +24,6 @@
       <artifactId>coremedia-spring</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.coremedia.ui</groupId>
-      <artifactId>cap-rest-service</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.coremedia.cms</groupId>
       <artifactId>cap-multisite</artifactId>
     </dependency>

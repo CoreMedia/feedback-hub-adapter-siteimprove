@@ -5,42 +5,35 @@
 The _CoreMedia Feedback Hub_ offers the possibility to provide feedback for CoreMedia content. 
 It is possible to connect external systems to the Feedback Hub in order to collect feedback. 
 
-This project integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
-It also enables the Siteimprove widget for the preview CAE.
+This CoreMedia Plugin integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
 
 ### Documentation
 
-https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/tree/master/documentation
+https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/tree/main/documentation
 
 ### Issue Tracker
 
 https://github.com/CoreMedia/feedback-hub-adapter-siteimprove/issues
 
-### Installation
- 
-- From the project's root folder, clone this repository as a submodule of the extensions folder. Make sure to use the branch name that matches your workspace version. 
-```
-git submodule add  -b 1907.1 https://github.com/CoreMedia/coremedia-studio-hub modules/extensions/feedback-hub-adapter-siteimprove
-```
+# Installation of the CoreMedia Siteimprove Plugin
+[Installation](installation.md)
 
-- Use the extension tool in the root folder of the project to link the modules to your workspace.
- ```
-mvn -f workspace-configuration/extensions com.coremedia.maven:extensions-maven-plugin:LATEST:sync -Denable=feedback-hub-adapter-siteimprove
-```
+## CoreMedia Labs
 
-- Rebuild the workspace
+Welcome to [CoreMedia Labs](https://blog.coremedia.com/labs/)! This repository
+is part of a platform for developers who want to have a look under the hood or
+get some hands-on understanding of the vast and compelling capabilities of
+CoreMedia. Whatever your experience level with CoreMedia is, we've got something
+for you.
 
-For CI runs:
-- Ensure that the matching branch name is set in the _.gitmodules_ file, e.g.:
+Each project in our Labs platform is an extra feature to be used with CoreMedia,
+including extensions, tools and 3rd party integrations. We provide some test
+data and explanatory videos for non-customers and for insiders there is
+open-source code and instructions on integrating the feature into your
+CoreMedia workspace.
 
-```
-[submodule "modules/extensions/coremedia-studio-hub"]
-	path = modules/extensions/feedback-hub-adapter-siteimprove
-	url = https://github.com/CoreMedia/feedback-hub-adapter-siteimprove.git
-	branch = 1907.3
-```
-
-For the IDEA import:
-- Ignore folder _.remote-package_
-- Disable "Settings > Compiler > Clear output directory on rebuild"
- 
+The code we provide is meant to be example code, illustrating a set of features
+that could be used to enhance your CoreMedia experience. We'd love to hear your
+feedback on use-cases and further developments! If you're having problems with
+our code, please refer to our issues section. If you already have a solution to
+an issue, we love to review and integrate your pull requests. 

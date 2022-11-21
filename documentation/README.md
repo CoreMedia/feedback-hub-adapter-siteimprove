@@ -11,7 +11,8 @@ The following screenshot shows the setup of two test sites: _Labs Preview_ and _
 
 ![Siteimprove Sites](sites.png "Siteimprove Sites")
 
-
+# Installation of the CoreMedia Siteimprove Plugin
+[Installation](installation.md)
 
 # Configuration for the CoreMedia Feedbackhub 
 
@@ -31,12 +32,13 @@ Edit the settings document using the struct editor. Create the following setting
   <BooleanProperty Name="enabled">true</BooleanProperty>
   <StructProperty Name="settings">
     <Struct>
+      <StringProperty Name="contentLinkBuilderStrategy">cae</StringProperty>  
       <StringProperty Name="email"></StringProperty>
       <StringProperty Name="apiKey"></StringProperty>
       <StringProperty Name="siteimprovePreviewSiteId"></StringProperty>
       <StringProperty Name="siteimproveLiveSiteId"></StringProperty>
-      <StringProperty Name="previewCaeBaseUrl">https://PREIVEW_CAE_HOST/blueprint/servlet/</StringProperty>
-      <StringProperty Name="liveCaeBaseUrl">https://LIVE_CAE_HOST/blueprint/servlet/</StringProperty>
+      <StringProperty Name="previewCaeBaseUrl">http://cae-preview:8081</StringProperty>
+      <StringProperty Name="liveCaeBaseUrl">http://cae-live:8081/</StringProperty>
     </Struct>
   </StructProperty>
 </Struct>
@@ -61,6 +63,7 @@ Edit the settings document using the struct editor. Create the following setting
 | siteimproveLiveSiteId | yes | The Siteimprove site id of the crawled Coremedia _live_ site, see section "How to find the Siteimprove site id?". |
 | previewCaeBaseUrl | yes | The base url of the preview cae |
 | liveCaeBaseUrl | yes | The base url of the live cae |
+| contentLinkBuilderStrategy | yes | Defines which link builder strategy should be used to generate links which are then crawled by Siteimprove. Can be "cae" for cae-based frontends or "direct" for other frontends. |
 
 #### Example
 

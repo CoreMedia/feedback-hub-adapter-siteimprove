@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class DciOverallScoreDocument {
 
-  @JsonProperty("accessibility")
+  @JsonProperty("a11y")
   private AccessibilityDocument accessibilityDocument;
 
   @JsonProperty("qa")

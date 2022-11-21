@@ -5,7 +5,7 @@
 The _CoreMedia Feedback Hub_ offers the possibility to provide feedback for CoreMedia content. 
 It is possible to connect external systems to the Feedback Hub in order to collect feedback. 
 
-This projects integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
+This project integrates the _Siteimprove_ REST API into the Feedback Hub of CoreMedia.
 It also enables the Siteimprove widget for the preview CAE.
 
 ### Documentation

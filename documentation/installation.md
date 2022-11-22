@@ -51,3 +51,12 @@ In short, for a quick development roundtrip:
 
 Now the plugin is running.  You won't yet notice it though, until you configure a connection
 and restart the studio server.
+
+## Frontend Extension
+
+The principal of Siteimprove is to crawl a target website and to anaylze its pages. The Siteimprove Feedback Hub Plugin
+needs to match contentIds to a crawled page in the Siteimprove index. This is why we need to add a special HTML meta-data tag 
+to each CoreMedia delivered content page or article.  The meta tag must follow the following format and needs to show the 
+corresponding pages content Id:
+
+`<meta name="coremedia:content-id" content="${self.contentId}" />`

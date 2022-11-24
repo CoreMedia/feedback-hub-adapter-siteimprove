@@ -1,6 +1,5 @@
 ![CoreMedia Labs Logo](https://documentation.coremedia.com/badges/banner_coremedia_labs_wide.png "CoreMedia Labs Logo Title Text")
 
-
 # Siteimprove Integration for the CoreMedia Feedback Hub
 The _CoreMedia Feedback Hub_ offers the possibility to provide feedback for CoreMedia content. 
 It is possible to connect external systems to the Feedback Hub in order to collect feedback. 

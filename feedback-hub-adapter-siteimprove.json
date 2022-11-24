@@ -5,7 +5,7 @@
       "file": "studio-server/target/studio-server.feedback-hub-adapter-siteimprove-${VERSION}.zip"
     },
     "studio-client.main": {
-      "file": "studio-client/apps/main/feedback-hub-adapter-sisteimprove/build/studio-client.main.feedback-hub-adapter-siteimprove-${VERSION}.zip"
+      "file": "studio-client/apps/main/feedback-hub-adapter-siteimprove/build/studio-client.main.feedback-hub-adapter-siteimprove-${VERSION}.zip"
     }
   }
 }

@@ -1,10 +1,10 @@
-name: Build
+name: Build-Presales
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 2210_plugin ]
   pull_request:
-    branches: [ main ]
+    branches: [ 2210_plugin ]
   workflow_dispatch:
 
 jobs:

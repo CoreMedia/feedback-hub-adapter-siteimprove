@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ 2210_plugin ]
+    branches: [ main ]
   pull_request:
-    branches: [ 2210_plugin ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:

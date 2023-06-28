@@ -72,12 +72,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.coremedia.feedbackhub</groupId>
-      <artifactId>feedback-hub-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.coremedia.ui</groupId>
       <artifactId>cap-rest-service</artifactId>
       <scope>provided</scope>

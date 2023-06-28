@@ -28,11 +28,15 @@ import java.util.Arrays;
  */
 class SiteimproveRestConnector {
   private static final Logger LOG = LoggerFactory.getLogger(SiteimproveRestConnector.class);
-  private String protocol = "https";
-  private String host = "api.siteimprove.com/v2";
+  private String protocol;
+  private String host;
+  private String version;
   private RestTemplate restTemplate;
 
-  SiteimproveRestConnector(@NonNull RestTemplate restTemplate) {
+  SiteimproveRestConnector(@NonNull String apiProtocol, @NonNull String apiHost, @NonNull String apiVersion, @NonNull RestTemplate restTemplate) {
+    this.protocol = apiProtocol;
+    this.host = apiHost;
+    this.version = apiVersion;
     this.restTemplate = restTemplate;
   }
 
@@ -76,8 +80,7 @@ class SiteimproveRestConnector {
         headers.add("Accept", "application/json");
         headers.add("Content-Type", "application/json");
         requestEntity = new HttpEntity<>(headers);
-      }
-      else {
+      } else {
         headers.add("Content-Type", "text/plain; charset=utf8");
         requestEntity = new HttpEntity<>(body, headers);
       }
@@ -99,13 +102,13 @@ class SiteimproveRestConnector {
   private String getUrl(String resourcePath, MultiValueMap<String, String> queryParams) {
     UriComponentsBuilder uriComponentsBuilder;
     //resourcePath can be absolute when it is from extracted from a json of a previous request.
-    if (resourcePath.contains(host)) {
+    if (resourcePath.startsWith(protocol)) {
       uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(resourcePath);
-    }
-    else {
+    } else {
       uriComponentsBuilder = UriComponentsBuilder.newInstance()
               .scheme(protocol)
               .host(host)
+              .path(version)
               .path(resourcePath);
     }
 
@@ -124,12 +127,5 @@ class SiteimproveRestConnector {
     return Base64Utils.encodeToString((userName + ":" + apiKey).getBytes(StandardCharsets.UTF_8));
   }
 
-  public void setProtocol(String protocol) {
-    this.protocol = protocol;
-  }
-
-  public void setBaseUrl(String baseUrl) {
-    this.host = baseUrl;
-  }
 }
 

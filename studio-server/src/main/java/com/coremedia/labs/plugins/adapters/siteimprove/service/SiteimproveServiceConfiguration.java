@@ -11,8 +11,15 @@ import org.springframework.web.client.RestTemplate;
 @PropertySource("classpath:/com/coremedia/labs/plugins/adapters/siteimprove/siteimprove.properties")
 @Configuration
 public class SiteimproveServiceConfiguration {
-  @Value(value = "${siteimprove.api.host}")
+
+  @Value(value = "${siteimprove.api.protocol:https}")
+  private String apiProtocol;
+
+  @Value(value = "${siteimprove.api.host:api.siteimprove.com}")
   private String apiHost;
+
+  @Value(value = "${siteimprove.api.version:v2}")
+  private String apiVersion;
 
   @Bean
   public SiteimproveService siteImproveService(SiteimproveRestConnector siteImproveRestConnector) {
@@ -21,12 +28,12 @@ public class SiteimproveServiceConfiguration {
 
   @Bean
   public SiteimproveRestConnector siteimproveRestConnector(@Qualifier("siteimproveRestTemplate") RestTemplate restTemplate) {
-    return new SiteimproveRestConnector(restTemplate);
+    return new SiteimproveRestConnector(apiProtocol, apiHost, apiVersion, restTemplate);
   }
 
   @Bean(name = "siteimproveRestTemplate")
   public RestTemplate siteimproveRestTemplate() {
-    HttpHost httpHost = new HttpHost(apiHost, -1, "https");
+    HttpHost httpHost = new HttpHost(apiHost + "/" + apiVersion, -1, apiProtocol);
     return new RestTemplate(new HttpComponentsClientHttpRequestFactoryBasicAuth(httpHost));
   }
 }

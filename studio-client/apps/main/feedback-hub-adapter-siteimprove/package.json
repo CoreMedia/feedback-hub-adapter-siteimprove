@@ -2,7 +2,7 @@
   "name": "@coremedia-labs/studio-client.main.feedback-hub-adapter-siteimprove",
   "author": "CoreMedia GmbH",
   "license": "CoreMedia Open Source License",
-  "version": "1.0.2",
+  "version": "1.0.3-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@coremedia/studio-client.cap-rest-client": "2110.2.0",

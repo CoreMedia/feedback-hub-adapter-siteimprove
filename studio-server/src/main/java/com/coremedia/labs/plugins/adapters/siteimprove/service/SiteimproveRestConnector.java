@@ -1,18 +1,13 @@
 package com.coremedia.labs.plugins.adapters.siteimprove.service;
 
+import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import com.coremedia.labs.plugins.adapters.siteimprove.SiteimproveFeedbackHubErrorCode;
 import com.coremedia.labs.plugins.adapters.siteimprove.SiteimproveSettings;
-import com.coremedia.feedbackhub.adapter.FeedbackHubException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.Base64Utils;
+import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 
 
 /**
@@ -28,10 +24,10 @@ import java.util.Arrays;
  */
 class SiteimproveRestConnector {
   private static final Logger LOG = LoggerFactory.getLogger(SiteimproveRestConnector.class);
-  private String protocol;
-  private String host;
-  private String version;
-  private RestTemplate restTemplate;
+  private final String protocol;
+  private final String host;
+  private final String version;
+  private final RestTemplate restTemplate;
 
   SiteimproveRestConnector(@NonNull String apiProtocol, @NonNull String apiHost, @NonNull String apiVersion, @NonNull RestTemplate restTemplate) {
     this.protocol = apiProtocol;
@@ -86,9 +82,9 @@ class SiteimproveRestConnector {
       }
 
       ResponseEntity<T> responseEntity = restTemplate.exchange(url, method, requestEntity, responseType);
-      HttpStatus statusCode = responseEntity.getStatusCode();
+      HttpStatusCode statusCode = responseEntity.getStatusCode();
       if (!statusCode.is2xxSuccessful()) {
-        LOG.error("Failed to execute Siteimprove REST call {}: {}", url, statusCode.getReasonPhrase());
+        LOG.error("Failed to execute Siteimprove REST call {}: {}", url, statusCode);
       }
       return responseEntity.getBody();
     } catch (HttpClientErrorException e) {
@@ -106,10 +102,10 @@ class SiteimproveRestConnector {
       uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(resourcePath);
     } else {
       uriComponentsBuilder = UriComponentsBuilder.newInstance()
-              .scheme(protocol)
-              .host(host)
-              .path(version)
-              .path(resourcePath);
+          .scheme(protocol)
+          .host(host)
+          .path(version)
+          .path(resourcePath);
     }
 
     if (queryParams != null) {
@@ -124,7 +120,7 @@ class SiteimproveRestConnector {
   private String resolveToken(@NonNull SiteimproveSettings config) {
     String userName = config.getEmail();
     String apiKey = config.getApiKey();
-    return Base64Utils.encodeToString((userName + ":" + apiKey).getBytes(StandardCharsets.UTF_8));
+    return Base64.getEncoder().encodeToString((userName + ":" + apiKey).getBytes(StandardCharsets.UTF_8));
   }
 
 }

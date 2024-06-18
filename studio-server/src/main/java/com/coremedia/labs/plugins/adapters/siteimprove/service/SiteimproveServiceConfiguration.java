@@ -1,6 +1,6 @@
 package com.coremedia.labs.plugins.adapters.siteimprove.service;
 
-import org.apache.http.HttpHost;
+import org.apache.hc.core5.http.HttpHost;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +33,7 @@ public class SiteimproveServiceConfiguration {
 
   @Bean(name = "siteimproveRestTemplate")
   public RestTemplate siteimproveRestTemplate() {
-    HttpHost httpHost = new HttpHost(apiHost + "/" + apiVersion, -1, apiProtocol);
+    HttpHost httpHost = new HttpHost(apiProtocol, apiHost + "/" + apiVersion);
     return new RestTemplate(new HttpComponentsClientHttpRequestFactoryBasicAuth(httpHost));
   }
 }

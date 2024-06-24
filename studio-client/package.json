@@ -3,19 +3,20 @@
   "version": "1.0.0-SNAPSHOT",
   "private": true,
   "engines": {
-    "node": "18",
-    "pnpm": "8.6"
+    "node": "^20",
+    "pnpm": "^9"
   },
   "devDependencies": {
     "@coremedia/set-version": "^1.1.1",
     "@typescript-eslint/eslint-plugin": "4.31.2",
     "@typescript-eslint/parser": "4.31.2",
-    "eslint": "7.32.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-jsdoc": "35.1.2",
-    "eslint-plugin-unused-imports": "1.1.5"
+    "eslint-plugin-unused-imports": "1.1.4"
   },
   "scripts": {
     "set-version": "set-version"
-  }
+  },
+  "packageManager": "pnpm@9.4.0+sha256.b6fd0bfda555e7e584ad7e56b30c68b01d5a04f9ee93989f4b93ca8473c49c74"
 }

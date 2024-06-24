@@ -11,8 +11,10 @@
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <cm.studio-server.core.version>2401.1</cm.studio-server.core.version>
-    <cm.common.core.version>2401.1</cm.common.core.version>
+    <cm.studio-server.core.version>2404.2</cm.studio-server.core.version>
+    <cm.common.core.version>2404.2</cm.common.core.version>
+    <org.apache.httpcomponents.client5.version>5.3.1</org.apache.httpcomponents.client5.version>
+    <org.apache.httpcomponents.core5.version>5.2.4</org.apache.httpcomponents.core5.version>
   </properties>
 
 
@@ -128,10 +130,18 @@
       <artifactId>spring-web</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
-    </dependency>
+      <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpclient</artifactId>
+          <scope>provided</scope>
+          <version>4.5.13</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.httpcomponents.client5</groupId>
+          <artifactId>httpclient5</artifactId>
+          <scope>provided</scope>
+          <version>${org.apache.httpcomponents.client5.version}</version>
+      </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
@@ -143,6 +153,12 @@
       <artifactId>commons-io</artifactId>
       <scope>provided</scope>
       <version>2.16.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents.core5</groupId>
+      <artifactId>httpcore5</artifactId>
+      <scope>provided</scope>
+      <version>${org.apache.httpcomponents.core5.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

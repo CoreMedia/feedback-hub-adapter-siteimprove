@@ -1,12 +1,11 @@
 package com.coremedia.labs.plugins.adapters.siteimprove.service;
 
+import org.apache.hc.core5.http.HttpHost;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @PropertySource("classpath:/com/coremedia/labs/plugins/adapters/siteimprove/siteimprove.properties")
@@ -34,10 +33,7 @@ public class SiteimproveServiceConfiguration {
 
   @Bean(name = "siteimproveRestTemplate")
   public RestTemplate siteimproveRestTemplate() {
-    RestTemplate restTemplate = new RestTemplateBuilder()
-            .requestFactory(SimpleClientHttpRequestFactory.class)
-            .rootUri(apiProtocol + "://" + apiHost + "/" + apiVersion)
-            .build();
-    return restTemplate;
+    HttpHost httpHost = new HttpHost(apiProtocol,apiHost + "/" + apiVersion,-1);
+    return new RestTemplate(new HttpComponentsClientHttpRequestFactoryBasicAuth(httpHost));
   }
 }
